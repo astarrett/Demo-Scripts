@@ -92,6 +92,9 @@
       border-radius: 8px;
       border-left: 4px solid var(--santa-fe-adobe);
       margin-bottom: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     .balance-value {
@@ -121,7 +124,7 @@
 
     .map-container {
       width: 100%;
-      height: 200px;
+      height: 220px;
       border-radius: 6px;
       overflow: hidden;
       border: 1px solid #edf2f7;
@@ -141,14 +144,20 @@
     .btn-primary { background: var(--santa-fe-blue); color: white; }
     .btn-outline { background: transparent; border: 1px solid #cbd5e0; color: #4a5568; }
 
-    .alert-box {
-      padding: 10px;
-      border-radius: 5px;
-      font-size: 12px;
-      background: #fff5f5;
-      color: #c53030;
-      border: 1px solid #feb2b2;
+    .notes-box {
+      background: #f7fafc;
+      border: 1px solid #edf2f7;
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      color: #4a5568;
+      min-height: 60px;
       margin-top: 10px;
+    }
+
+    .risk-indicator {
+      font-weight: 700;
+      color: var(--danger);
     }
   </style>
 </head>
@@ -164,10 +173,13 @@
     </header>
 
     <div class="balance-hero">
-      <div class="label">Total Amount Due</div>
-      <div class="balance-value" id="totalBalance">$0.00</div>
-      <div style="font-size: 12px; color: #718096; margin-top: 3px;">
-        Includes past due balance of <span id="pastDue" style="font-weight:600">$0.00</span>
+      <div>
+        <div class="label">Current Balance</div>
+        <div class="balance-value" id="totalBalance">$0.00</div>
+      </div>
+      <div style="text-align: right;">
+        <div class="label">Shutoff Risk</div>
+        <div class="value risk-indicator" id="riskLevel">None</div>
       </div>
     </div>
 
@@ -190,9 +202,8 @@
       </div>
     </div>
 
-    <div class="alert-box" id="disconnectAlert" style="display:none;">
-      <strong>⚠️ Disconnect Notice:</strong> Service interruption scheduled for <span id="discoDate"></span>.
-    </div>
+    <div class="label">Account Notes</div>
+    <div class="notes-box" id="accountNotes">No notes available for this account.</div>
   </div>
 
   <div class="sidebar">
@@ -206,8 +217,13 @@
     <div class="action-card">
       <h3 style="margin:0 0 5px 0; font-size:14px; color: var(--santa-fe-blue);">Service Area Map</h3>
       <div class="map-container">
-        <!-- Embedding a Google Map centered on Santa Fe -->
-<iframe width="100%" height="100%" frameborder="0" style="border:0;" src="https://www.openstreetmap.org/export/embed.html?bbox=-106.0,-106.0,-105.8,35.75&layer=mapnik&marker=35.6870,-105.9378" allowfullscreen></iframe>
+        <iframe 
+          width="100%" 
+          height="100%" 
+          frameborder="0" 
+          scrolling="no" 
+          src="https://www.openstreetmap.org/export/embed.html?bbox=-105.973%2C35.667%2C-105.920%2C35.710&layer=mapnik&marker=35.687%2C-105.944">
+        </iframe>
       </div>
       <p style="font-size: 10px; color: #a0aec0; margin-top: 5px; text-align: center;">
         Current Grid Status: <span style="color: var(--success); font-weight: bold;">Normal</span>
@@ -228,20 +244,27 @@
   function init() {
     document.getElementById('custName').textContent = getParam('customerName') || 'Andy Starrett';
     document.getElementById('accNum').textContent = getParam('accountNumber') || 'SF-99821-01';
-    document.getElementById('address').textContent = getParam('address') || '123 Canyon Road, Santa Fe, NM';
+    document.getElementById('address').textContent = getParam('serviceAddress') || '123 Canyon Road, Santa Fe, NM';
+    document.getElementById('accountNotes').textContent = getParam('notes') || 'No notes available for this account.';
     
-    const balance = getParam('balance') || 450.25;
-    const pastDue = getParam('pastDue') || 125.00;
+    const balance = getParam('balance') || 0.00;
     document.getElementById('totalBalance').textContent = formatCurrency(balance);
-    document.getElementById('pastDue').textContent = formatCurrency(pastDue);
 
-    const disco = getParam('disconnectDate');
-    if(disco) {
-      document.getElementById('disconnectAlert').style.display = 'block';
-      document.getElementById('discoDate').textContent = disco;
+    const risk = getParam('shutoffRisk') || 'None';
+    document.getElementById('riskLevel').textContent = risk;
+
+    const lastAmt = getParam('lastPaymentAmount');
+    const lastDate = getParam('lastPaymentDate');
+    if(lastAmt && lastDate) {
+      document.getElementById('lastPay').textContent = formatCurrency(lastAmt) + ' on ' + lastDate;
+    }
+
+    if(risk.toLowerCase() === 'high' || risk.toLowerCase() === 'yes') {
       document.getElementById('statusContainer').innerHTML = '<span class="status-badge status-cutoff">Interruption Pending</span>';
-    } else if (pastDue > 0) {
+      document.getElementById('riskLevel').style.color = 'var(--danger)';
+    } else if (balance > 0) {
       document.getElementById('statusContainer').innerHTML = '<span class="status-badge status-delinquent">Past Due</span>';
+      document.getElementById('riskLevel').style.color = 'var(--warning)';
     }
   }
 
