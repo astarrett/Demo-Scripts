@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>City of Santa Fe Utilities - Agent Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 16px;
+      background-color: #f5f5f5;
+      color: #222;
+    }
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 16px 20px 24px;
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    }
+    h1 {
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+    h2 {
+      font-size: 16px;
+      margin-top: 20px;
+      margin-bottom: 8px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 4px;
+    }
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .card {
+      background: #fafafa;
+      border-radius: 4px;
+      border: 1px solid #e0e0e0;
+      padding: 8px 10px;
+    }
+    .label {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: #666;
+      margin-bottom: 2px;
+    }
+    .value {
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .status-pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 500;
+      color: #fff;
+      background-color: #607d8b;
+    }
+    .status-risk {
+      background-color: #f44336;
+    }
+    .status-warning {
+      background-color: #ff9800;
+    }
+    .status-normal {
+      background-color: #4caf50;
+    }
+    .note {
+      font-size: 12px;
+      color: #555;
+      margin-top: 8px;
+    }
+    .actions {
+      margin-top: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .btn {
+      border: none;
+      border-radius: 4px;
+      padding: 8px 14px;
+      font-size: 13px;
+      cursor: pointer;
+      background-color: #1976d2;
+      color: #fff;
+    }
+    .btn.secondary {
+      background-color: #607d8b;
+    }
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>City of Santa Fe Utilities – Account Overview</h1>
+
+    <div class="summary">
+      <div class="card">
+        <div class="label">Customer Name</div>
+        <div class="value" id="customerName">–</div>
+      </div>
+      <div class="card">
+        <div class="label">Account Number</div>
+        <div class="value" id="accountNumber">–</div>
+      </div>
+      <div class="card">
+        <div class="label">Service Address</div>
+        <div class="value" id="serviceAddress">–</div>
+      </div>
+      <div class="card">
+        <div class="label">Status</div>
+        <div class="value" id="accountStatus">
+          <span class="status-pill status-normal">Active</span>
+        </div>
+      </div>
+    </div>
+
+    <h2>Financial Summary</h2>
+    <div class="summary">
+      <div class="card">
+        <div class="label">Total Balance</div>
+        <div class="value" id="totalBalance">$0.00</div>
+      </div>
+      <div class="card">
+        <div class="label">Past Due Amount</div>
+        <div class="value" id="pastDueAmount">$0.00</div>
+      </div>
+      <div class="card">
+        <div class="label">Last Payment</div>
+        <div class="value" id="lastPayment">–</div>
+      </div>
+      <div class="card">
+        <div class="label">Pending Disconnect</div>
+        <div class="value" id="disconnectDate">None</div>
+      </div>
+    </div>
+
+    <p class="note">
+      Account and balance information is provided by backend services. 
+      Use the “Take a Payment” option only if the customer requests to pay with an agent.
+    </p>
+
+    <h2>Agent Actions</h2>
+    <div class="actions">
+      <button class="btn" id="takePaymentBtn">Take a Payment</button>
+      <button class="btn secondary" id="viewHistoryBtn">View Account History</button>
+    </div>
+
+    <p class="note">
+      Repayment plans are offered in self-service. Use this page only to take a one-time payment 
+      or review account details with the caller.
+    </p>
+  </div>
+
+  <script>
+    // This is a simple example of reading query parameters from the URL.
+    // In Genesys Cloud you can pass values into the iframe URL and map them here.
+    function getParam(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name);
+    }
+
+    function setText(id, value, fallback) {
+      document.getElementById(id).textContent = value || fallback || "–";
+    }
+
+    function formatCurrency(value) {
+      const num = Number(value);
+      if (isNaN(num)) return "$0.00";
+      return num.toLocaleString("en-US", { style: "currency", currency: "USD" });
+    }
+
+    function init() {
+      setText("customerName", getParam("customerName"), "Unknown");
+      setText("accountNumber", getParam("accountNumber"), "Unknown");
+      setText("serviceAddress", getParam("serviceAddress"), "Not available");
+
+      const totalBalance = getParam("balance");
+      const pastDue = getParam("pastDue");
+      setText("totalBalance", formatCurrency(totalBalance));
+      setText("pastDueAmount", formatCurrency(pastDue));
+
+      const lastPaymentDate = getParam("lastPaymentDate");
+      const lastPaymentAmount = getParam("lastPaymentAmount");
+      if (lastPaymentDate && lastPaymentAmount) {
+        setText(
+          "lastPayment",
+          `${formatCurrency(lastPaymentAmount)} on ${lastPaymentDate}`
+        );
+      } else {
+        setText("lastPayment", "No recent payments");
+      }
+
+      const disconnectDate = getParam("disconnectDate");
+      setText("disconnectDate", disconnectDate || "None scheduled");
+
+      const riskFlag = getParam("riskStatus"); // e.g., "normal", "warning", "risk"
+      const statusEl = document.getElementById("accountStatus");
+      let label = "Active";
+      let cssClass = "status-normal";
+      if (riskFlag === "risk") {
+        label = "At Risk";
+        cssClass = "status-risk";
+      } else if (riskFlag === "warning") {
+        label = "Past Due";
+        cssClass = "status-warning";
+      }
+      statusEl.innerHTML = `<span class="status-pill ${cssClass}">${label}</span>`;
+
+      // Hook up buttons – for demo these just log; in real use you could postMessage back to the script.
+      document.getElementById("takePaymentBtn").addEventListener("click", () => {
+        console.log("Agent clicked Take a Payment");
+        alert("Proceed with your normal payment workflow in Genesys Cloud.");
+      });
+
+      document.getElementById("viewHistoryBtn").addEventListener("click", () => {
+        console.log("Agent clicked View Account History");
+        alert("Open your CRM or billing system to review detailed history.");
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", init);
+  </script>
+</body>
+</html>
