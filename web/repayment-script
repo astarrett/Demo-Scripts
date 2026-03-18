@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>City of Santa Fe - Repayment Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --santa-fe-blue: #00778b;
+      --santa-fe-adobe: #c1663e;
+      --bg-gray: #f8f9fa;
+      --text-dark: #2d3436;
+      --success: #27ae60;
+      --warning: #f39c12;
+      --danger: #e74c3c;
+      --info: #3498db;
+    }
+
+    body {
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 15px;
+      background-color: var(--bg-gray);
+      color: var(--text-dark);
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      border-top: 5px solid var(--santa-fe-adobe);
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #edf2f7;
+      padding-bottom: 10px;
+    }
+
+    .title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--santa-fe-adobe);
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--santa-fe-blue);
+      text-transform: uppercase;
+      margin: 20px 0 10px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+    }
+
+    .card {
+      padding: 12px;
+      background: #fcfcfc;
+      border: 1px solid #edf2f7;
+      border-radius: 6px;
+    }
+
+    .label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #718096;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+
+    .value {
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .status-pill {
+      padding: 4px 10px;
+      border-radius: 15px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .eligible { background: #e6fffa; color: var(--success); }
+    .ineligible { background: #fff5f5; color: var(--danger); }
+    .active-plan { background: #ebf8ff; color: var(--info); }
+
+    .alert-box {
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      margin-top: 15px;
+      border: 1px solid #edf2f7;
+    }
+
+    .alert-info { background: #ebf8ff; color: #2b6cb0; border-color: #bee3f8; }
+    .alert-warning { background: #fffaf0; color: #9c4221; border-color: #feebc8; }
+
+    .agreement-box {
+      margin-top: 20px;
+      padding: 15px;
+      background: #f7fafc;
+      border-radius: 8px;
+      border: 1px dashed #cbd5e0;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div class="title">Repayment & Arrangement Status</div>
+    <div id="eligibilityStatus">
+      <span class="status-pill eligible">Checking Eligibility...</span>
+    </div>
+  </header>
+
+  <div class="section-title">📋 Eligibility Details</div>
+  <div class="grid">
+    <div class="card">
+      <div class="label">Arrangement Eligible</div>
+      <div class="value" id="isEligible">--</div>
+    </div>
+    <div class="card">
+      <div class="label">Max Allowed Months</div>
+      <div class="value" id="maxMonths">--</div>
+    </div>
+    <div class="card">
+      <div class="label">Min Down Payment</div>
+      <div class="value" id="minDown">--</div>
+    </div>
+  </div>
+
+  <div id="ineligibleReasonBox" class="alert-box alert-warning" style="display:none;">
+    <strong>Ineligibility Reason:</strong> <span id="ineligibleReason"></span>
+  </div>
+
+  <div class="section-title">📅 Active Repayment Plan</div>
+  <div class="grid">
+    <div class="card">
+      <div class="label">Plan Status</div>
+      <div class="value" id="planStatus">No Active Plan</div>
+    </div>
+    <div class="card">
+      <div class="label">Monthly Payment</div>
+      <div class="value" id="monthlyPay">--</div>
+    </div>
+    <div class="card">
+      <div class="label">Plan Duration</div>
+      <div class="value" id="planMonths">--</div>
+    </div>
+    <div class="card">
+      <div class="label">Start Date</div>
+      <div class="value" id="startDate">--</div>
+    </div>
+  </div>
+
+  <div class="section-title">✍️ Agreement & Compliance</div>
+  <div class="grid">
+    <div class="card">
+      <div class="label">Signed By</div>
+      <div class="value" id="signedName">--</div>
+    </div>
+    <div class="card">
+      <div class="label">Received At</div>
+      <div class="value" id="receivedAt">--</div>
+    </div>
+  </div>
+
+  <div class="agreement-box">
+    <div class="label">Self-Service Note</div>
+    <p style="font-size: 13px; margin: 5px 0 0 0; color: #4a5568;">
+      Repayment plans must be completed via the IVR or Customer Portal. Agents can view details here but cannot modify active arrangements.
+    </p>
+  </div>
+</div>
+
+<script>
+  function getParam(name) {
+    return new URLSearchParams(window.location.search).get(name);
+  }
+
+  function formatCurrency(val) {
+    if (!val || isNaN(val)) return "--";
+    return new Number(val).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+  }
+
+  function init() {
+    // Eligibility
+    const eligible = getParam('arrangementEligible');
+    const isEligible = eligible === 'true' || eligible === 'Yes';
+    document.getElementById('isEligible').textContent = isEligible ? 'Yes' : 'No';
+    
+    const eligStatus = document.getElementById('eligibilityStatus');
+    if (isEligible) {
+      eligStatus.innerHTML = '<span class="status-pill eligible">Eligible for Plan</span>';
+    } else {
+      eligStatus.innerHTML = '<span class="status-pill ineligible">Ineligible</span>';
+      const reason = getParam('arrangementIneligibleReason');
+      if (reason) {
+        document.getElementById('ineligibleReasonBox').style.display = 'block';
+        document.getElementById('ineligibleReason').textContent = reason;
+      }
+    }
+
+    document.getElementById('maxMonths').textContent = getParam('arrangementMaxMonths') || '--';
+    document.getElementById('minDown').textContent = formatCurrency(getParam('arrangementMinDownPayment'));
+
+    // Active Plan
+    const status = getParam('repaymentPlanStatus') || 'None';
+    document.getElementById('planStatus').textContent = status;
+    document.getElementById('monthlyPay').textContent = formatCurrency(getParam('repaymentMonthlyPayment'));
+    document.getElementById('planMonths').textContent = getParam('repaymentMonths') ? getParam('repaymentMonths') + ' Months' : '--';
+    document.getElementById('startDate').textContent = getParam('repaymentStartDate') || '--';
+
+    // Agreement
+    document.getElementById('signedName').textContent = getParam('agreementSignedName') || '--';
+    document.getElementById('receivedAt').textContent = getParam('agreementReceivedAt') || '--';
+  }
+
+  window.onload = init;
+</script>
+
+</body>
+</html>
