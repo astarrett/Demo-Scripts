@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>City of Santa Fe - Take a Payment Script</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --santa-fe-blue: #00778b;
+      --santa-fe-adobe: #c1663e;
+      --bg-gray: #f8f9fa;
+      --text-dark: #2d3436;
+      --success: #27ae60;
+      --warning: #f39c12;
+      --danger: #e74c3c;
+    }
+
+    body {
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 15px;
+      background-color: var(--bg-gray);
+      color: var(--text-dark);
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      border-top: 5px solid var(--santa-fe-blue);
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #edf2f7;
+      padding-bottom: 10px;
+    }
+
+    .title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--santa-fe-blue);
+    }
+
+    .payment-hero {
+      background: #f0f9ff;
+      padding: 20px;
+      border-radius: 8px;
+      border-left: 4px solid var(--santa-fe-blue);
+      margin-bottom: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .amount-box {
+      text-align: center;
+    }
+
+    .amount-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #4a5568;
+      text-transform: uppercase;
+    }
+
+    .amount-value {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--santa-fe-blue);
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #4a5568;
+      text-transform: uppercase;
+      margin: 20px 0 10px 0;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+    }
+
+    .card {
+      padding: 12px;
+      background: #fcfcfc;
+      border: 1px solid #edf2f7;
+      border-radius: 6px;
+    }
+
+    .label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #718096;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+
+    .value {
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .payment-status {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: 700;
+      display: none;
+    }
+
+    .status-success { background: #e6fffa; color: var(--success); border: 1px solid #b2f5ea; }
+    .status-error { background: #fff5f5; color: var(--danger); border: 1px solid #feb2b2; }
+
+    .btn-group {
+      margin-top: 25px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .btn {
+      padding: 15px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+
+    .btn-primary { background: var(--santa-fe-blue); color: white; }
+    .btn-primary:hover { background: #005f6f; }
+    
+    .btn-secure { background: var(--santa-fe-adobe); color: white; }
+    .btn-secure:hover { background: #a05533; }
+
+    .talk-track {
+      margin-top: 20px;
+      padding: 15px;
+      background: #fffaf0;
+      border: 1px solid #feebc8;
+      border-radius: 8px;
+      font-style: italic;
+      font-size: 13px;
+      color: #744210;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div class="title">Take a Payment Script</div>
+    <div id="accountRef" style="font-size: 13px; color: #718096;">Account: --</div>
+  </header>
+
+  <div class="payment-hero">
+    <div class="amount-box">
+      <div class="amount-label">Current Balance</div>
+      <div class="amount-value" id="currentBalance">$0.00</div>
+    </div>
+    <div class="amount-box" style="border-left: 1px solid #cbd5e0;">
+      <div class="amount-label">Last Payment</div>
+      <div class="amount-value" id="lastPayment" style="font-size: 24px; margin-top: 8px;">$0.00</div>
+      <div id="lastDate" style="font-size: 11px; color: #718096;">--</div>
+    </div>
+  </div>
+
+  <div class="section-title">Payment Details</div>
+  <div class="grid">
+    <div class="card">
+      <div class="label">Secure Input Status</div>
+      <div class="value" id="secureStatus">Ready</div>
+    </div>
+    <div class="card">
+      <div class="label">Transaction Result</div>
+      <div class="value" id="paymentResult">Pending</div>
+    </div>
+  </div>
+
+  <div id="resultBanner" class="payment-status"></div>
+
+  <div class="talk-track">
+    "I can certainly help you with that payment. For your security, I am going to transfer you to our automated secure payment system. You will enter your card details using your telephone keypad, and I will remain on the line to confirm once the transaction is complete."
+  </div>
+
+  <div class="btn-group">
+    <button class="btn btn-primary" onclick="alert('Initiating Standard Payment Flow...')">Standard Payment</button>
+    <button class="btn btn-secure" onclick="alert('Launching Genesys Secure Input Flow...')">Launch Secure Input</button>
+  </div>
+</div>
+
+<script>
+  function getParam(name) {
+    return new URLSearchParams(window.location.search).get(name);
+  }
+
+  function formatCurrency(val) {
+    return new Number(val || 0).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+  }
+
+  function init() {
+    document.getElementById('accountRef').textContent = 'Account: ' + (getParam('accountNumber') || '--');
+    document.getElementById('currentBalance').textContent = formatCurrency(getParam('currentBalance'));
+    document.getElementById('lastPayment').textContent = formatCurrency(getParam('lastPaymentAmount'));
+    document.getElementById('lastDate').textContent = 'Received on ' + (getParam('lastPaymentDate') || '--');
+    
+    const secureInput = getParam('SecureInputPayment') || 'Ready';
+    document.getElementById('secureStatus').textContent = secureInput;
+
+    const result = getParam('SecurePaymentResult');
+    const banner = document.getElementById('resultBanner');
+    
+    if (result) {
+      document.getElementById('paymentResult').textContent = result;
+      banner.style.display = 'block';
+      if (result.toLowerCase().includes('success') || result.toLowerCase().includes('approved')) {
+        banner.textContent = '✅ Payment Successfully Processed';
+        banner.className = 'payment-status status-success';
+      } else {
+        banner.textContent = '❌ Payment Failed: ' + result;
+        banner.className = 'payment-status status-error';
+      }
+    }
+  }
+
+  window.onload = init;
+</script>
+
+</body>
+</html>
