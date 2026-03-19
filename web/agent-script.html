@@ -34,7 +34,7 @@
             margin: 0 auto;
         }
 
-        /* MAIN CONTENT AREA */
+        /* MAIN PANEL */
         .main-panel {
             border: 1px solid var(--border-color);
             border-radius: 8px;
@@ -71,6 +71,16 @@
             text-transform: uppercase;
         }
 
+        .account-status-badge.disconnected {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .account-status-badge.pastdue {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
         /* BALANCE SECTION */
         .balance-card {
             background-color: var(--sf-light-red);
@@ -97,9 +107,7 @@
             margin-top: 5px;
         }
 
-        .risk-info {
-            text-align: right;
-        }
+        .risk-info { text-align: right; }
 
         .risk-label {
             font-size: 12px;
@@ -111,9 +119,12 @@
         .risk-value {
             font-size: 18px;
             font-weight: bold;
-            color: #c0392b;
             margin-top: 5px;
         }
+
+        .risk-high { color: #c0392b; }
+        .risk-medium { color: #e67e22; }
+        .risk-low { color: #28a745; }
 
         /* DATA GRID */
         .data-grid {
@@ -157,9 +168,10 @@
             border: 1px solid #e9ecef;
             padding: 15px;
             border-radius: 4px;
-            min-height: 100px;
+            min-height: 80px;
             font-size: 14px;
             color: #6c757d;
+            line-height: 1.5;
         }
 
         /* SIDEBAR */
@@ -190,12 +202,35 @@
             border: 1px solid #dee2e6;
             background-color: white;
             color: #495057;
+            cursor: pointer;
+            box-sizing: border-box;
+            transition: background-color 0.15s ease;
+        }
+
+        .btn:hover {
+            background-color: #e9ecef;
+            color: #343a40;
         }
 
         .btn-primary {
             background-color: var(--sf-teal);
             color: white;
             border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #005f6e;
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: white;
+            color: var(--sf-teal);
+            border: 1px solid var(--sf-teal);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--sf-light-teal);
         }
 
         /* MAP */
@@ -212,13 +247,17 @@
             color: #adb5bd;
         }
 
-        .status-green { color: var(--sf-green); font-weight: bold; }
+        .status-green {
+            color: var(--sf-green);
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- Left Panel -->
+
+    <!-- LEFT PANEL -->
     <div class="main-panel">
         <div class="header-row">
             <h1>CITY OF SANTA FE <span>| Utilities</span></h1>
@@ -232,26 +271,26 @@
             </div>
             <div class="risk-info">
                 <div class="risk-label">Shutoff Risk</div>
-                <div class="risk-value" id="display-risk">None</div>
+                <div class="risk-value risk-low" id="display-risk">None</div>
             </div>
         </div>
 
         <div class="data-grid">
             <div class="data-item">
                 <div class="item-label">Customer Name</div>
-                <div class="item-value" id="display-name">Andy Starrett</div>
+                <div class="item-value" id="display-name">—</div>
             </div>
             <div class="data-item">
                 <div class="item-label">Account Number</div>
-                <div class="item-value" id="display-account">SF-99821-01</div>
+                <div class="item-value" id="display-account">—</div>
             </div>
             <div class="data-item">
                 <div class="item-label">Service Address</div>
-                <div class="item-value" id="display-address">123 Canyon Road, Santa Fe, NM</div>
+                <div class="item-value" id="display-address">—</div>
             </div>
             <div class="data-item">
                 <div class="item-label">Last Payment</div>
-                <div class="item-value" id="display-last-pay">None on record</div>
+                <div class="item-value" id="display-last-pay">—</div>
             </div>
         </div>
 
@@ -263,21 +302,22 @@
         </div>
     </div>
 
-    <!-- Right Sidebar -->
+    <!-- RIGHT SIDEBAR -->
     <div class="sidebar">
         <div class="sidebar-card">
             <h3>Quick Actions</h3>
-            <a href="#" class="btn btn-primary">Take a Payment</a>
+            <a href="#" id="btn-take-payment" class="btn btn-primary">Take a Payment</a>
+            <a href="#" id="btn-repayment" class="btn btn-secondary">Repayment Plan</a>
             <a href="#" class="btn">Usage History</a>
-            <a href="#" class="btn">Account Notes</a>
         </div>
 
         <div class="sidebar-card">
-            <h3 style="color: var(--sf-teal)">Service Area Map</h3>
+            <h3 style="color: var(--sf-teal);">Service Area Map</h3>
             <div id="map"></div>
             <div class="grid-status">Current Grid Status: <span class="status-green">Normal</span></div>
         </div>
     </div>
+
 </div>
 
 <script>
@@ -285,42 +325,75 @@
         return new URLSearchParams(window.location.search).get(name);
     }
 
-    // Map Data from URL
-    const name = getParam('customerName') || "Andy Starrett";
-    const account = getParam('accountNumber') || "SF-99821-01";
-    const address = getParam('serviceAddress') || "123 Canyon Road, Santa Fe, NM";
-    const balance = getParam('balance') || "0.00";
-    const lastPayDate = getParam('lastPaymentDate') || "None on record";
-    const lastPayAmt = getParam('lastPaymentAmount') || "";
-    const risk = getParam('shutOffRisk') || "None";
-    const notes = getParam('notes') || "No notes available for this account.";
-    const status = getParam('accountStatus') || "Account Active";
+    // Read URL Parameters
+    const name          = getParam('customerName')       || "—";
+    const account       = getParam('accountNumber')      || "—";
+    const address       = getParam('serviceAddress')     || "Santa Fe, NM";
+    const balance       = getParam('balance')            || "0.00";
+    const lastPayDate   = getParam('lastPaymentDate')    || "";
+    const lastPayAmt    = getParam('lastPaymentAmount')  || "";
+    const risk          = getParam('shutOffRisk')        || "None";
+    const notes         = getParam('notes')              || "No notes available for this account.";
+    const status        = getParam('accountStatus')      || "Active";
 
-    // Update UI
-    document.getElementById('display-name').innerText = name;
+    // Populate Fields
+    document.getElementById('display-name').innerText    = name;
     document.getElementById('display-account').innerText = account;
     document.getElementById('display-address').innerText = address;
-    document.getElementById('display-notes').innerText = notes;
-    document.getElementById('display-status').innerText = status;
-    document.getElementById('display-risk').innerText = risk;
+    document.getElementById('display-notes').innerText   = notes;
 
-    // Balance Formatting
+    // Balance
     const balNum = parseFloat(balance.replace(/[^0-9.]/g, ''));
     document.getElementById('display-balance').innerText = isNaN(balNum) ? '$' + balance : '$' + balNum.toFixed(2);
 
-    // Last Payment Formatting
-    if (lastPayAmt && lastPayAmt !== "None on record") {
-        document.getElementById('display-last-pay').innerText = `${lastPayAmt} (${lastPayDate})`;
+    // Last Payment
+    const lastPayEl = document.getElementById('display-last-pay');
+    if (lastPayAmt && lastPayDate) {
+        const amt = parseFloat(lastPayAmt.replace(/[^0-9.]/g, ''));
+        lastPayEl.innerText = (isNaN(amt) ? lastPayAmt : '$' + amt.toFixed(2)) + ' on ' + lastPayDate;
+    } else if (lastPayDate) {
+        lastPayEl.innerText = lastPayDate;
     } else {
-        document.getElementById('display-last-pay').innerText = lastPayDate;
+        lastPayEl.innerText = "None on record";
     }
 
-    // Initialize Map
+    // Account Status Badge
+    const statusEl = document.getElementById('display-status');
+    statusEl.innerText = status;
+    const s = status.toLowerCase();
+    if (s.includes('disconnect')) {
+        statusEl.className = 'account-status-badge disconnected';
+    } else if (s.includes('past') || s.includes('due') || s.includes('final')) {
+        statusEl.className = 'account-status-badge pastdue';
+    } else {
+        statusEl.className = 'account-status-badge';
+    }
+
+    // Shutoff Risk
+    const riskEl = document.getElementById('display-risk');
+    riskEl.innerText = risk;
+    const r = risk.toLowerCase();
+    if (r === 'high') {
+        riskEl.className = 'risk-value risk-high';
+    } else if (r === 'medium') {
+        riskEl.className = 'risk-value risk-medium';
+    } else {
+        riskEl.className = 'risk-value risk-low';
+    }
+
+    // Navigation: Carry all URL params to other pages
+    const currentParams = window.location.search;
+    document.getElementById('btn-take-payment').href = 'take-payment.html' + currentParams;
+    document.getElementById('btn-repayment').href    = 'repayment-script.html' + currentParams;
+
+    // Map
     const map = L.map('map', { zoomControl: false }).setView([35.6870, -105.9378], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap'
     }).addTo(map);
-    L.marker([35.6870, -105.9378]).addTo(map);
+    L.marker([35.6870, -105.9378]).addTo(map)
+        .bindPopup('<b>' + name + '</b><br>' + address)
+        .openPopup();
 </script>
 
 </body>
