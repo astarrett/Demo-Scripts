@@ -1,317 +1,24 @@
-<!-- web/repayment-script.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Santa Fe Utility - Repayment Script</title>
-    <style>
-        :root {
-            --sf-teal: #007a8d;
-            --sf-light-teal: #e6f2f4;
-            --sf-red: #d9534f;
-            --sf-light-red: #fdf1f0;
-            --sf-green: #28a745;
-            --sf-light-green: #e9f7ef;
-            --border-color: #e9ecef;
-        }
-
-        body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: white;
-            margin: 0;
-            padding: 20px;
-            color: #495057;
-        }
-
-        .container {
-            display: grid;
-            grid-template-columns: 1fr 300px;
-            gap: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .main-panel {
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 25px;
-        }
-
-        .header-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid var(--sf-teal);
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-
-        .header-row h1 {
-            font-size: 20px;
-            color: var(--sf-teal);
-            margin: 0;
-        }
-
-        .header-row h1 span {
-            font-weight: normal;
-            color: #6c757d;
-        }
-
-        .pill {
-            padding: 6px 12px;
-            border-radius: 999px;
-            font-weight: 700;
-            font-size: 12px;
-            border: 1px solid #dee2e6;
-            background: #fff;
-            color: #495057;
-            text-transform: uppercase;
-        }
-
-        .pill.good { background: var(--sf-light-green); border-color: #c3e6cb; color: #155724; }
-        .pill.warn { background: #fff3cd; border-color: #ffeeba; color: #856404; }
-        .pill.bad  { background: var(--sf-light-red); border-color: #f5c6cb; color: #721c24; }
-
-        .section-title {
-            font-size: 12px;
-            font-weight: 800;
-            letter-spacing: 0.6px;
-            text-transform: uppercase;
-            color: var(--sf-teal);
-            margin: 18px 0 10px;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        .card {
-            border: 1px solid #f1f1f1;
-            border-radius: 6px;
-            padding: 14px;
-            background: #fcfcfc;
-        }
-
-        .label {
-            font-size: 10px;
-            font-weight: 800;
-            color: #adb5bd;
-            text-transform: uppercase;
-            margin-bottom: 6px;
-        }
-
-        .value {
-            font-size: 15px;
-            font-weight: 700;
-            color: #495057;
-        }
-
-        .big {
-            font-size: 22px;
-            color: #c0392b;
-        }
-
-        .note {
-            background: var(--sf-light-teal);
-            border: 1px solid #cfe7ea;
-            border-left: 4px solid var(--sf-teal);
-            padding: 12px 14px;
-            border-radius: 6px;
-            color: #2d666f;
-            line-height: 1.5;
-        }
-
-        .sidebar-card {
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        .sidebar-card h3 {
-            font-size: 14px;
-            margin-top: 0;
-            margin-bottom: 15px;
-            color: #495057;
-        }
-
-        .btn {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 4px;
-            text-align: center;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 14px;
-            border: 1px solid #dee2e6;
-            background-color: white;
-            color: #495057;
-            cursor: pointer;
-            box-sizing: border-box;
-            transition: background-color 0.15s ease;
-        }
-
-        .btn:hover { background-color: #e9ecef; color: #343a40; }
-
-        .btn-primary {
-            background-color: var(--sf-teal);
-            color: white;
-            border: none;
-        }
-
-        .btn-primary:hover { background-color: #005f6e; color: white; }
-
-        .btn-secondary {
-            background-color: white;
-            color: var(--sf-teal);
-            border: 1px solid var(--sf-teal);
-        }
-
-        .btn-secondary:hover { background-color: var(--sf-light-teal); }
-
-        .footer-hint {
-            font-size: 11px;
-            color: #adb5bd;
-            margin-top: 8px;
-            line-height: 1.4;
-        }
-    </style>
-</head>
-<body>
-
-<div class="container">
-
-    <div class="main-panel">
-        <div class="header-row">
-            <h1>Repayment Plan <span>| Script</span></h1>
-            <div id="rep-pill" class="pill warn">Pending</div>
-        </div>
-
-        <div class="section-title">Customer</div>
-        <div class="grid">
-            <div class="card">
-                <div class="label">Customer Name</div>
-                <div class="value" id="display-name">—</div>
-            </div>
-            <div class="card">
-                <div class="label">Account Number</div>
-                <div class="value" id="display-account">—</div>
-            </div>
-            <div class="card">
-                <div class="label">Current Balance</div>
-                <div class="value big" id="display-balance">$0.00</div>
-            </div>
-            <div class="card">
-                <div class="label">Shutoff Risk</div>
-                <div class="value" id="display-risk">—</div>
-            </div>
-        </div>
-
-        <div class="section-title">Plan Terms</div>
-        <div class="grid">
-            <div class="card">
-                <div class="label">Eligible</div>
-                <div class="value" id="display-eligible">—</div>
-            </div>
-            <div class="card">
-                <div class="label">Max Months</div>
-                <div class="value" id="display-max-months">—</div>
-            </div>
-            <div class="card">
-                <div class="label">Minimum Down Payment</div>
-                <div class="value" id="display-min-down">$—</div>
-            </div>
-            <div class="card">
-                <div class="label">Selected Months</div>
-                <div class="value" id="display-months">—</div>
-            </div>
-            <div class="card">
-                <div class="label">Selected Down Payment</div>
-                <div class="value" id="display-down">$—</div>
-            </div>
-            <div class="card">
-                <div class="label">Estimated Monthly Payment</div>
-                <div class="value" id="display-monthly">$—</div>
-            </div>
-        </div>
-
-        <div class="section-title">Agreement</div>
-        <div class="grid">
-            <div class="card">
-                <div class="label">Plan Status</div>
-                <div class="value" id="display-plan-status">—</div>
-            </div>
-            <div class="card">
-                <div class="label">Confirmation Number</div>
-                <div class="value" id="display-confirm">—</div>
-            </div>
-            <div class="card">
-                <div class="label">Start Date</div>
-                <div class="value" id="display-start">—</div>
-            </div>
-            <div class="card">
-                <div class="label">Agreement Status</div>
-                <div class="value" id="display-agreement-status">—</div>
-            </div>
-            <div class="card" style="grid-column: span 2;">
-                <div class="label">Agreement Link</div>
-                <div class="value">
-                    <a id="display-agreement-link" href="#" target="_blank" rel="noopener">—</a>
-                </div>
-                <div class="footer-hint">If this is blank, confirm you are passing agreementLink in the URL parameters.</div>
-            </div>
-        </div>
-
-        <div class="section-title">Notes</div>
-        <div class="note" id="display-notes">No notes available.</div>
-    </div>
-
-    <div class="sidebar">
-        <div class="sidebar-card">
-            <h3>Navigation</h3>
-            <a href="#" id="btn-back" class="btn btn-primary">Back to Dashboard</a>
-            <a href="#" id="btn-take-payment" class="btn btn-secondary">Take a Payment</a>
-        </div>
-
-        <div class="sidebar-card">
-            <h3>Quick Checklist</h3>
-            <div class="footer-hint">
-                1. Confirm eligibility and max months.<br>
-                2. Confirm down payment meets minimum.<br>
-                3. Confirm agreement link sent via SMS.<br>
-                4. If customer disputes balance, transfer.
-            </div>
-        </div>
-    </div>
-
-</div>
-
 <script>
     function getParam(name) {
         return new URLSearchParams(window.location.search).get(name);
     }
 
     function money(val, fallback) {
-        if (!val && val !== 0) return fallback;
+        if (!val && val !== 0 || val === '—') return fallback;
         const n = parseFloat(String(val).replace(/[^0-9.]/g, ''));
         return isNaN(n) ? fallback : '$' + n.toFixed(2);
     }
 
     const params = window.location.search;
 
-    // Common fields
+    // Common fields - checking both possible names for balance
     const name        = getParam('customerName')  || '—';
     const account     = getParam('accountNumber') || '—';
-    const balanceRaw  = getParam('balance') || getParam('currentBalance') || '0.00';
+    const balanceRaw  = getParam('currentBalance') || getParam('balance') || '0.00';
     const risk        = getParam('shutOffRisk') || '—';
     const notes       = getParam('notes') || 'No notes available.';
 
-    // Repayment fields (from your Data Table outputs)
+    // Repayment fields
     const eligible    = getParam('arrangementEligible') || '—';
     const maxMonths   = getParam('arrangementMaxMonths') || '—';
     const minDown     = getParam('arrangementMinDownPayment') || '—';
@@ -323,10 +30,6 @@
 
     const planStatus  = getParam('repaymentPlanStatus') || '—';
     const confirmNum  = getParam('repaymentConfirmationNumber') || '—';
-
-    // Agreement tracking (optional)
-    const agreementStatus = getParam('agreementStatus') || '—';
-    const agreementLink   = getParam('agreementLink') || '';
 
     // Populate UI
     document.getElementById('display-name').innerText = name;
@@ -345,38 +48,8 @@
     document.getElementById('display-plan-status').innerText = planStatus;
     document.getElementById('display-confirm').innerText = confirmNum;
     document.getElementById('display-start').innerText = startDate;
-    document.getElementById('display-agreement-status').innerText = agreementStatus;
 
-    const linkEl = document.getElementById('display-agreement-link');
-    if (agreementLink) {
-        linkEl.href = agreementLink;
-        linkEl.innerText = agreementLink;
-    } else {
-        linkEl.href = '#';
-        linkEl.innerText = '—';
-    }
-
-    // Repayment pill state
-    const pill = document.getElementById('rep-pill');
-    const ps = String(planStatus).toLowerCase();
-    if (ps.includes('signed') || ps.includes('received')) {
-        pill.className = 'pill good';
-        pill.innerText = 'Complete';
-    } else if (ps.includes('sent') || ps.includes('pending')) {
-        pill.className = 'pill warn';
-        pill.innerText = 'In Progress';
-    } else if (ps === '—' || ps.includes('none')) {
-        pill.className = 'pill warn';
-        pill.innerText = 'Pending';
-    } else {
-        pill.className = 'pill warn';
-        pill.innerText = 'In Progress';
-    }
-
-    // Navigation with param carry-forward
+    // Navigation
     document.getElementById('btn-back').href = 'agent-script.html' + params;
     document.getElementById('btn-take-payment').href = 'take-payment.html' + params;
 </script>
-
-</body>
-</html>
