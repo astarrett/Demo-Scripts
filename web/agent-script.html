@@ -7,394 +7,56 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
-        :root {
-            --sf-teal: #007a8d;
-            --sf-light-teal: #e6f2f4;
-            --sf-red: #d9534f;
-            --sf-light-red: #fdf1f0;
-            --sf-green: #28a745;
-            --sf-light-green: #e9f7ef;
-            --bg-gray: #f8f9fa;
-            --border-color: #e9ecef;
-        }
-
-        body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: white;
-            margin: 0;
-            padding: 20px;
-            color: #495057;
-        }
-
-        .container {
-            display: grid;
-            grid-template-columns: 1fr 300px;
-            gap: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        /* MAIN PANEL */
-        .main-panel {
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 25px;
-        }
-
-        .header-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid var(--sf-teal);
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-
-        .header-row h1 {
-            font-size: 24px;
-            color: var(--sf-teal);
-            margin: 0;
-        }
-
-        .header-row h1 span {
-            font-weight: normal;
-            color: #6c757d;
-        }
-
-        .account-status-badge {
-            background-color: var(--sf-light-green);
-            color: var(--sf-green);
-            padding: 5px 15px;
-            border-radius: 4px;
-            font-weight: bold;
-            font-size: 12px;
-            text-transform: uppercase;
-        }
-
-        .account-status-badge.disconnected {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-
-        .account-status-badge.pastdue {
-            background-color: #fff3cd;
-            color: #856404;
-        }
-
-        /* BALANCE SECTION */
-        .balance-card {
-            background-color: var(--sf-light-red);
-            border-left: 5px solid #c0392b;
-            padding: 15px 20px;
-            border-radius: 4px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .balance-label {
-            font-size: 12px;
-            font-weight: bold;
-            color: #6c757d;
-            text-transform: uppercase;
-        }
-
-        .balance-amount {
-            font-size: 32px;
-            font-weight: bold;
-            color: #c0392b;
-            margin-top: 5px;
-        }
-
-        .risk-info { text-align: right; }
-
-        .risk-label {
-            font-size: 12px;
-            font-weight: bold;
-            color: #6c757d;
-            text-transform: uppercase;
-        }
-
-        .risk-value {
-            font-size: 18px;
-            font-weight: bold;
-            margin-top: 5px;
-        }
-
-        .risk-high { color: #c0392b; }
-        .risk-medium { color: #e67e22; }
-        .risk-low { color: #28a745; }
-
-        /* DATA GRID */
-        .data-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .data-item {
-            background-color: #fcfcfc;
-            border: 1px solid #f1f1f1;
-            padding: 12px 15px;
-            border-radius: 4px;
-        }
-
-        .item-label {
-            font-size: 10px;
-            font-weight: bold;
-            color: #adb5bd;
-            text-transform: uppercase;
-            margin-bottom: 5px;
-        }
-
-        .item-value {
-            font-size: 15px;
-            font-weight: 600;
-            color: #495057;
-        }
-
-        /* NOTES SECTION */
-        .notes-section h3 {
-            font-size: 12px;
-            color: var(--sf-teal);
-            text-transform: uppercase;
-            margin-bottom: 10px;
-        }
-
-        .notes-content {
-            background-color: #f8f9fa;
-            border: 1px solid #e9ecef;
-            padding: 15px;
-            border-radius: 4px;
-            min-height: 80px;
-            font-size: 14px;
-            color: #6c757d;
-            line-height: 1.5;
-        }
-
-        /* SIDEBAR */
-        .sidebar-card {
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        .sidebar-card h3 {
-            font-size: 14px;
-            margin-top: 0;
-            margin-bottom: 15px;
-            color: #495057;
-        }
-
-        .btn {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 4px;
-            text-align: center;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 14px;
-            border: 1px solid #dee2e6;
-            background-color: white;
-            color: #495057;
-            cursor: pointer;
-            box-sizing: border-box;
-            transition: background-color 0.15s ease;
-        }
-
-        .btn:hover {
-            background-color: #e9ecef;
-            color: #343a40;
-        }
-
-        .btn-primary {
-            background-color: var(--sf-teal);
-            color: white;
-            border: none;
-        }
-
-        .btn-primary:hover {
-            background-color: #005f6e;
-            color: white;
-        }
-
-        .btn-secondary {
-            background-color: white;
-            color: var(--sf-teal);
-            border: 1px solid var(--sf-teal);
-        }
-
-        .btn-secondary:hover {
-            background-color: var(--sf-light-teal);
-        }
-
-        /* MAP */
-        #map {
-            height: 200px;
-            width: 100%;
-            border-radius: 4px;
-            margin-bottom: 10px;
-        }
-
-        .grid-status {
-            font-size: 10px;
-            text-align: right;
-            color: #adb5bd;
-        }
-
-        .status-green {
-            color: var(--sf-green);
-            font-weight: bold;
-        }
+        :root { --sf-teal: #007a8d; --sf-light-red: #fdf1f0; --sf-green: #28a745; --bg-gray: #f8f9fa; --border-color: #e9ecef; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: white; margin: 0; padding: 20px; color: #495057; }
+        .container { display: grid; grid-template-columns: 1fr 300px; gap: 20px; max-width: 1200px; margin: 0 auto; }
+        .main-panel { border: 1px solid var(--border-color); border-radius: 8px; padding: 25px; }
+        .header-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--sf-teal); padding-bottom: 10px; margin-bottom: 20px; }
+        .header-row h1 { font-size: 24px; color: var(--sf-teal); margin: 0; }
+        .account-status-badge { background-color: #e9f7ef; color: var(--sf-green); padding: 5px 15px; border-radius: 4px; font-weight: bold; font-size: 12px; text-transform: uppercase; }
+        .balance-card { background-color: var(--sf-light-red); border-left: 5px solid #c0392b; padding: 15px 20px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .balance-amount { font-size: 32px; font-weight: bold; color: #c0392b; }
+        .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .data-item { background-color: #fcfcfc; border: 1px solid #f1f1f1; padding: 12px 15px; border-radius: 4px; }
+        .item-label { font-size: 10px; font-weight: bold; color: #adb5bd; text-transform: uppercase; margin-bottom: 5px; }
+        .item-value { font-size: 15px; font-weight: 600; color: #495057; }
+        .notes-section h3 { font-size: 12px; color: var(--sf-teal); text-transform: uppercase; margin-bottom: 10px; }
+        .notes-content { background-color: #f8f9fa; border: 1px solid #e9ecef; padding: 15px; border-radius: 4px; min-height: 80px; font-size: 14px; color: #6c757d; }
+        .sidebar-card { background-color: #f8f9fa; border-radius: 8px; padding: 20px; margin-bottom: 20px; }
+        .btn { display: block; width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 4px; text-align: center; text-decoration: none; font-weight: bold; font-size: 14px; background-color: var(--sf-teal); color: white; border: none; }
+        #map { height: 200px; width: 100%; border-radius: 4px; margin-bottom: 10px; }
     </style>
 </head>
 <body>
-
 <div class="container">
-
-    <!-- LEFT PANEL -->
     <div class="main-panel">
-        <div class="header-row">
-            <h1>CITY OF SANTA FE <span>| Utilities</span></h1>
-            <div class="account-status-badge" id="display-status">Account Active</div>
-        </div>
-
-        <div class="balance-card">
-            <div>
-                <div class="balance-label">Current Balance</div>
-                <div class="balance-amount" id="display-balance">$0.00</div>
-            </div>
-            <div class="risk-info">
-                <div class="risk-label">Shutoff Risk</div>
-                <div class="risk-value risk-low" id="display-risk">None</div>
-            </div>
-        </div>
-
+        <div class="header-row"><h1>CITY OF SANTA FE <span>| Utilities</span></h1><div class="account-status-badge">ACTIVE</div></div>
+        <div class="balance-card"><div><div style="font-size:12px; font-weight:bold; color:#6c757d;">CURRENT BALANCE</div><div class="balance-amount" id="d-bal">$0.00</div></div><div style="text-align:right;"><div style="font-size:12px; font-weight:bold; color:#6c757d;">SHUTOFF RISK</div><div style="font-size:18px; font-weight:bold; color:#c0392b;" id="d-risk">None</div></div></div>
         <div class="data-grid">
-            <div class="data-item">
-                <div class="item-label">Customer Name</div>
-                <div class="item-value" id="display-name">—</div>
-            </div>
-            <div class="data-item">
-                <div class="item-label">Account Number</div>
-                <div class="item-value" id="display-account">—</div>
-            </div>
-            <div class="data-item">
-                <div class="item-label">Service Address</div>
-                <div class="item-value" id="display-address">—</div>
-            </div>
-            <div class="data-item">
-                <div class="item-label">Last Payment</div>
-                <div class="item-value" id="display-last-pay">—</div>
-            </div>
+            <div class="data-item"><div class="item-label">Customer Name</div><div class="item-value" id="d-name">—</div></div>
+            <div class="data-item"><div class="item-label">Account Number</div><div class="item-value" id="d-acc">—</div></div>
+            <div class="data-item"><div class="item-label">Service Address</div><div class="item-value" id="d-addr">—</div></div>
+            <div class="data-item"><div class="item-label">Last Payment</div><div class="item-value" id="d-last">—</div></div>
         </div>
-
-        <div class="notes-section">
-            <h3>Account Notes</h3>
-            <div class="notes-content" id="display-notes">
-                No notes available for this account.
-            </div>
-        </div>
+        <div class="notes-section"><h3>Account Notes</h3><div class="notes-content" id="d-notes">No notes available.</div></div>
     </div>
-
-    <!-- RIGHT SIDEBAR -->
     <div class="sidebar">
-        <div class="sidebar-card">
-            <h3>Quick Actions</h3>
-            <a href="#" id="btn-take-payment" class="btn btn-primary">Take a Payment</a>
-            <a href="#" id="btn-repayment" class="btn btn-secondary">Repayment Plan</a>
-            <a href="#" class="btn">Usage History</a>
-        </div>
-
-        <div class="sidebar-card">
-            <h3 style="color: var(--sf-teal);">Service Area Map</h3>
-            <div id="map"></div>
-            <div class="grid-status">Current Grid Status: <span class="status-green">Normal</span></div>
-        </div>
+        <div class="sidebar-card"><h3>Quick Actions</h3><a href="#" class="btn">Take a Payment</a><a href="#" class="btn" style="background:#fff; color:var(--sf-teal); border:1px solid var(--sf-teal);">Usage History</a></div>
+        <div class="sidebar-card"><h3 style="color:var(--sf-teal)">Service Area Map</h3><div id="map"></div></div>
     </div>
-
 </div>
-
 <script>
-    function getParam(name) {
-        return new URLSearchParams(window.location.search).get(name);
-    }
-
-    // Read URL Parameters
-    const name          = getParam('customerName')       || "—";
-    const account       = getParam('accountNumber')      || "—";
-    const address       = getParam('serviceAddress')     || "Santa Fe, NM";
-    const balance       = getParam('balance')            || "0.00";
-    const lastPayDate   = getParam('lastPaymentDate')    || "";
-    const lastPayAmt    = getParam('lastPaymentAmount')  || "";
-    const risk          = getParam('shutOffRisk')        || "None";
-    const notes         = getParam('notes')              || "No notes available for this account.";
-    const status        = getParam('accountStatus')      || "Active";
-
-    // Populate Fields
-    document.getElementById('display-name').innerText    = name;
-    document.getElementById('display-account').innerText = account;
-    document.getElementById('display-address').innerText = address;
-    document.getElementById('display-notes').innerText   = notes;
-
-    // Balance
-    const balNum = parseFloat(balance.replace(/[^0-9.]/g, ''));
-    document.getElementById('display-balance').innerText = isNaN(balNum) ? '$' + balance : '$' + balNum.toFixed(2);
-
-    // Last Payment
-    const lastPayEl = document.getElementById('display-last-pay');
-    if (lastPayAmt && lastPayDate) {
-        const amt = parseFloat(lastPayAmt.replace(/[^0-9.]/g, ''));
-        lastPayEl.innerText = (isNaN(amt) ? lastPayAmt : '$' + amt.toFixed(2)) + ' on ' + lastPayDate;
-    } else if (lastPayDate) {
-        lastPayEl.innerText = lastPayDate;
-    } else {
-        lastPayEl.innerText = "None on record";
-    }
-
-    // Account Status Badge
-    const statusEl = document.getElementById('display-status');
-    statusEl.innerText = status;
-    const s = status.toLowerCase();
-    if (s.includes('disconnect')) {
-        statusEl.className = 'account-status-badge disconnected';
-    } else if (s.includes('past') || s.includes('due') || s.includes('final')) {
-        statusEl.className = 'account-status-badge pastdue';
-    } else {
-        statusEl.className = 'account-status-badge';
-    }
-
-    // Shutoff Risk
-    const riskEl = document.getElementById('display-risk');
-    riskEl.innerText = risk;
-    const r = risk.toLowerCase();
-    if (r === 'high') {
-        riskEl.className = 'risk-value risk-high';
-    } else if (r === 'medium') {
-        riskEl.className = 'risk-value risk-medium';
-    } else {
-        riskEl.className = 'risk-value risk-low';
-    }
-
-    // Navigation: Carry all URL params to other pages
-    const currentParams = window.location.search;
-    document.getElementById('btn-take-payment').href = 'take-payment.html' + currentParams;
-    document.getElementById('btn-repayment').href    = 'repayment-script.html' + currentParams;
-
-    // Map
-    const map = L.map('map', { zoomControl: false }).setView([35.6870, -105.9378], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap'
-    }).addTo(map);
-    L.marker([35.6870, -105.9378]).addTo(map)
-        .bindPopup('<b>' + name + '</b><br>' + address)
-        .openPopup();
+    const p = new URLSearchParams(window.location.search);
+    document.getElementById('d-name').innerText = p.get('customerName') || '—';
+    document.getElementById('d-acc').innerText = p.get('accountNumber') || '—';
+    document.getElementById('d-addr').innerText = p.get('serviceAddress') || 'Santa Fe, NM';
+    document.getElementById('d-bal').innerText = '$' + (p.get('currentBalance') || '0.00');
+    document.getElementById('d-risk').innerText = p.get('shutOffRisk') || 'None';
+    document.getElementById('d-notes').innerText = p.get('notes') || 'No notes available.';
+    document.getElementById('d-last').innerText = p.get('lastPaymentAmount') ? p.get('lastPaymentAmount') + ' (' + p.get('lastPaymentDate') + ')' : 'None on record';
+    const map = L.map('map', {zoomControl:false}).setView([35.6870, -105.9378], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+    L.marker([35.6870, -105.9378]).addTo(map);
 </script>
-
 </body>
 </html>
