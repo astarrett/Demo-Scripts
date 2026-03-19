@@ -16,7 +16,6 @@
             --bg-gray: #f4f7f6; 
             --border-color: #e9ecef;
         }
-        
         body { 
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
             background-color: var(--bg-gray); 
@@ -24,7 +23,6 @@
             padding: 20px; 
             color: #495057; 
         }
-
         .container { 
             display: grid; 
             grid-template-columns: 1fr 300px; 
@@ -32,8 +30,6 @@
             max-width: 1200px; 
             margin: 0 auto; 
         }
-
-        /* Main Content Area */
         .main-panel { 
             background: white;
             border: 1px solid var(--border-color); 
@@ -41,7 +37,6 @@
             padding: 25px; 
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
-
         .header-row { 
             display: flex; 
             justify-content: space-between; 
@@ -50,10 +45,8 @@
             padding-bottom: 10px; 
             margin-bottom: 20px; 
         }
-
         .header-row h1 { font-size: 22px; color: var(--sf-teal); margin: 0; }
         .header-row h1 span { font-weight: normal; color: #6c757d; }
-
         .status-badge { 
             padding: 6px 12px; 
             border-radius: 4px; 
@@ -63,7 +56,6 @@
         }
         .status-high { background: var(--sf-light-red); color: #c0392b; border: 1px solid #f5c6cb; }
         .status-low { background: #e9f7ef; color: var(--sf-green); border: 1px solid #c3e6cb; }
-
         .balance-card { 
             background-color: var(--sf-light-red); 
             border-left: 5px solid #c0392b; 
@@ -72,19 +64,14 @@
             margin-bottom: 20px; 
         }
         .balance-amount { font-size: 32px; font-weight: bold; color: #c0392b; }
-
         .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
         .data-item { background-color: #fcfcfc; border: 1px solid #f1f1f1; padding: 12px 15px; border-radius: 4px; }
         .item-label { font-size: 10px; font-weight: bold; color: #adb5bd; text-transform: uppercase; margin-bottom: 5px; }
         .item-value { font-size: 15px; font-weight: 600; color: #495057; }
-
         .notes-section h3 { font-size: 12px; color: var(--sf-teal); text-transform: uppercase; margin-bottom: 10px; }
         .notes-content { background-color: #fff9e6; border: 1px solid #ffeeba; padding: 15px; border-radius: 4px; font-style: italic; font-size: 14px; color: #6c757d; }
-
-        /* Sidebar / Buttons */
         .sidebar-card { background-color: white; border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .sidebar-card h3 { font-size: 14px; margin-top: 0; color: var(--sf-teal); text-transform: uppercase; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-        
         .btn { 
             display: block; 
             width: 100%; 
@@ -103,7 +90,6 @@
         }
         .btn-outline { background-color: white; color: var(--sf-teal); border: 1px solid var(--sf-teal); }
         .btn:hover { opacity: 0.9; }
-
         #map { height: 200px; width: 100%; border-radius: 4px; border: 1px solid #ddd; }
     </style>
 </head>
@@ -114,12 +100,12 @@
     <div class="main-panel">
         <div class="header-row">
             <h1>CITY OF SANTA FE <span>| Utilities</span></h1>
-            <div id="risk-badge" class="status-badge status-low">Risk: Low</div>
+            <div id="risk-badge" class="status-badge status-low">Risk: —</div>
         </div>
 
         <div class="balance-card">
             <div style="font-size:12px; font-weight:bold; color:#6c757d;">CURRENT BALANCE</div>
-            <div class="balance-amount" id="display-balance">$0.00</div>
+            <div class="balance-amount" id="display-balance">—</div>
         </div>
 
         <div class="data-grid">
@@ -127,12 +113,12 @@
             <div class="data-item"><div class="item-label">Account Number</div><div class="item-value" id="display-account">—</div></div>
             <div class="data-item"><div class="item-label">Service Address</div><div class="item-value" id="display-address">—</div></div>
             <div class="data-item"><div class="item-label">Last Payment</div><div class="item-value" id="display-last-pay">—</div></div>
-            <div class="data-item" style="grid-column: span 2;"><div class="item-label">Repayment Status</div><div class="item-value" id="display-repayment">None</div></div>
+            <div class="data-item" style="grid-column: span 2;"><div class="item-label">Repayment Status</div><div class="item-value" id="display-repayment">—</div></div>
         </div>
 
         <div class="notes-section">
             <h3>Account Notes & Alerts</h3>
-            <div class="notes-content" id="display-notes">No recent notes available.</div>
+            <div class="notes-content" id="display-notes">—</div>
         </div>
     </div>
 
@@ -140,11 +126,10 @@
     <div class="sidebar">
         <div class="sidebar-card">
             <h3>Quick Actions</h3>
-            <a href="#" class="btn">Take a Payment</a>
-            <a href="#" class="btn btn-outline">Repayment Plan</a>
+            <a href="#" id="btn-payment" class="btn">Take a Payment</a>
+            <a href="#" id="btn-repayment" class="btn btn-outline">Repayment Plan</a>
             <a href="#" class="btn btn-outline">Usage History</a>
         </div>
-
         <div class="sidebar-card">
             <h3>Service Location</h3>
             <div id="map"></div>
@@ -154,43 +139,73 @@
 
 <script>
     function getParam(name) {
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get(name);
+        return new URLSearchParams(window.location.search).get(name);
     }
 
-    // Data from URL with Fallbacks
-    const name = getParam('customerName') || "Jordan Hayes";
-    const account = getParam('accountNumber') || "100002";
-    const address = getParam('serviceAddress') || "1452 Poplar Ave, Santa Fe, NM";
-    const balance = getParam('currentBalance') || getParam('balance') || "486.27";
-    const lastPayDate = getParam('lastPaymentDate') || "01/10/26";
-    const lastPayAmt = getParam('lastPaymentAmount') || "$120.00";
-    const risk = getParam('shutOffRisk') || "Low";
-    const notes = getParam('notes') || "Customer called regarding high bill. Eligible for repayment plan.";
-    const repayment = getParam('repaymentPlanStatus') || "None";
+    function setText(id, val) {
+        document.getElementById(id).innerText = (val === null || val === '') ? '—' : val;
+    }
 
-    // Update UI
-    document.getElementById('display-name').innerText = name;
-    document.getElementById('display-account').innerText = account;
-    document.getElementById('display-address').innerText = address;
-    document.getElementById('display-balance').innerText = balance.startsWith('$') ? balance : '$' + balance;
-    document.getElementById('display-last-pay').innerText = `${lastPayAmt} (${lastPayDate})`;
-    document.getElementById('display-notes').innerText = notes;
-    document.getElementById('display-repayment').innerText = repayment;
+    // Read params — NO hard-coded fallbacks
+    const name     = getParam('customerName');
+    const account  = getParam('accountNumber');
+    const address  = getParam('serviceAddress');
+    const balance  = getParam('currentBalance') || getParam('balance');
+    const lastDate = getParam('lastPaymentDate');
+    const lastAmt  = getParam('lastPaymentAmount');
+    const risk     = getParam('shutOffRisk');
+    const notes    = getParam('notes');
+    const repay    = getParam('repaymentPlanStatus');
 
-    // Update Risk Badge
-    const riskBadge = document.getElementById('risk-badge');
-    riskBadge.innerText = `Risk: ${risk}`;
-    if (risk.toLowerCase() === 'high') {
-        riskBadge.className = 'status-badge status-high';
+    // Populate UI
+    setText('display-name', name);
+    setText('display-account', account);
+    setText('display-address', address);
+    setText('display-repayment', repay);
+    setText('display-notes', notes);
+
+    // Balance formatting
+    if (balance === null || balance === '') {
+        document.getElementById('display-balance').innerText = '—';
     } else {
-        riskBadge.className = 'status-badge status-low';
+        document.getElementById('display-balance').innerText = String(balance).startsWith('$') ? balance : ('$' + balance);
     }
 
-    // Initialize Map
+    // Last payment formatting
+    document.getElementById('display-last-pay').innerText = (lastAmt && lastDate) ? `${lastAmt} (${lastDate})` : '—';
+
+    // Risk badge
+    const riskBadge = document.getElementById('risk-badge');
+    const riskText = (risk === null || risk === '') ? '—' : risk;
+    riskBadge.innerText = `Risk: ${riskText}`;
+    riskBadge.className = String(riskText).toLowerCase() === 'high' ? 'status-badge status-high' : 'status-badge status-low';
+
+    // Navigation buttons — carry all params forward
+    const params = window.location.search;
+    document.getElementById('btn-payment').href = 'take-payment.html' + params;
+    document.getElementById('btn-repayment').href = 'repayment-script.html' + params;
+
+    // DEBUG — shows exactly what the page received from Genesys
+    const debug = document.createElement('pre');
+    debug.style.cssText = 'margin-top:20px;padding:10px;border:1px dashed #ccc;border-radius:6px;background:#fff;font-size:11px;color:#333;white-space:pre-wrap;word-break:break-all;';
+    debug.textContent =
+        'DEBUG\n' +
+        'Full query string: ' + (window.location.search || '(none)') + '\n\n' +
+        'customerName=' + (name ?? '(null)') + '\n' +
+        'accountNumber=' + (account ?? '(null)') + '\n' +
+        'serviceAddress=' + (address ?? '(null)') + '\n' +
+        'currentBalance=' + (balance ?? '(null)') + '\n' +
+        'lastPaymentDate=' + (lastDate ?? '(null)') + '\n' +
+        'lastPaymentAmount=' + (lastAmt ?? '(null)') + '\n' +
+        'shutOffRisk=' + (risk ?? '(null)') + '\n' +
+        'repaymentPlanStatus=' + (repay ?? '(null)') + '\n' +
+        'notes=' + (notes ?? '(null)');
+    document.querySelector('.main-panel').appendChild(debug);
+
+    // Map
     const map = L.map('map', {zoomControl: false}).setView([35.6870, -105.9378], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-    L.marker([35.6870, -105.9378]).addTo(map);
+    L.marker([35.6870, -105.9378]).addTo(map).bindPopup(address || 'Santa Fe, NM');
 </script>
 
 </body>
