@@ -7,70 +7,103 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
-        :root { --sf-teal: #007a8d; --sf-light-red: #fdf1f0; --sf-green: #28a745; --border-color: #e9ecef; }
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; color: #495057; }
-        .container { display: grid; grid-template-columns: 1fr 300px; gap: 20px; max-width: 1200px; margin: 0 auto; }
-        .main-panel { border: 1px solid var(--border-color); border-radius: 8px; padding: 25px; }
-        .header-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--sf-teal); padding-bottom: 10px; margin-bottom: 20px; }
-        .header-row h1 { font-size: 24px; color: var(--sf-teal); margin: 0; }
-        .balance-card { background-color: var(--sf-light-red); border-left: 5px solid #c0392b; padding: 15px 20px; border-radius: 4px; display: flex; justify-content: space-between; margin-bottom: 20px; }
-        .balance-amount { font-size: 32px; font-weight: bold; color: #c0392b; }
-        .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
-        .data-item { background-color: #fcfcfc; border: 1px solid #f1f1f1; padding: 12px 15px; border-radius: 4px; }
-        .item-label { font-size: 10px; font-weight: bold; color: #adb5bd; text-transform: uppercase; }
-        .item-value { font-size: 15px; font-weight: 600; }
-        .notes-content { background-color: #f8f9fa; border: 1px solid #e9ecef; padding: 15px; border-radius: 4px; min-height: 60px; font-size: 14px; }
-        .btn { display: block; width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 4px; text-align: center; text-decoration: none; font-weight: bold; background-color: var(--sf-teal); color: white; border: none; }
-        #map { height: 200px; width: 100%; border-radius: 4px; }
-        #debug-box { margin-top: 50px; padding: 10px; background: #eee; font-size: 10px; color: #999; border-top: 1px dashed #ccc; }
+        :root { --sf-blue: #004a99; --sf-gold: #f1b434; --sf-red: #d9534f; --sf-green: #5cb85c; --bg-gray: #f4f7f6; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-gray); margin: 0; padding: 15px; color: #333; }
+        .header { display: flex; justify-content: space-between; align-items: center; background: white; padding: 15px 25px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 20px; border-left: 6px solid var(--sf-blue); }
+        .header h1 { margin: 0; font-size: 22px; color: var(--sf-blue); }
+        .status-badge { padding: 6px 12px; border-radius: 20px; font-weight: bold; font-size: 12px; text-transform: uppercase; }
+        .status-high { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .status-low { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .card h3 { margin-top: 0; color: var(--sf-blue); border-bottom: 2px solid #eee; padding-bottom: 10px; font-size: 16px; }
+        .data-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f9f9f9; }
+        .data-label { font-weight: 600; color: #666; }
+        .data-value { font-weight: 700; color: #000; }
+        #map { height: 300px; border-radius: 8px; border: 1px solid #ddd; margin-top: 10px; }
+        .notes-box { background: #fff9e6; border: 1px solid #ffeeba; padding: 10px; border-radius: 5px; font-style: italic; min-height: 60px; }
     </style>
 </head>
 <body>
-<div class="container">
-    <div class="main-panel">
-        <div class="header-row"><h1>CITY OF SANTA FE <span>| Utilities</span></h1><div style="background:#e9f7ef; color:var(--sf-green); padding:5px 10px; border-radius:4px; font-weight:bold;" id="d-status">ACTIVE</div></div>
-        <div class="balance-card">
-            <div><div style="font-size:10px; font-weight:bold;">CURRENT BALANCE</div><div class="balance-amount" id="d-bal">$0.00</div></div>
-            <div style="text-align:right;"><div style="font-size:10px; font-weight:bold;">SHUTOFF RISK</div><div style="font-size:18px; font-weight:bold; color:#c0392b;" id="d-risk">None</div></div>
-        </div>
-        <div class="data-grid">
-            <div class="data-item"><div class="item-label">Customer Name</div><div class="item-value" id="d-name">—</div></div>
-            <div class="data-item"><div class="item-label">Account Number</div><div class="item-value" id="d-acc">—</div></div>
-            <div class="data-item"><div class="item-label">Service Address</div><div class="item-value" id="d-addr">—</div></div>
-            <div class="data-item"><div class="item-label">Last Payment</div><div class="item-value" id="d-last">—</div></div>
-        </div>
-        <h3>Account Notes</h3><div class="notes-content" id="d-notes">No notes available.</div>
+
+<div class="header">
+    <div>
+        <h1>City of Santa Fe Utilities</h1>
+        <div style="margin-top: 5px; font-size: 14px; color: #666;">Agent Dashboard | Account: <span id="display-account">100002</span></div>
     </div>
-    <div class="sidebar">
-        <div style="background:#f8f9fa; padding:20px; border-radius:8px;">
-            <h3>Quick Actions</h3><a href="#" class="btn">Take a Payment</a><a href="#" class="btn" style="background:#fff; color:var(--sf-teal); border:1px solid var(--sf-teal);">Usage History</a>
-            <h3 style="margin-top:20px;">Service Area</h3><div id="map"></div>
+    <div id="risk-badge" class="status-badge status-low">Risk: Low</div>
+</div>
+
+<div class="grid">
+    <!-- Customer Info -->
+    <div class="card">
+        <h3>Customer Information</h3>
+        <div class="data-row"><span class="data-label">Name:</span> <span class="data-value" id="display-name">Jordan Hayes</span></div>
+        <div class="data-row"><span class="data-label">Service Address:</span> <span class="data-value" id="display-address">1452 Poplar Ave, Santa Fe, NM</span></div>
+        <div class="data-row"><span class="data-label">Current Balance:</span> <span class="data-value" style="color: var(--sf-red);" id="display-balance">$486.27</span></div>
+        <div class="data-row"><span class="data-label">Last Payment:</span> <span class="data-value" id="display-last-pay">$120.00 (01/10/26)</span></div>
+        <div class="data-row"><span class="data-label">Repayment Status:</span> <span class="data-value" id="display-repayment">None</span></div>
+    </div>
+
+    <!-- Map Area -->
+    <div class="card">
+        <h3>Service Location</h3>
+        <div id="map"></div>
+    </div>
+
+    <!-- Interaction Notes -->
+    <div class="card" style="grid-column: span 2;">
+        <h3>Account Notes & Alerts</h3>
+        <div class="notes-box" id="display-notes">
+            Customer called regarding high bill. Eligible for repayment plan.
         </div>
     </div>
 </div>
-<div id="debug-box">URL Parameters Received: <span id="debug-text">None</span></div>
 
 <script>
-    const p = new URLSearchParams(window.location.search);
-    document.getElementById('debug-text').innerText = window.location.search || "No parameters found in URL";
+    function getParam(name) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
+    }
 
-    document.getElementById('d-name').innerText = p.get('customerName') || '—';
-    document.getElementById('d-acc').innerText = p.get('accountNumber') || '—';
-    document.getElementById('d-addr').innerText = p.get('serviceAddress') || 'Santa Fe, NM';
-    document.getElementById('d-notes').innerText = p.get('notes') || 'No notes available.';
-    document.getElementById('d-risk').innerText = p.get('shutOffRisk') || 'None';
-    document.getElementById('d-bal').innerText = '$' + (p.get('currentBalance') || '0.00');
-    
-    const lpAmt = p.get('lastPaymentAmount');
-    const lpDate = p.get('lastPaymentDate');
-    document.getElementById('d-last').innerText = (lpAmt && lpDate) ? `${lpAmt} (${lpDate})` : 'None on record';
+    // Map Data from URL
+    const name = getParam('customerName') || "Jordan Hayes";
+    const account = getParam('accountNumber') || "100002";
+    const address = getParam('serviceAddress') || "1452 Poplar Ave, Santa Fe, NM";
+    const balance = getParam('balance') || "$486.27";
+    const lastPayDate = getParam('lastPaymentDate') || "01/10/26";
+    const lastPayAmt = getParam('lastPaymentAmount') || "$120.00";
+    const risk = getParam('shutOffRisk') || "Low"; // Updated to match your new variable
+    const notes = getParam('notes') || "No recent notes available.";
+    const repayment = getParam('repaymentPlanStatus') || "None";
 
-    const repStatus = p.get('repaymentPlanStatus');
-    if (repStatus && repStatus !== 'None') document.getElementById('d-status').innerText = repStatus;
+    // Update UI
+    document.getElementById('display-name').innerText = name;
+    document.getElementById('display-account').innerText = account;
+    document.getElementById('display-address').innerText = address;
+    document.getElementById('display-balance').innerText = balance.startsWith('$') ? balance : '$' + balance;
+    document.getElementById('display-last-pay').innerText = `${lastPayAmt} (${lastPayDate})`;
+    document.getElementById('display-notes').innerText = notes;
+    document.getElementById('display-repayment').innerText = repayment;
 
-    const map = L.map('map', {zoomControl:false}).setView([35.6870, -105.9378], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-    L.marker([35.6870, -105.9378]).addTo(map);
+    // Update Risk Badge
+    const riskBadge = document.getElementById('risk-badge');
+    riskBadge.innerText = `Risk: ${risk}`;
+    if (risk.toLowerCase() === 'high') {
+        riskBadge.className = 'status-badge status-high';
+    } else {
+        riskBadge.className = 'status-badge status-low';
+    }
+
+    // Initialize Map (Santa Fe, NM)
+    const map = L.map('map').setView([35.6870, -105.9378], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+    L.marker([35.6870, -105.9378]).addTo(map)
+        .bindPopup(address)
+        .openPopup();
 </script>
+
 </body>
 </html>
