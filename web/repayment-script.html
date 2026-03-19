@@ -1,55 +1,49 @@
-<script>
-    function getParam(name) {
-        return new URLSearchParams(window.location.search).get(name);
-    }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Santa Fe Utility - Repayment Script</title>
+    <style>
+        :root { --sf-teal: #007a8d; --sf-red: #d9534f; --sf-green: #28a745; --border-color: #e9ecef; }
+        body { font-family: 'Segoe UI', sans-serif; padding: 20px; color: #495057; }
+        .main-panel { border: 1px solid var(--border-color); border-radius: 8px; padding: 25px; max-width: 900px; margin: 0 auto; }
+        .header-row { display: flex; justify-content: space-between; border-bottom: 2px solid var(--sf-teal); padding-bottom: 10px; margin-bottom: 20px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .card { border: 1px solid #f1f1f1; padding: 14px; background: #fcfcfc; border-radius: 4px; }
+        .label { font-size: 10px; font-weight: 800; color: #adb5bd; text-transform: uppercase; }
+        .value { font-size: 15px; font-weight: 700; }
+        .btn { display: inline-block; padding: 10px 20px; background: var(--sf-teal); color: white; text-decoration: none; border-radius: 4px; font-weight: bold; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="main-panel">
+        <div class="header-row"><h1>Repayment Plan Details</h1></div>
+        <div class="grid">
+            <div class="card"><div class="label">Customer</div><div class="value" id="d-name">—</div></div>
+            <div class="card"><div class="label">Account</div><div class="value" id="d-acc">—</div></div>
+            <div class="card"><div class="label">Balance</div><div class="value" id="d-bal">$0.00</div></div>
+            <div class="card"><div class="label">Status</div><div class="value" id="d-status">—</div></div>
+        </div>
+        <div class="grid">
+            <div class="card"><div class="label">Months</div><div class="value" id="d-months">—</div></div>
+            <div class="card"><div class="label">Down Payment</div><div class="value" id="d-down">—</div></div>
+            <div class="card"><div class="label">Monthly Payment</div><div class="value" id="d-monthly">—</div></div>
+            <div class="card"><div class="label">Confirm #</div><div class="value" id="d-conf">—</div></div>
+        </div>
+        <a href="#" id="btn-back" class="btn">Back to Dashboard</a>
+    </div>
 
-    function money(val, fallback) {
-        if (!val && val !== 0 || val === '—') return fallback;
-        const n = parseFloat(String(val).replace(/[^0-9.]/g, ''));
-        return isNaN(n) ? fallback : '$' + n.toFixed(2);
-    }
-
-    const params = window.location.search;
-
-    // Common fields - checking both possible names for balance
-    const name        = getParam('customerName')  || '—';
-    const account     = getParam('accountNumber') || '—';
-    const balanceRaw  = getParam('currentBalance') || getParam('balance') || '0.00';
-    const risk        = getParam('shutOffRisk') || '—';
-    const notes       = getParam('notes') || 'No notes available.';
-
-    // Repayment fields
-    const eligible    = getParam('arrangementEligible') || '—';
-    const maxMonths   = getParam('arrangementMaxMonths') || '—';
-    const minDown     = getParam('arrangementMinDownPayment') || '—';
-
-    const months      = getParam('repaymentMonths') || '—';
-    const downPay     = getParam('repaymentDownPayment') || '—';
-    const monthlyPay  = getParam('repaymentMonthlyPayment') || '—';
-    const startDate   = getParam('repaymentStartDate') || '—';
-
-    const planStatus  = getParam('repaymentPlanStatus') || '—';
-    const confirmNum  = getParam('repaymentConfirmationNumber') || '—';
-
-    // Populate UI
-    document.getElementById('display-name').innerText = name;
-    document.getElementById('display-account').innerText = account;
-    document.getElementById('display-balance').innerText = money(balanceRaw, '$0.00');
-    document.getElementById('display-risk').innerText = risk;
-    document.getElementById('display-notes').innerText = notes;
-
-    document.getElementById('display-eligible').innerText = eligible;
-    document.getElementById('display-max-months').innerText = maxMonths;
-    document.getElementById('display-min-down').innerText = money(minDown, '$—');
-    document.getElementById('display-months').innerText = months;
-    document.getElementById('display-down').innerText = money(downPay, '$—');
-    document.getElementById('display-monthly').innerText = money(monthlyPay, '$—');
-
-    document.getElementById('display-plan-status').innerText = planStatus;
-    document.getElementById('display-confirm').innerText = confirmNum;
-    document.getElementById('display-start').innerText = startDate;
-
-    // Navigation
-    document.getElementById('btn-back').href = 'agent-script.html' + params;
-    document.getElementById('btn-take-payment').href = 'take-payment.html' + params;
-</script>
+    <script>
+        const p = new URLSearchParams(window.location.search);
+        document.getElementById('d-name').innerText = p.get('customerName') || '—';
+        document.getElementById('d-acc').innerText = p.get('accountNumber') || '—';
+        document.getElementById('d-bal').innerText = '$' + (p.get('currentBalance') || p.get('balance') || '0.00');
+        document.getElementById('d-status').innerText = p.get('repaymentPlanStatus') || 'None';
+        document.getElementById('d-months').innerText = p.get('repaymentMonths') || '—';
+        document.getElementById('d-down').innerText = '$' + (p.get('repaymentDownPayment') || '—');
+        document.getElementById('d-monthly').innerText = '$' + (p.get('repaymentMonthlyPayment') || '—');
+        document.getElementById('d-conf').innerText = p.get('repaymentConfirmationNumber') || '—';
+        document.getElementById('btn-back').href = 'agent-script.html' + window.location.search;
+    </script>
+</body>
+</html>
