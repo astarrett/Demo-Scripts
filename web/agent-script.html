@@ -7,33 +7,31 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
-        :root { --sf-teal: #007a8d; --sf-light-red: #fdf1f0; --sf-green: #28a745; --bg-gray: #f8f9fa; --border-color: #e9ecef; }
-        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: white; margin: 0; padding: 20px; color: #495057; }
+        :root { --sf-teal: #007a8d; --sf-light-red: #fdf1f0; --sf-green: #28a745; --border-color: #e9ecef; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; color: #495057; }
         .container { display: grid; grid-template-columns: 1fr 300px; gap: 20px; max-width: 1200px; margin: 0 auto; }
         .main-panel { border: 1px solid var(--border-color); border-radius: 8px; padding: 25px; }
         .header-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--sf-teal); padding-bottom: 10px; margin-bottom: 20px; }
         .header-row h1 { font-size: 24px; color: var(--sf-teal); margin: 0; }
-        .account-status-badge { background-color: #e9f7ef; color: var(--sf-green); padding: 5px 15px; border-radius: 4px; font-weight: bold; font-size: 12px; text-transform: uppercase; }
-        .balance-card { background-color: var(--sf-light-red); border-left: 5px solid #c0392b; padding: 15px 20px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .balance-card { background-color: var(--sf-light-red); border-left: 5px solid #c0392b; padding: 15px 20px; border-radius: 4px; display: flex; justify-content: space-between; margin-bottom: 20px; }
         .balance-amount { font-size: 32px; font-weight: bold; color: #c0392b; }
         .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
         .data-item { background-color: #fcfcfc; border: 1px solid #f1f1f1; padding: 12px 15px; border-radius: 4px; }
-        .item-label { font-size: 10px; font-weight: bold; color: #adb5bd; text-transform: uppercase; margin-bottom: 5px; }
-        .item-value { font-size: 15px; font-weight: 600; color: #495057; }
-        .notes-section h3 { font-size: 12px; color: var(--sf-teal); text-transform: uppercase; margin-bottom: 10px; }
-        .notes-content { background-color: #f8f9fa; border: 1px solid #e9ecef; padding: 15px; border-radius: 4px; min-height: 80px; font-size: 14px; color: #6c757d; }
-        .sidebar-card { background-color: #f8f9fa; border-radius: 8px; padding: 20px; margin-bottom: 20px; }
-        .btn { display: block; width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 4px; text-align: center; text-decoration: none; font-weight: bold; font-size: 14px; background-color: var(--sf-teal); color: white; border: none; cursor: pointer; }
-        #map { height: 200px; width: 100%; border-radius: 4px; margin-bottom: 10px; }
+        .item-label { font-size: 10px; font-weight: bold; color: #adb5bd; text-transform: uppercase; }
+        .item-value { font-size: 15px; font-weight: 600; }
+        .notes-content { background-color: #f8f9fa; border: 1px solid #e9ecef; padding: 15px; border-radius: 4px; min-height: 60px; font-size: 14px; }
+        .btn { display: block; width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 4px; text-align: center; text-decoration: none; font-weight: bold; background-color: var(--sf-teal); color: white; border: none; }
+        #map { height: 200px; width: 100%; border-radius: 4px; }
+        #debug-box { margin-top: 50px; padding: 10px; background: #eee; font-size: 10px; color: #999; border-top: 1px dashed #ccc; }
     </style>
 </head>
 <body>
 <div class="container">
     <div class="main-panel">
-        <div class="header-row"><h1>CITY OF SANTA FE <span>| Utilities</span></h1><div class="account-status-badge" id="d-status">ACTIVE</div></div>
+        <div class="header-row"><h1>CITY OF SANTA FE <span>| Utilities</span></h1><div style="background:#e9f7ef; color:var(--sf-green); padding:5px 10px; border-radius:4px; font-weight:bold;" id="d-status">ACTIVE</div></div>
         <div class="balance-card">
-            <div><div style="font-size:12px; font-weight:bold; color:#6c757d;">CURRENT BALANCE</div><div class="balance-amount" id="d-bal">$0.00</div></div>
-            <div style="text-align:right;"><div style="font-size:12px; font-weight:bold; color:#6c757d;">SHUTOFF RISK</div><div style="font-size:18px; font-weight:bold; color:#c0392b;" id="d-risk">None</div></div>
+            <div><div style="font-size:10px; font-weight:bold;">CURRENT BALANCE</div><div class="balance-amount" id="d-bal">$0.00</div></div>
+            <div style="text-align:right;"><div style="font-size:10px; font-weight:bold;">SHUTOFF RISK</div><div style="font-size:18px; font-weight:bold; color:#c0392b;" id="d-risk">None</div></div>
         </div>
         <div class="data-grid">
             <div class="data-item"><div class="item-label">Customer Name</div><div class="item-value" id="d-name">—</div></div>
@@ -41,39 +39,35 @@
             <div class="data-item"><div class="item-label">Service Address</div><div class="item-value" id="d-addr">—</div></div>
             <div class="data-item"><div class="item-label">Last Payment</div><div class="item-value" id="d-last">—</div></div>
         </div>
-        <div class="notes-section"><h3>Account Notes</h3><div class="notes-content" id="d-notes">No notes available.</div></div>
+        <h3>Account Notes</h3><div class="notes-content" id="d-notes">No notes available.</div>
     </div>
     <div class="sidebar">
-        <div class="sidebar-card"><h3>Quick Actions</h3><a href="#" class="btn">Take a Payment</a><a href="#" class="btn" style="background:#fff; color:var(--sf-teal); border:1px solid var(--sf-teal);">Usage History</a></div>
-        <div class="sidebar-card"><h3 style="color:var(--sf-teal)">Service Area Map</h3><div id="map"></div></div>
+        <div style="background:#f8f9fa; padding:20px; border-radius:8px;">
+            <h3>Quick Actions</h3><a href="#" class="btn">Take a Payment</a><a href="#" class="btn" style="background:#fff; color:var(--sf-teal); border:1px solid var(--sf-teal);">Usage History</a>
+            <h3 style="margin-top:20px;">Service Area</h3><div id="map"></div>
+        </div>
     </div>
 </div>
+<div id="debug-box">URL Parameters Received: <span id="debug-text">None</span></div>
+
 <script>
     const p = new URLSearchParams(window.location.search);
-    
-    // Mapping URL params to UI
+    document.getElementById('debug-text').innerText = window.location.search || "No parameters found in URL";
+
     document.getElementById('d-name').innerText = p.get('customerName') || '—';
     document.getElementById('d-acc').innerText = p.get('accountNumber') || '—';
     document.getElementById('d-addr').innerText = p.get('serviceAddress') || 'Santa Fe, NM';
     document.getElementById('d-notes').innerText = p.get('notes') || 'No notes available.';
     document.getElementById('d-risk').innerText = p.get('shutOffRisk') || 'None';
+    document.getElementById('d-bal').innerText = '$' + (p.get('currentBalance') || '0.00');
     
-    // Balance Formatting
-    const rawBal = p.get('currentBalance') || '0.00';
-    document.getElementById('d-bal').innerText = rawBal.includes('$') ? rawBal : '$' + rawBal;
-
-    // Last Payment Formatting
     const lpAmt = p.get('lastPaymentAmount');
     const lpDate = p.get('lastPaymentDate');
     document.getElementById('d-last').innerText = (lpAmt && lpDate) ? `${lpAmt} (${lpDate})` : 'None on record';
 
-    // Repayment Status (Optional display in status badge)
     const repStatus = p.get('repaymentPlanStatus');
-    if (repStatus && repStatus !== 'None') {
-        document.getElementById('d-status').innerText = repStatus;
-    }
+    if (repStatus && repStatus !== 'None') document.getElementById('d-status').innerText = repStatus;
 
-    // Map Initialization
     const map = L.map('map', {zoomControl:false}).setView([35.6870, -105.9378], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
     L.marker([35.6870, -105.9378]).addTo(map);
