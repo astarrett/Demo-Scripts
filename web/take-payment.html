@@ -1,241 +1,270 @@
+<!-- web/take-payment.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>City of Santa Fe - Take a Payment Script</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <style>
-    :root {
-      --santa-fe-blue: #00778b;
-      --santa-fe-adobe: #c1663e;
-      --bg-gray: #f8f9fa;
-      --text-dark: #2d3436;
-      --success: #27ae60;
-      --warning: #f39c12;
-      --danger: #e74c3c;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Santa Fe Utility - Take Payment</title>
+    <style>
+        :root {
+            --sf-teal: #007a8d;
+            --sf-light-teal: #e6f2f4;
+            --sf-red: #d9534f;
+            --sf-light-red: #fdf1f0;
+            --sf-green: #28a745;
+            --sf-light-green: #e9f7ef;
+            --border-color: #e9ecef;
+        }
 
-    body {
-      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      margin: 0;
-      padding: 15px;
-      background-color: var(--bg-gray);
-      color: var(--text-dark);
-    }
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: white;
+            margin: 0;
+            padding: 20px;
+            color: #495057;
+        }
 
-    .container {
-      max-width: 1000px;
-      margin: 0 auto;
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-      border-top: 5px solid var(--santa-fe-blue);
-    }
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      border-bottom: 1px solid #edf2f7;
-      padding-bottom: 10px;
-    }
+        .main-panel {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 25px;
+        }
 
-    .title {
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--santa-fe-blue);
-    }
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--sf-teal);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
 
-    .payment-hero {
-      background: #f0f9ff;
-      padding: 20px;
-      border-radius: 8px;
-      border-left: 4px solid var(--santa-fe-blue);
-      margin-bottom: 20px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-    }
+        .header-row h1 {
+            font-size: 20px;
+            color: var(--sf-teal);
+            margin: 0;
+        }
 
-    .amount-box {
-      text-align: center;
-    }
+        .header-row h1 span {
+            font-weight: normal;
+            color: #6c757d;
+        }
 
-    .amount-label {
-      font-size: 12px;
-      font-weight: 600;
-      color: #4a5568;
-      text-transform: uppercase;
-    }
+        .section-title {
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            color: var(--sf-teal);
+            margin: 18px 0 10px;
+        }
 
-    .amount-value {
-      font-size: 32px;
-      font-weight: 800;
-      color: var(--santa-fe-blue);
-    }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
 
-    .section-title {
-      font-size: 14px;
-      font-weight: 700;
-      color: #4a5568;
-      text-transform: uppercase;
-      margin: 20px 0 10px 0;
-    }
+        .card {
+            border: 1px solid #f1f1f1;
+            border-radius: 6px;
+            padding: 14px;
+            background: #fcfcfc;
+        }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 15px;
-    }
+        .label {
+            font-size: 10px;
+            font-weight: 800;
+            color: #adb5bd;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
 
-    .card {
-      padding: 12px;
-      background: #fcfcfc;
-      border: 1px solid #edf2f7;
-      border-radius: 6px;
-    }
+        .value {
+            font-size: 15px;
+            font-weight: 700;
+            color: #495057;
+        }
 
-    .label {
-      font-size: 11px;
-      font-weight: 600;
-      color: #718096;
-      text-transform: uppercase;
-      margin-bottom: 2px;
-    }
+        .big { font-size: 22px; color: #c0392b; }
 
-    .value {
-      font-size: 15px;
-      font-weight: 500;
-    }
+        .info {
+            background: var(--sf-light-teal);
+            border: 1px solid #cfe7ea;
+            border-left: 4px solid var(--sf-teal);
+            padding: 12px 14px;
+            border-radius: 6px;
+            color: #2d666f;
+            line-height: 1.5;
+        }
 
-    .payment-status {
-      margin-top: 20px;
-      padding: 15px;
-      border-radius: 8px;
-      text-align: center;
-      font-weight: 700;
-      display: none;
-    }
+        .sidebar-card {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
 
-    .status-success { background: #e6fffa; color: var(--success); border: 1px solid #b2f5ea; }
-    .status-error { background: #fff5f5; color: var(--danger); border: 1px solid #feb2b2; }
+        .sidebar-card h3 {
+            font-size: 14px;
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #495057;
+        }
 
-    .btn-group {
-      margin-top: 25px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
-    }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            text-align: center;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+            border: 1px solid #dee2e6;
+            background-color: white;
+            color: #495057;
+            cursor: pointer;
+            box-sizing: border-box;
+            transition: background-color 0.15s ease;
+        }
 
-    .btn {
-      padding: 15px;
-      border: none;
-      border-radius: 6px;
-      font-weight: 700;
-      cursor: pointer;
-      font-size: 14px;
-      transition: background 0.2s;
-    }
+        .btn:hover { background-color: #e9ecef; color: #343a40; }
 
-    .btn-primary { background: var(--santa-fe-blue); color: white; }
-    .btn-primary:hover { background: #005f6f; }
-    
-    .btn-secure { background: var(--santa-fe-adobe); color: white; }
-    .btn-secure:hover { background: #a05533; }
+        .btn-primary {
+            background-color: var(--sf-teal);
+            color: white;
+            border: none;
+        }
 
-    .talk-track {
-      margin-top: 20px;
-      padding: 15px;
-      background: #fffaf0;
-      border: 1px solid #feebc8;
-      border-radius: 8px;
-      font-style: italic;
-      font-size: 13px;
-      color: #744210;
-    }
-  </style>
+        .btn-primary:hover { background-color: #005f6e; color: white; }
+
+        .btn-secondary {
+            background-color: white;
+            color: var(--sf-teal);
+            border: 1px solid var(--sf-teal);
+        }
+
+        .btn-secondary:hover { background-color: var(--sf-light-teal); }
+
+        .callout {
+            background: var(--sf-light-green);
+            border: 1px solid #c3e6cb;
+            border-left: 4px solid var(--sf-green);
+            padding: 12px 14px;
+            border-radius: 6px;
+            color: #155724;
+            line-height: 1.5;
+        }
+
+        .footer-hint {
+            font-size: 11px;
+            color: #adb5bd;
+            margin-top: 8px;
+            line-height: 1.4;
+        }
+    </style>
 </head>
 <body>
 
 <div class="container">
-  <header>
-    <div class="title">Take a Payment Script</div>
-    <div id="accountRef" style="font-size: 13px; color: #718096;">Account: --</div>
-  </header>
 
-  <div class="payment-hero">
-    <div class="amount-box">
-      <div class="amount-label">Current Balance</div>
-      <div class="amount-value" id="currentBalance">$0.00</div>
+    <div class="main-panel">
+        <div class="header-row">
+            <h1>Take a Payment <span>| Script</span></h1>
+            <div class="footer-hint">Do not collect full card numbers in chat.</div>
+        </div>
+
+        <div class="section-title">Customer</div>
+        <div class="grid">
+            <div class="card">
+                <div class="label">Customer Name</div>
+                <div class="value" id="display-name">—</div>
+            </div>
+            <div class="card">
+                <div class="label">Account Number</div>
+                <div class="value" id="display-account">—</div>
+            </div>
+            <div class="card">
+                <div class="label">Current Balance</div>
+                <div class="value big" id="display-balance">$0.00</div>
+            </div>
+            <div class="card">
+                <div class="label">Shutoff Risk</div>
+                <div class="value" id="display-risk">—</div>
+            </div>
+        </div>
+
+        <div class="section-title">Agent Guidance</div>
+        <div class="info">
+            If the customer wants to pay now, transfer them to the secure payment experience or your approved payment process.
+            Do not collect full card numbers, bank credentials, passwords, or one-time passcodes in the bot or in agent notes.
+        </div>
+
+        <div class="section-title">Suggested Prompts</div>
+        <div class="callout">
+            1. "I can help you make a payment now. Would you like to pay the full balance or a specific amount?"<br>
+            2. "If you prefer, I can transfer you to our secure payment option."<br>
+            3. "Once completed, I can confirm your updated balance."
+        </div>
+
+        <div class="section-title">Notes</div>
+        <div class="info" id="display-notes">No notes available.</div>
     </div>
-    <div class="amount-box" style="border-left: 1px solid #cbd5e0;">
-      <div class="amount-label">Last Payment</div>
-      <div class="amount-value" id="lastPayment" style="font-size: 24px; margin-top: 8px;">$0.00</div>
-      <div id="lastDate" style="font-size: 11px; color: #718096;">--</div>
+
+    <div class="sidebar">
+        <div class="sidebar-card">
+            <h3>Navigation</h3>
+            <a href="#" id="btn-back" class="btn btn-primary">Back to Dashboard</a>
+            <a href="#" id="btn-repayment" class="btn btn-secondary">Repayment Plan</a>
+        </div>
+
+        <div class="sidebar-card">
+            <h3>Demo Tips</h3>
+            <div class="footer-hint">
+                If you want the payment page to show a real embedded payment app later, we can host it separately and iframe it here.
+            </div>
+        </div>
     </div>
-  </div>
 
-  <div class="section-title">Payment Details</div>
-  <div class="grid">
-    <div class="card">
-      <div class="label">Secure Input Status</div>
-      <div class="value" id="secureStatus">Ready</div>
-    </div>
-    <div class="card">
-      <div class="label">Transaction Result</div>
-      <div class="value" id="paymentResult">Pending</div>
-    </div>
-  </div>
-
-  <div id="resultBanner" class="payment-status"></div>
-
-  <div class="talk-track">
-    "I can certainly help you with that payment. For your security, I am going to transfer you to our automated secure payment system. You will enter your card details using your telephone keypad, and I will remain on the line to confirm once the transaction is complete."
-  </div>
-
-  <div class="btn-group">
-    <button class="btn btn-primary" onclick="alert('Initiating Standard Payment Flow...')">Standard Payment</button>
-    <button class="btn btn-secure" onclick="alert('Launching Genesys Secure Input Flow...')">Launch Secure Input</button>
-  </div>
 </div>
 
 <script>
-  function getParam(name) {
-    return new URLSearchParams(window.location.search).get(name);
-  }
-
-  function formatCurrency(val) {
-    return new Number(val || 0).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-  }
-
-  function init() {
-    document.getElementById('accountRef').textContent = 'Account: ' + (getParam('accountNumber') || '--');
-    document.getElementById('currentBalance').textContent = formatCurrency(getParam('currentBalance'));
-    document.getElementById('lastPayment').textContent = formatCurrency(getParam('lastPaymentAmount'));
-    document.getElementById('lastDate').textContent = 'Received on ' + (getParam('lastPaymentDate') || '--');
-    
-    const secureInput = getParam('SecureInputPayment') || 'Ready';
-    document.getElementById('secureStatus').textContent = secureInput;
-
-    const result = getParam('SecurePaymentResult');
-    const banner = document.getElementById('resultBanner');
-    
-    if (result) {
-      document.getElementById('paymentResult').textContent = result;
-      banner.style.display = 'block';
-      if (result.toLowerCase().includes('success') || result.toLowerCase().includes('approved')) {
-        banner.textContent = '✅ Payment Successfully Processed';
-        banner.className = 'payment-status status-success';
-      } else {
-        banner.textContent = '❌ Payment Failed: ' + result;
-        banner.className = 'payment-status status-error';
-      }
+    function getParam(name) {
+        return new URLSearchParams(window.location.search).get(name);
     }
-  }
 
-  window.onload = init;
+    function money(val, fallback) {
+        if (!val && val !== 0) return fallback;
+        const n = parseFloat(String(val).replace(/[^0-9.]/g, ''));
+        return isNaN(n) ? fallback : '$' + n.toFixed(2);
+    }
+
+    const params = window.location.search;
+
+    const name       = getParam('customerName')  || '—';
+    const account    = getParam('accountNumber') || '—';
+    const balanceRaw = getParam('balance') || getParam('currentBalance') || '0.00';
+    const risk       = getParam('shutOffRisk') || '—';
+    const notes      = getParam('notes') || 'No notes available.';
+
+    document.getElementById('display-name').innerText = name;
+    document.getElementById('display-account').innerText = account;
+    document.getElementById('display-balance').innerText = money(balanceRaw, '$0.00');
+    document.getElementById('display-risk').innerText = risk;
+    document.getElementById('display-notes').innerText = notes;
+
+    document.getElementById('btn-back').href = 'agent-script.html' + params;
+    document.getElementById('btn-repayment').href = 'repayment-script.html' + params;
 </script>
 
 </body>
