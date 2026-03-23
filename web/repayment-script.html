@@ -59,11 +59,7 @@
 
   <script>
     (async function(){
-      const rawUrls = [
-        'https://raw.githubusercontent.com/astarrett/Demo-Scripts/main/data-actions/Utility-Accounts',
-        'https://raw.githubusercontent.com/astarrett/Demo-Scripts/main/data-actions/Utility-Accounts.json',
-        'https://raw.githubusercontent.com/astarrett/Demo-Scripts/main/data-actions/accounts.json'
-      ];
+      const DATA_RAW_URL = 'https://raw.githubusercontent.com/astarrett/Demo-Scripts/main/data-actions/Utility-Accounts';
 
       const params = new URLSearchParams(window.location.search);
       const acct = (params.get('accountNumber') || '').trim();
@@ -88,19 +84,14 @@
         return;
       }
 
-      // fetch
-      let rawText=null, data=null, lastErr='';
-      for(const u of rawUrls){
-        try {
-          const r = await fetch(u, {cache: 'no-store'});
-          rawText = await r.text();
-          if(!r.ok){ lastErr = `Fetch failed ${r.status} ${u}`; continue; }
-          try { data = JSON.parse(rawText); break; } catch(pe){ lastErr = `JSON parse failed for ${u}: ${pe.message}`; continue; }
-        } catch(e){ lastErr = `Network error ${u}: ${e.message}`; continue; }
-      }
-
-      if(!data){
-        el('debug').innerText = 'ERROR:\n' + lastErr + '\n\nRaw (truncated):\n' + (rawText?rawText.substring(0,2000):'(none)');
+      let rawText=null, data=null;
+      try {
+        const r = await fetch(DATA_RAW_URL, {cache: 'no-store'});
+        rawText = await r.text();
+        if(!r.ok) throw new Error('Fetch failed ' + r.status + ' ' + DATA_RAW_URL);
+        data = JSON.parse(rawText);
+      } catch (err) {
+        el('debug').innerText = 'ERROR:\n' + err.message + '\n\nRaw (truncated):\n' + (rawText ? rawText.substring(0,2000) : '(none)');
         el('debug').style.display = 'block';
         set('d-name','Error loading data');
         return;
@@ -115,10 +106,8 @@
         return;
       }
 
-      // prefer URL params for repayment fields (AVA will pass these)
       const getVal = (k) => {
         if(params.has(k) && params.get(k) !== null && params.get(k) !== '') return params.get(k);
-        // try record variants
         return rec[k] || rec[k.charAt(0).toLowerCase() + k.slice(1)] || rec[k.toUpperCase()] || '';
       };
 
@@ -127,20 +116,14 @@
       set('d-bal', currency(getVal('currentBalance') || rec.currentBalance || rec.balance));
       set('d-status', getVal('repaymentPlanStatus') || rec.repaymentPlanStatus || rec.repaymentPlan || 'None');
 
-      const months = getVal('repaymentMonths') || '';
-      const down = getVal('repaymentDownPayment') || '';
-      const monthly = getVal('repaymentMonthlyPayment') || '';
-      const conf = getVal('repaymentConfirmationNumber') || '';
-
-      set('d-months', months || '—');
-      set('d-down', down ? currency(down) : '—');
-      set('d-monthly', monthly ? currency(monthly) : '—');
-      set('d-conf', conf || '—');
+      set('d-months', getVal('repaymentMonths') || '—');
+      set('d-down', getVal('repaymentDownPayment') ? currency(getVal('repaymentDownPayment')) : '—');
+      set('d-monthly', getVal('repaymentMonthlyPayment') ? currency(getVal('repaymentMonthlyPayment')) : '—');
+      set('d-conf', getVal('repaymentConfirmationNumber') || '—');
 
       el('backBtn').href = 'agent-script.html?accountNumber=' + encodeURIComponent(acct);
       el('openAgent').href = 'agent-script.html?accountNumber=' + encodeURIComponent(acct);
 
-      // debug summary
       debug.innerText = 'Loaded account ' + acct + '\nFields present: ' + Object.keys(rec).join(', ');
     })();
   </script>
