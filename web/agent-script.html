@@ -1,187 +1,276 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>Utility Company — Agent Script</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <style>
-    :root{--teal:#007a8d;--red:#d9534f;--muted:#6c757d;--border:#e9eef2;--bg:#f7f9fb}
-    html,body{height:100%;margin:0;font-family:"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:#222}
-    .container{display:flex;height:100vh;gap:0}
-    .left{flex:1;padding:26px 28px;overflow:auto}
-    .right{width:360px;background:#fff;border-left:1px solid var(--border);padding:22px;display:flex;flex-direction:column}
-    .title{color:var(--teal);font-size:22px;margin:0 0 6px 0;font-weight:800}
-    .sub{color:var(--muted);font-size:13px;margin-bottom:12px}
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
-    .card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px 14px;box-shadow:0 2px 6px rgba(0,0,0,0.02)}
-    .label{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.6px}
-    .value{margin-top:8px;font-size:16px;font-weight:800}
-    .big{font-size:24px;color:var(--teal)}
-    .pill{display:inline-block;padding:6px 12px;border-radius:20px;color:#fff;font-weight:800;font-size:12px}
-    .map{margin-top:18px;height:300px;border-radius:10px;overflow:hidden;border:1px solid var(--border);background:#fafafa}
-    .btn{display:block;width:100%;text-align:center;padding:12px;border-radius:8px;color:#fff;text-decoration:none;font-weight:800;background:var(--teal);margin-top:18px}
-    .meta{margin-top:12px;color:var(--muted);font-size:12px}
-    .debug{margin-top:14px;background:#0b1220;color:#cfe8ff;padding:10px;border-radius:8px;font-family:monospace;font-size:12px;display:none;white-space:pre-wrap;max-height:160px;overflow:auto}
-    .toggle{background:transparent;border:0;color:var(--teal);text-decoration:underline;cursor:pointer;padding:0;font-size:13px;margin-top:8px}
-    @media (max-width:980px){.right{width:320px}.map{height:260px}}
-    @media (max-width:700px){.container{flex-direction:column}.right{width:100%;order:2}.left{order:1}}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent Dashboard — Santa Fe Utility</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  :root {
+    --terracotta: #C2572A;
+    --terracotta-dark: #A04520;
+    --tan: #D2B48C;
+    --tan-light: #E8D5B7;
+    --beige: #F5F0E6;
+    --beige-dark: #EDE4D0;
+    --blue: #5F9EA0;
+    --blue-light: #87CEEB;
+    --blue-pale: #D6EEF5;
+    --blue-dark: #3D7A7C;
+    --text-dark: #2C1A0E;
+    --text-mid: #5C4A3A;
+    --text-light: #8B7B6B;
+    --white: #FFFFFF;
+    --shadow: 0 2px 12px rgba(44,26,14,.08);
+    --shadow-lg: 0 6px 24px rgba(44,26,14,.12);
+    --radius: 12px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--beige); color: var(--text-dark); min-height: 100vh; }
+
+  /* Top bar */
+  .topbar { background: linear-gradient(135deg, var(--terracotta), var(--terracotta-dark)); color: var(--white); padding: 14px 28px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px rgba(0,0,0,.15); }
+  .topbar h1 { font-size: 1.15rem; font-weight: 600; letter-spacing: .3px; }
+  .topbar .nav-pills { display: flex; gap: 8px; }
+  .topbar .nav-pills a { color: var(--white); text-decoration: none; padding: 6px 16px; border-radius: 20px; font-size: .82rem; font-weight: 500; background: rgba(255,255,255,.15); transition: background .2s; }
+  .topbar .nav-pills a:hover { background: rgba(255,255,255,.3); }
+  .topbar .nav-pills a.active { background: var(--white); color: var(--terracotta); }
+
+  /* Layout */
+  .layout { display: grid; grid-template-columns: 1fr 300px; gap: 20px; padding: 20px 24px; max-width: 1400px; margin: 0 auto; }
+  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+
+  /* Cards */
+  .card { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+  .card-header { padding: 14px 20px; font-weight: 600; font-size: .88rem; text-transform: uppercase; letter-spacing: .6px; border-bottom: 1px solid var(--beige-dark); color: var(--text-mid); display: flex; align-items: center; gap: 8px; }
+  .card-header .icon { width: 22px; height: 22px; border-radius: 6px; display: grid; place-items: center; font-size: .75rem; }
+  .card-body { padding: 18px 20px; }
+
+  /* Hero balance card */
+  .hero { background: linear-gradient(135deg, var(--blue), var(--blue-dark)); color: var(--white); border-radius: var(--radius); padding: 24px 28px; margin-bottom: 20px; box-shadow: var(--shadow-lg); }
+  .hero .label { font-size: .78rem; text-transform: uppercase; letter-spacing: 1px; opacity: .85; margin-bottom: 4px; }
+  .hero .balance { font-size: 2.4rem; font-weight: 700; }
+  .hero .sub { font-size: .82rem; opacity: .8; margin-top: 6px; }
+  .hero-row { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px; }
+
+  /* Risk badge */
+  .badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 12px; border-radius: 20px; font-size: .75rem; font-weight: 600; }
+  .badge-danger { background: #FDECEA; color: #B71C1C; }
+  .badge-safe { background: #E8F5E9; color: #2E7D32; }
+  .badge-warn { background: #FFF3E0; color: #E65100; }
+  .badge-info { background: var(--blue-pale); color: var(--blue-dark); }
+
+  /* Data grid */
+  .data-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+  .data-item .dt { font-size: .72rem; text-transform: uppercase; letter-spacing: .7px; color: var(--text-light); margin-bottom: 3px; }
+  .data-item .dd { font-size: .95rem; font-weight: 600; color: var(--text-dark); word-break: break-word; }
+
+  /* Notes */
+  .notes-box { background: var(--beige); border-left: 4px solid var(--tan); border-radius: 0 8px 8px 0; padding: 14px 18px; font-size: .88rem; color: var(--text-mid); line-height: 1.55; white-space: pre-wrap; }
+
+  /* Map */
+  #map { width: 100%; height: 220px; border-radius: 0 0 var(--radius) var(--radius); }
+
+  /* Sidebar */
+  .sidebar { display: flex; flex-direction: column; gap: 16px; }
+  .sidebar .card-body { padding: 14px 16px; }
+  .action-btn { display: block; width: 100%; padding: 11px 14px; border: none; border-radius: 8px; font-size: .85rem; font-weight: 600; cursor: pointer; text-align: left; transition: all .2s; margin-bottom: 8px; text-decoration: none; }
+  .action-btn:last-child { margin-bottom: 0; }
+  .action-btn.primary { background: var(--terracotta); color: var(--white); }
+  .action-btn.primary:hover { background: var(--terracotta-dark); }
+  .action-btn.secondary { background: var(--blue-pale); color: var(--blue-dark); }
+  .action-btn.secondary:hover { background: #c0e4ef; }
+  .action-btn.outline { background: transparent; color: var(--terracotta); border: 1.5px solid var(--tan); }
+  .action-btn.outline:hover { background: var(--tan-light); }
+
+  /* Sidebar info items */
+  .info-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--beige-dark); font-size: .84rem; }
+  .info-row:last-child { border-bottom: none; }
+  .info-row .lbl { color: var(--text-light); }
+  .info-row .val { font-weight: 600; }
+</style>
 </head>
 <body>
-  <div class="container">
-    <div class="left">
-      <h1 class="title">Customer Overview</h1>
-      <div class="sub">Agent view — dynamic data from accounts JSON</div>
 
-      <div class="grid">
-        <div class="card">
-          <div class="label">Customer</div>
-          <div id="name" class="value">—</div>
-          <div id="notes" style="margin-top:8px;color:var(--muted);font-weight:600">—</div>
+<div class="topbar">
+  <h1>🏠 Santa Fe Utility — Agent Dashboard</h1>
+  <nav class="nav-pills">
+    <a href="#" class="active" id="nav-agent">Agent Script</a>
+    <a href="#" id="nav-repayment">Repayment</a>
+    <a href="#" id="nav-payment">Take Payment</a>
+  </nav>
+</div>
+
+<div class="layout">
+  <!-- Main Panel -->
+  <div class="main">
+    <!-- Hero balance -->
+    <div class="hero">
+      <div class="hero-row">
+        <div>
+          <div class="label">Current Balance</div>
+          <div class="balance" id="heroBalance">—</div>
+          <div class="sub">Account #<span id="heroAcct">—</span> · <span id="heroStatus" class="badge badge-info">—</span></div>
         </div>
-
-        <div class="card">
-          <div class="label">Account #</div>
-          <div id="account" class="value">—</div>
-          <div style="margin-top:12px">
-            <div class="label">Status</div>
-            <div id="status" class="value" style="font-size:14px">—</div>
-          </div>
+        <div style="text-align:right;">
+          <div class="label">Shut-Off Risk</div>
+          <div id="heroRisk" class="badge badge-safe" style="font-size:.95rem;">—</div>
         </div>
-      </div>
-
-      <div class="card" style="margin-bottom:14px">
-        <div class="label">Service Address</div>
-        <div id="address" class="value">—</div>
-      </div>
-
-      <div class="card" style="height:360px; display:flex; flex-direction:column; justify-content:flex-start">
-        <div class="label">Account Notes</div>
-        <div id="notesLarge" style="margin-top:8px;color:var(--muted);font-weight:600">—</div>
-        <div class="map" id="map"></div>
       </div>
     </div>
 
-    <div class="right">
-      <div style="flex:0 0 auto">
-        <div class="label" style="margin-bottom:6px">Financial Summary</div>
-        <div class="card" style="margin-bottom:12px">
-          <div class="label">Current Balance</div>
-          <div id="balance" class="value big">$0.00</div>
-        </div>
-
-        <div class="card" style="margin-bottom:12px">
-          <div class="label">Last Payment</div>
-          <div id="last" class="value">—</div>
-        </div>
-
-        <div class="label" style="margin-bottom:6px;margin-top:6px">Risk & Eligibility</div>
-        <div class="card">
-          <div class="label">Shut-off Risk</div>
-          <div id="risk" class="value"><span id="riskPill" class="pill" style="background:var(--teal)">Checking...</span></div>
-        </div>
-
-        <a id="repayBtn" class="btn" href="#">Open Repayment Script</a>
-        <div class="meta" id="sourceNote">Source: GitHub raw</div>
+    <!-- Customer Info -->
+    <div class="card" style="margin-bottom:20px;">
+      <div class="card-header"><span class="icon" style="background:var(--tan-light);color:var(--terracotta);">👤</span> Customer Information</div>
+      <div class="card-body">
+        <div class="data-grid" id="customerGrid"></div>
       </div>
+    </div>
 
-      <button class="toggle" id="toggleDebug">Show debug</button>
-      <div id="debug" class="debug" aria-hidden="true"></div>
+    <!-- Payment Info -->
+    <div class="card" style="margin-bottom:20px;">
+      <div class="card-header"><span class="icon" style="background:var(--blue-pale);color:var(--blue-dark);">💳</span> Payment &amp; Arrangement Details</div>
+      <div class="card-body">
+        <div class="data-grid" id="paymentGrid"></div>
+      </div>
+    </div>
+
+    <!-- Notes -->
+    <div class="card" style="margin-bottom:20px;">
+      <div class="card-header"><span class="icon" style="background:var(--tan-light);color:var(--terracotta);">📝</span> Account Notes</div>
+      <div class="card-body">
+        <div class="notes-box" id="notesBox">—</div>
+      </div>
+    </div>
+
+    <!-- Map -->
+    <div class="card">
+      <div class="card-header"><span class="icon" style="background:var(--blue-pale);color:var(--blue-dark);">📍</span> Service Location</div>
+      <div id="map"></div>
     </div>
   </div>
 
-  <script>
-    (async function(){
-      const DATA_RAW_URL = 'https://raw.githubusercontent.com/astarrett/Demo-Scripts/main/data-actions/Utility-Accounts';
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="card">
+      <div class="card-header">Quick Actions</div>
+      <div class="card-body">
+        <a class="action-btn primary" id="btn-repayment">📋 Repayment Info</a>
+        <a class="action-btn secondary" id="btn-payment">💰 Take Payment</a>
+        <button class="action-btn outline" onclick="window.print()">🖨️ Print Summary</button>
+      </div>
+    </div>
 
-      const params = new URLSearchParams(window.location.search);
-      const acct = (params.get('accountNumber') || '').trim();
-      const el = id => document.getElementById(id);
-      const set = (id, v) => { const e = el(id); if(e) e.innerText = (v === undefined || v === null || v === '') ? '—' : v; };
+    <div class="card">
+      <div class="card-header">Account Snapshot</div>
+      <div class="card-body" id="snapshotBody"></div>
+    </div>
 
-      function currency(v){
-        if(v === undefined || v === null || v === '') return '—';
-        const n = Number(String(v).replace(/[^0-9.-]/g,''));
-        if(isNaN(n)) return String(v);
-        return n.toLocaleString(undefined, {style:'currency', currency:'USD'});
-      }
+    <div class="card">
+      <div class="card-header">Flags</div>
+      <div class="card-body" id="flagsBody"></div>
+    </div>
+  </div>
+</div>
 
-      const debug = el('debug'), toggle = el('toggleDebug');
-      toggle.onclick = () => {
-        const showing = debug.style.display === 'block';
-        debug.style.display = showing ? 'none' : 'block';
-        toggle.innerText = showing ? 'Show debug' : 'Hide debug';
-      };
+<script>
+  // --- Parse URL Params ---
+  const P = Object.fromEntries(new URLSearchParams(window.location.search));
+  const g = (k) => P[k] || '';
+  const d = (k, fmt) => { const v = g(k); if (!v) return '—'; if (fmt === '$') return '$' + parseFloat(v).toFixed(2); return v; };
 
-      if(!acct){
-        set('name','No accountNumber in URL');
-        return;
-      }
+  // Build query string for navigation
+  function qs() { return new URLSearchParams(P).toString(); }
+  document.getElementById('nav-agent').href = 'agent-script.html?' + qs();
+  document.getElementById('nav-repayment').href = 'repayment-script.html?' + qs();
+  document.getElementById('nav-payment').href = 'take-payment-script.html?' + qs();
+  document.getElementById('btn-repayment').href = 'repayment-script.html?' + qs();
+  document.getElementById('btn-payment').href = 'take-payment-script.html?' + qs();
 
-      let rawText = null, data = null;
-      try {
-        const r = await fetch(DATA_RAW_URL, {cache: 'no-store'});
-        rawText = await r.text();
-        if(!r.ok) throw new Error('Fetch failed ' + r.status + ' ' + DATA_RAW_URL);
-        data = JSON.parse(rawText);
-        el('sourceNote').innerText = 'Source: ' + DATA_RAW_URL;
-      } catch (err) {
-        set('name','Error Loading Data');
-        debug.innerText = 'ERROR:\n' + err.message + '\n\nRaw (truncated):\n' + (rawText ? rawText.substring(0,2000) : '(none)');
-        debug.style.display = 'block';
-        return;
-      }
+  // Hero
+  document.getElementById('heroBalance').textContent = d('currentBalance', '$');
+  document.getElementById('heroAcct').textContent = d('key');
+  const status = g('accountStatus');
+  const statusEl = document.getElementById('heroStatus');
+  statusEl.textContent = status || '—';
+  if (status === 'finalNotice') { statusEl.className = 'badge badge-danger'; statusEl.textContent = 'Final Notice'; }
+  else if (status === 'pastDue') { statusEl.className = 'badge badge-warn'; statusEl.textContent = 'Past Due'; }
+  else if (status === 'disconnected') { statusEl.className = 'badge badge-danger'; statusEl.textContent = 'Disconnected'; }
+  else if (status === 'active') { statusEl.className = 'badge badge-safe'; statusEl.textContent = 'Active'; }
 
-      const rec = data[acct] || null;
-      if(!rec){
-        debug.innerText = 'Account not found. Sample keys: ' + Object.keys(data).slice(0,20).join(', ');
-        debug.style.display = 'block';
-        set('name','Account Not Found');
-        set('account', acct);
-        return;
-      }
+  const risk = g('shutOffRisk');
+  const riskEl = document.getElementById('heroRisk');
+  if (risk === 'True') { riskEl.className = 'badge badge-danger'; riskEl.textContent = '⚠ HIGH RISK'; riskEl.style.fontSize = '.95rem'; }
+  else if (risk === 'False') { riskEl.className = 'badge badge-safe'; riskEl.textContent = '✓ Low Risk'; riskEl.style.fontSize = '.95rem'; }
+  else { riskEl.textContent = '—'; }
 
-      const pick = (o, keys) => {
-        for(const k of keys){
-          if(!o) break;
-          if(k in o) return o[k];
-          const alt = k.charAt(0).toLowerCase() + k.slice(1);
-          if(alt in o) return o[alt];
+  // Customer grid
+  function makeGrid(id, items) {
+    const el = document.getElementById(id);
+    el.innerHTML = items.map(i => `<div class="data-item"><div class="dt">${i[0]}</div><div class="dd">${i[1]}</div></div>`).join('');
+  }
+  const addr = [g('serviceAddress'), g('city'), g('state'), g('zip')].filter(Boolean).join(', ') || '—';
+  makeGrid('customerGrid', [
+    ['Account Number', d('key')],
+    ['Customer Name', d('customerName')],
+    ['Service Address', addr],
+    ['Account Status', status ? (status === 'finalNotice' ? 'Final Notice' : status === 'pastDue' ? 'Past Due' : status.charAt(0).toUpperCase() + status.slice(1)) : '—'],
+    ['Hardship Flag', g('hardshipFlag') === 'True' ? '🚩 Yes' : g('hardshipFlag') === 'False' ? 'No' : '—'],
+    ['Bounced Checks (6 mo)', d('bouncedCheckCountLast6Months')],
+  ]);
+
+  makeGrid('paymentGrid', [
+    ['Last Payment Date', d('lastPaymentDate')],
+    ['Last Payment Amount', d('lastPaymentAmount', '$')],
+    ['Repayment Plan Status', d('repaymentPlanStatus')],
+    ['Arrangement Eligible', g('arrangementEligible') === 'True' ? '✓ Yes' : g('arrangementEligible') === 'False' ? '✗ No' : '—'],
+    ['Min Down Payment', d('arrangementMinDownPayment', '$')],
+    ['Max Months', d('arrangementMaxMonths')],
+  ]);
+
+  // Notes
+  const notesText = [g('notes'), g('arrangementIneligibleReason') ? 'Ineligible Reason: ' + g('arrangementIneligibleReason') : ''].filter(Boolean).join('\n') || '—';
+  document.getElementById('notesBox').textContent = notesText;
+
+  // Sidebar snapshot
+  const snap = document.getElementById('snapshotBody');
+  const snapItems = [
+    ['Balance', d('currentBalance', '$')],
+    ['Last Payment', d('lastPaymentAmount', '$')],
+    ['Last Paid', d('lastPaymentDate')],
+    ['Status', status ? status.replace(/([A-Z])/g, ' $1').trim() : '—'],
+  ];
+  snap.innerHTML = snapItems.map(i => `<div class="info-row"><span class="lbl">${i[0]}</span><span class="val">${i[1]}</span></div>`).join('');
+
+  // Flags
+  const flags = document.getElementById('flagsBody');
+  const flagItems = [];
+  if (g('shutOffRisk') === 'True') flagItems.push('<span class="badge badge-danger">⚠ Shut-Off Risk</span>');
+  if (g('hardshipFlag') === 'True') flagItems.push('<span class="badge badge-warn">🚩 Hardship</span>');
+  if (g('bouncedCheckLast6Month') === 'True') flagItems.push('<span class="badge badge-warn">↩ Bounced Check</span>');
+  if (g('arrangementEligible') === 'True') flagItems.push('<span class="badge badge-safe">✓ Arrangement Eligible</span>');
+  if (g('arrangementEligible') === 'False') flagItems.push('<span class="badge badge-danger">✗ Not Eligible</span>');
+  flags.innerHTML = flagItems.length ? flagItems.map(f => '<div style="margin-bottom:8px;">'+f+'</div>').join('') : '<span style="color:var(--text-light);font-size:.85rem;">No flags</span>';
+
+  // Map
+  const map = L.map('map').setView([35.0844, -106.6504], 12);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors',
+    maxZoom: 19
+  }).addTo(map);
+
+  const fullAddr = [g('serviceAddress'), g('city'), g('state'), g('zip')].filter(Boolean).join(', ');
+  if (fullAddr) {
+    fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(fullAddr))
+      .then(r => r.json()).then(data => {
+        if (data && data.length) {
+          const lat = parseFloat(data[0].lat), lon = parseFloat(data[0].lon);
+          map.setView([lat, lon], 15);
+          L.marker([lat, lon]).addTo(map).bindPopup('<b>' + d('customerName') + '</b><br>' + fullAddr).openPopup();
         }
-        return undefined;
-      };
-
-      set('name', pick(rec,['customerName','customer_name','customer']) || '—');
-      set('account', acct);
-      set('address', (pick(rec,['serviceAddress','service_address','address']) || '') );
-      set('notes', pick(rec,['notes','note','AccountNotes']) || '—');
-      set('notesLarge', pick(rec,['notes','note','AccountNotes']) || '—');
-      set('balance', currency(pick(rec,['currentBalance','current_balance','balance'])));
-      set('last', (pick(rec,['lastPaymentDate','last_payment_date']) || '—') + ' (' + (pick(rec,['lastPaymentAmount','last_payment_amount']) || '—') + ')');
-
-      const riskVal = pick(rec,['shutoffRisk','shutOffRisk','shutoff_risk']);
-      const riskPill = el('riskPill');
-      if(riskVal === true || String(riskVal).toLowerCase() === 'true' || Number(riskVal) === 1){
-        riskPill.innerText = 'HIGH RISK';
-        riskPill.style.background = 'var(--red)';
-      } else {
-        riskPill.innerText = 'NORMAL';
-        riskPill.style.background = 'var(--teal)';
-      }
-
-      const lat = pick(rec,['latitude','lat']) || '35.6870';
-      const lon = pick(rec,['longitude','lon','lng']) || '-105.9378';
-      const bbox = 0.012;
-      const left = (parseFloat(lon) - bbox).toFixed(6);
-      const right = (parseFloat(lon) + bbox).toFixed(6);
-      const top = (parseFloat(lat) + bbox).toFixed(6);
-      const bottom = (parseFloat(lat) - bbox).toFixed(6);
-      el('map').innerHTML = `<iframe width="100%" height="100%" frameborder="0" scrolling="no" src="https://www.openstreetmap.org/export/embed.html?bbox=${left},${bottom},${right},${top}&layer=mapnik&marker=${lat},${lon}"></iframe>`;
-
-      el('repayBtn').href = 'repayment-script.html?accountNumber=' + encodeURIComponent(acct);
-
-      debug.innerText = 'Loaded record for ' + acct + '\nFields: ' + Object.keys(rec).join(', ');
-    })();
-  </script>
+      }).catch(() => {});
+  }
+</script>
 </body>
 </html>
