@@ -92,18 +92,12 @@
 
   <script>
     (async function(){
-      // Raw GitHub URL(s) to your data (explicit, per your repo)
-      const rawUrls = [
-        'https://raw.githubusercontent.com/astarrett/Demo-Scripts/main/data-actions/Utility-Accounts',
-        'https://raw.githubusercontent.com/astarrett/Demo-Scripts/main/data-actions/Utility-Accounts.json',
-        'https://raw.githubusercontent.com/astarrett/Demo-Scripts/main/data-actions/accounts.json'
-      ];
+      const DATA_RAW_URL = 'https://raw.githubusercontent.com/astarrett/Demo-Scripts/main/data-actions/Utility-Accounts';
 
       const params = new URLSearchParams(window.location.search);
       const acct = (params.get('accountNumber') || '').trim();
       const el = id => document.getElementById(id);
       const set = (id, v) => { const e = el(id); if(e) e.innerText = (v === undefined || v === null || v === '') ? '—' : v; };
-      const setHTML = (id, html) => { const e = el(id); if(e) e.innerHTML = html; };
 
       function currency(v){
         if(v === undefined || v === null || v === '') return '—';
@@ -112,7 +106,6 @@
         return n.toLocaleString(undefined, {style:'currency', currency:'USD'});
       }
 
-      // debug toggle
       const debug = el('debug'), toggle = el('toggleDebug');
       toggle.onclick = () => {
         const showing = debug.style.display === 'block';
@@ -125,38 +118,20 @@
         return;
       }
 
-      // Try raw URLs until one returns parseable JSON
-      let rawText = null, data = null, lastErr = '';
-      for(const u of rawUrls){
-        try {
-          const r = await fetch(u, {cache: 'no-store'});
-          rawText = await r.text();
-          if(!r.ok){
-            lastErr = `Fetch failed ${r.status} ${u}`;
-            continue;
-          }
-          try {
-            data = JSON.parse(rawText);
-            el('sourceNote').innerText = 'Source: ' + u;
-            break;
-          } catch(parseErr){
-            lastErr = `JSON parse failed for ${u}: ${parseErr.message}`;
-            continue;
-          }
-        } catch(netErr){
-          lastErr = `Network error for ${u}: ${netErr.message}`;
-          continue;
-        }
-      }
-
-      if(!data){
+      let rawText = null, data = null;
+      try {
+        const r = await fetch(DATA_RAW_URL, {cache: 'no-store'});
+        rawText = await r.text();
+        if(!r.ok) throw new Error('Fetch failed ' + r.status + ' ' + DATA_RAW_URL);
+        data = JSON.parse(rawText);
+        el('sourceNote').innerText = 'Source: ' + DATA_RAW_URL;
+      } catch (err) {
         set('name','Error Loading Data');
-        debug.innerText = 'ERROR:\n' + (lastErr || 'No response') + '\n\nRaw (truncated):\n' + (rawText ? rawText.substring(0,2000) : '(none)');
+        debug.innerText = 'ERROR:\n' + err.message + '\n\nRaw (truncated):\n' + (rawText ? rawText.substring(0,2000) : '(none)');
         debug.style.display = 'block';
         return;
       }
 
-      // Lookup record
       const rec = data[acct] || null;
       if(!rec){
         debug.innerText = 'Account not found. Sample keys: ' + Object.keys(data).slice(0,20).join(', ');
@@ -166,7 +141,6 @@
         return;
       }
 
-      // flexible key picker
       const pick = (o, keys) => {
         for(const k of keys){
           if(!o) break;
@@ -185,7 +159,6 @@
       set('balance', currency(pick(rec,['currentBalance','current_balance','balance'])));
       set('last', (pick(rec,['lastPaymentDate','last_payment_date']) || '—') + ' (' + (pick(rec,['lastPaymentAmount','last_payment_amount']) || '—') + ')');
 
-      // Risk
       const riskVal = pick(rec,['shutoffRisk','shutOffRisk','shutoff_risk']);
       const riskPill = el('riskPill');
       if(riskVal === true || String(riskVal).toLowerCase() === 'true' || Number(riskVal) === 1){
@@ -196,7 +169,6 @@
         riskPill.style.background = 'var(--teal)';
       }
 
-      // Map
       const lat = pick(rec,['latitude','lat']) || '35.6870';
       const lon = pick(rec,['longitude','lon','lng']) || '-105.9378';
       const bbox = 0.012;
@@ -206,10 +178,8 @@
       const bottom = (parseFloat(lat) - bbox).toFixed(6);
       el('map').innerHTML = `<iframe width="100%" height="100%" frameborder="0" scrolling="no" src="https://www.openstreetmap.org/export/embed.html?bbox=${left},${bottom},${right},${top}&layer=mapnik&marker=${lat},${lon}"></iframe>`;
 
-      // Repayment link
       el('repayBtn').href = 'repayment-script.html?accountNumber=' + encodeURIComponent(acct);
 
-      // optional debug summary
       debug.innerText = 'Loaded record for ' + acct + '\nFields: ' + Object.keys(rec).join(', ');
     })();
   </script>
