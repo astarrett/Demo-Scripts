@@ -5,33 +5,29 @@
   <title>Utility Company — Repayment</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <style>
-    :root{--brand:#00607a;--muted:#6c757d;--border:#e9eef2;--bg:#f7f9fb}
+    :root{--teal:#007a8d;--muted:#6c757d;--border:#e9eef2;--bg:#f7f9fb}
     body{font-family:"Segoe UI",Arial,sans-serif;background:var(--bg);margin:18px;color:#222}
     .wrap{max-width:900px;margin:0 auto}
     .panel{background:#fff;border:1px solid var(--border);border-radius:10px;padding:18px}
-    .header{display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid var(--brand);padding-bottom:10px;margin-bottom:12px}
-    .title{color:var(--brand);font-size:20px}
+    .header{display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid var(--teal);padding-bottom:10px;margin-bottom:12px}
+    .title{color:var(--teal);font-size:20px}
     .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
     .card{background:#fff;padding:12px;border-radius:8px;border:1px solid #eef3f6}
     .label{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase}
     .value{font-size:16px;font-weight:800;margin-top:6px}
     .actions{display:flex;gap:10px;margin-top:14px}
-    .btn{padding:10px 14px;border-radius:8px;background:var(--brand);color:#fff;text-decoration:none;font-weight:700}
+    .btn{padding:10px 14px;border-radius:8px;background:var(--teal);color:#fff;text-decoration:none;font-weight:700}
     .btn.alt{background:#fff;border:1px solid #d7dde1;color:#222}
     .debug{margin-top:12px;background:#0b1220;color:#fff;padding:10px;border-radius:6px;font-family:monospace;font-size:12px;display:none}
-    .toggle-debug{cursor:pointer;color:var(--brand);text-decoration:underline;font-size:13px;background:none;border:none;padding:0}
-    @media (max-width:900px){.grid{grid-template-columns:1fr 1fr}}
-    @media (max-width:520px){.grid{grid-template-columns:1fr}}
+    .toggle{cursor:pointer;color:var(--teal);text-decoration:underline;background:none;border:0;padding:0;font-size:13px}
+    @media (max-width:900px){.grid{grid-template-columns:1fr 1fr}}@media (max-width:520px){.grid{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="panel">
       <div class="header">
-        <div>
-          <h1 class="title">Repayment Plan</h1>
-          <div style="color:var(--muted);font-size:13px">View or confirm repayment details</div>
-        </div>
+        <div><h1 class="title">Repayment Plan</h1><div style="color:var(--muted);font-size:13px">View or confirm repayment details</div></div>
         <div id="loadStatus" style="color:var(--muted)">Loading…</div>
       </div>
 
@@ -51,98 +47,101 @@
         <a id="backBtn" class="btn alt">Back to Account</a>
         <a id="openAgent" class="btn">Open in Agent Script</a>
         <div style="flex:1"></div>
-        <div style="color:var(--muted)">Data source: accounts.json (GitHub)</div>
+        <div style="color:var(--muted)">Data source: GitHub</div>
       </div>
 
       <div style="margin-top:12px">
-        <button class="toggle-debug" id="toggleDebug">Show debug info</button>
-        <div id="debug" class="debug" aria-hidden="true"><pre id="debugText"></pre></div>
+        <button class="toggle" id="toggleDebug">Show debug info</button>
+        <div id="debug" class="debug" aria-hidden="true"></div>
       </div>
     </div>
   </div>
 
   <script>
     (async function(){
-      const dataUrl = 'https://astarrett.github.io/Demo-Scripts/data-actions/accounts.json';
+      const rawUrls = [
+        'https://raw.githubusercontent.com/astarrett/Demo-Scripts/main/data-actions/Utility-Accounts',
+        'https://raw.githubusercontent.com/astarrett/Demo-Scripts/main/data-actions/Utility-Accounts.json',
+        'https://raw.githubusercontent.com/astarrett/Demo-Scripts/main/data-actions/accounts.json'
+      ];
+
       const params = new URLSearchParams(window.location.search);
       const acct = (params.get('accountNumber') || '').trim();
-
       const el = id => document.getElementById(id);
-      const set = (id, v) => { const e = el(id); if(e) e.innerText = (v !== undefined && v !== null && v !== '') ? v : '—'; };
+      const set = (id, v) => { const e = el(id); if(e) e.innerText = (v === undefined || v === null || v === '') ? '—' : v; };
 
-      function formatCurrency(v){
+      function currency(v){
         if(v === undefined || v === null || v === '') return '—';
         const n = Number(String(v).replace(/[^0-9.-]/g,''));
         return isNaN(n) ? String(v) : n.toLocaleString(undefined,{style:'currency',currency:'USD'});
       }
 
-      function pick(obj, keys){
-        for(const k of keys){
-          if(obj === null || obj === undefined) break;
-          if(k in obj) return obj[k];
-          const alt = k.charAt(0).toLowerCase() + k.slice(1);
-          if(alt in obj) return obj[alt];
-          const up = k.toUpperCase();
-          if(up in obj) return obj[up];
-        }
-        return undefined;
-      }
-
-      // Debug UI
-      const debug = el('debug'), debugText = el('debugText'), toggle = el('toggleDebug');
-      toggle.addEventListener('click', ()=>{
+      const debug = el('debug'), toggle = el('toggleDebug');
+      toggle.addEventListener('click', ()=> {
         const showing = debug.style.display === 'block';
         debug.style.display = showing ? 'none' : 'block';
-        debug.setAttribute('aria-hidden', showing ? 'true' : 'false');
         toggle.innerText = showing ? 'Show debug info' : 'Hide debug info';
       });
 
-      try{
-        const resp = await fetch(dataUrl, { cache: "no-store" });
-        if(!resp.ok) throw new Error('Fetch failed: ' + resp.status);
-        const all = await resp.json();
-        el('loadStatus').innerText = 'Loaded';
-        debugText.innerText = 'URL params:\n' + JSON.stringify(Object.fromEntries(params.entries()), null, 2) + '\n\nData keys count: ' + Object.keys(all||{}).length;
-
-        if(!acct){
-          set('d-name','No accountNumber in URL');
-          return;
-        }
-
-        const rec = all[acct] || {};
-        debugText.innerText += '\n\nLookup: ' + acct + '\nFound: ' + (Object.keys(rec).length ? 'yes' : 'no') + (Object.keys(rec).length ? '\n\n' + JSON.stringify(rec, null, 2) : '');
-
-        // Prefer URL params for repayment-specific fields (AVA will pass these)
-        const urlOrRec = (k) => {
-          if(params.has(k) && params.get(k) !== null && params.get(k) !== '') return params.get(k);
-          return pick(rec, [k, k.charAt(0).toLowerCase() + k.slice(1)]) || '';
-        };
-
-        set('d-name', urlOrRec('customerName') || pick(rec,['customerName','customer','customer_name']) || '—');
-        set('d-acc', acct);
-        set('d-bal', formatCurrency(urlOrRec('currentBalance') || pick(rec,['currentBalance','balance'])));
-        set('d-status', urlOrRec('repaymentPlanStatus') || pick(rec,['repaymentPlanStatus','repaymentPlan','planStatus']) || 'None');
-
-        const months = urlOrRec('repaymentMonths') || '';
-        const down = urlOrRec('repaymentDownPayment') || '';
-        const monthly = urlOrRec('repaymentMonthlyPayment') || '';
-        const conf = urlOrRec('repaymentConfirmationNumber') || '';
-
-        set('d-months', months || '—');
-        set('d-down', down ? formatCurrency(down) : '—');
-        set('d-monthly', monthly ? formatCurrency(monthly) : '—');
-        set('d-conf', conf || '—');
-
-        // Buttons
-        el('backBtn').href = 'agent-script.html?accountNumber=' + encodeURIComponent(acct);
-        el('openAgent').href = 'agent-script.html?accountNumber=' + encodeURIComponent(acct);
-
-      }catch(err){
-        console.error(err);
-        el('loadStatus').innerText = 'Error loading';
-        debugText.innerText += '\n\nERROR:\n' + (err && err.message ? err.message : String(err));
-        debug.style.display = 'block';
+      if(!acct){
+        set('d-name','No accountNumber in URL');
+        return;
       }
+
+      // fetch
+      let rawText=null, data=null, lastErr='';
+      for(const u of rawUrls){
+        try {
+          const r = await fetch(u, {cache: 'no-store'});
+          rawText = await r.text();
+          if(!r.ok){ lastErr = `Fetch failed ${r.status} ${u}`; continue; }
+          try { data = JSON.parse(rawText); break; } catch(pe){ lastErr = `JSON parse failed for ${u}: ${pe.message}`; continue; }
+        } catch(e){ lastErr = `Network error ${u}: ${e.message}`; continue; }
+      }
+
+      if(!data){
+        el('debug').innerText = 'ERROR:\n' + lastErr + '\n\nRaw (truncated):\n' + (rawText?rawText.substring(0,2000):'(none)');
+        el('debug').style.display = 'block';
+        set('d-name','Error loading data');
+        return;
+      }
+
+      const rec = data[acct] || {};
+      if(!Object.keys(rec).length){
+        el('debug').innerText = 'Account not found. Available keys: ' + Object.keys(data).slice(0,30).join(', ');
+        el('debug').style.display = 'block';
+        set('d-name','Account Not Found');
+        set('d-acc', acct);
+        return;
+      }
+
+      // prefer URL params for repayment fields (AVA will pass these)
+      const getVal = (k) => {
+        if(params.has(k) && params.get(k) !== null && params.get(k) !== '') return params.get(k);
+        // try record variants
+        return rec[k] || rec[k.charAt(0).toLowerCase() + k.slice(1)] || rec[k.toUpperCase()] || '';
+      };
+
+      set('d-name', getVal('customerName') || rec.customerName || rec.customer || '—');
+      set('d-acc', acct);
+      set('d-bal', currency(getVal('currentBalance') || rec.currentBalance || rec.balance));
+      set('d-status', getVal('repaymentPlanStatus') || rec.repaymentPlanStatus || rec.repaymentPlan || 'None');
+
+      const months = getVal('repaymentMonths') || '';
+      const down = getVal('repaymentDownPayment') || '';
+      const monthly = getVal('repaymentMonthlyPayment') || '';
+      const conf = getVal('repaymentConfirmationNumber') || '';
+
+      set('d-months', months || '—');
+      set('d-down', down ? currency(down) : '—');
+      set('d-monthly', monthly ? currency(monthly) : '—');
+      set('d-conf', conf || '—');
+
+      el('backBtn').href = 'agent-script.html?accountNumber=' + encodeURIComponent(acct);
+      el('openAgent').href = 'agent-script.html?accountNumber=' + encodeURIComponent(acct);
+
+      // debug summary
+      debug.innerText = 'Loaded account ' + acct + '\nFields present: ' + Object.keys(rec).join(', ');
     })();
   </script>
 </body>
