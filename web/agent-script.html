@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Agent Dashboard — Santa Fe Utility</title>
+<title>Agent Dashboard — City Utilities Department</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
@@ -128,14 +128,6 @@
       </div>
     </div>
 
-    <!-- Payment Info -->
-    <div class="card" style="margin-bottom:20px;">
-      <div class="card-header"><span class="icon" style="background:var(--blue-pale);color:var(--blue-dark);">💳</span> Payment &amp; Arrangement Details</div>
-      <div class="card-body">
-        <div class="data-grid" id="paymentGrid"></div>
-      </div>
-    </div>
-
     <!-- Notes -->
     <div class="card" style="margin-bottom:20px;">
       <div class="card-header"><span class="icon" style="background:var(--tan-light);color:var(--terracotta);">📝</span> Account Notes</div>
@@ -218,15 +210,6 @@
     ['Account Status', status ? (status === 'finalNotice' ? 'Final Notice' : status === 'pastDue' ? 'Past Due' : status.charAt(0).toUpperCase() + status.slice(1)) : '—'],
     ['Hardship Flag', g('hardshipFlag') === 'True' ? '🚩 Yes' : g('hardshipFlag') === 'False' ? 'No' : '—'],
     ['Bounced Checks (6 mo)', d('bouncedCheckCountLast6Months')],
-  ]);
-
-  makeGrid('paymentGrid', [
-    ['Last Payment Date', d('lastPaymentDate')],
-    ['Last Payment Amount', d('lastPaymentAmount', '$')],
-    ['Repayment Plan Status', d('repaymentPlanStatus')],
-    ['Arrangement Eligible', g('arrangementEligible') === 'True' ? '✓ Yes' : g('arrangementEligible') === 'False' ? '✗ No' : '—'],
-    ['Min Down Payment', d('arrangementMinDownPayment', '$')],
-    ['Max Months', d('arrangementMaxMonths')],
   ]);
 
   // Notes
