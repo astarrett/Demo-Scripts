@@ -52,7 +52,8 @@
 
   <script>
     (async function(){
-      const raw = 'https://raw.githubusercontent.com/astarrett/Demo-Scripts/main/data-actions/Utility-Accounts';
+      // Replace the whole rawUrls array (or candidates block) with this single constant:
+const DATA_RAW_URL = 'https://raw.githubusercontent.com/astarrett/Demo-Scripts/main/data-actions/Utility-Accounts';
       const params = new URLSearchParams(window.location.search);
       const acct = (params.get('accountNumber') || '').trim();
       const el = id => document.getElementById(id);
