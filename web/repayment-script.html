@@ -1,131 +1,313 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>Utility Company — Repayment</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <style>
-    :root{--teal:#007a8d;--muted:#6c757d;--border:#e9eef2;--bg:#f7f9fb}
-    body{font-family:"Segoe UI",Arial,sans-serif;background:var(--bg);margin:18px;color:#222}
-    .wrap{max-width:900px;margin:0 auto}
-    .panel{background:#fff;border:1px solid var(--border);border-radius:10px;padding:18px}
-    .header{display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid var(--teal);padding-bottom:10px;margin-bottom:12px}
-    .title{color:var(--teal);font-size:20px}
-    .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-    .card{background:#fff;padding:12px;border-radius:8px;border:1px solid #eef3f6}
-    .label{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase}
-    .value{font-size:16px;font-weight:800;margin-top:6px}
-    .actions{display:flex;gap:10px;margin-top:14px}
-    .btn{padding:10px 14px;border-radius:8px;background:var(--teal);color:#fff;text-decoration:none;font-weight:700}
-    .btn.alt{background:#fff;border:1px solid #d7dde1;color:#222}
-    .debug{margin-top:12px;background:#0b1220;color:#fff;padding:10px;border-radius:6px;font-family:monospace;font-size:12px;display:none}
-    .toggle{cursor:pointer;color:var(--teal);text-decoration:underline;background:none;border:0;padding:0;font-size:13px}
-    @media (max-width:900px){.grid{grid-template-columns:1fr 1fr}}@media (max-width:520px){.grid{grid-template-columns:1fr}}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Repayment Info — Santa Fe Utility</title>
+<style>
+  :root {
+    --terracotta: #C2572A;
+    --terracotta-dark: #A04520;
+    --tan: #D2B48C;
+    --tan-light: #E8D5B7;
+    --beige: #F5F0E6;
+    --beige-dark: #EDE4D0;
+    --blue: #5F9EA0;
+    --blue-light: #87CEEB;
+    --blue-pale: #D6EEF5;
+    --blue-dark: #3D7A7C;
+    --text-dark: #2C1A0E;
+    --text-mid: #5C4A3A;
+    --text-light: #8B7B6B;
+    --white: #FFFFFF;
+    --shadow: 0 2px 12px rgba(44,26,14,.08);
+    --shadow-lg: 0 6px 24px rgba(44,26,14,.12);
+    --radius: 12px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--beige); color: var(--text-dark); min-height: 100vh; }
+
+  .topbar { background: linear-gradient(135deg, var(--terracotta), var(--terracotta-dark)); color: var(--white); padding: 14px 28px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px rgba(0,0,0,.15); }
+  .topbar h1 { font-size: 1.15rem; font-weight: 600; letter-spacing: .3px; }
+  .topbar .nav-pills { display: flex; gap: 8px; }
+  .topbar .nav-pills a { color: var(--white); text-decoration: none; padding: 6px 16px; border-radius: 20px; font-size: .82rem; font-weight: 500; background: rgba(255,255,255,.15); transition: background .2s; }
+  .topbar .nav-pills a:hover { background: rgba(255,255,255,.3); }
+  .topbar .nav-pills a.active { background: var(--white); color: var(--terracotta); }
+
+  .layout { display: grid; grid-template-columns: 1fr 300px; gap: 20px; padding: 20px 24px; max-width: 1400px; margin: 0 auto; }
+  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+
+  .card { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+  .card-header { padding: 14px 20px; font-weight: 600; font-size: .88rem; text-transform: uppercase; letter-spacing: .6px; border-bottom: 1px solid var(--beige-dark); color: var(--text-mid); display: flex; align-items: center; gap: 8px; }
+  .card-header .icon { width: 22px; height: 22px; border-radius: 6px; display: grid; place-items: center; font-size: .75rem; }
+  .card-body { padding: 18px 20px; }
+
+  .hero { background: linear-gradient(135deg, var(--blue), var(--blue-dark)); color: var(--white); border-radius: var(--radius); padding: 24px 28px; margin-bottom: 20px; box-shadow: var(--shadow-lg); }
+  .hero .label { font-size: .78rem; text-transform: uppercase; letter-spacing: 1px; opacity: .85; margin-bottom: 4px; }
+  .hero .balance { font-size: 2.4rem; font-weight: 700; }
+  .hero .sub { font-size: .82rem; opacity: .8; margin-top: 6px; }
+  .hero-row { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px; }
+
+  .badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 12px; border-radius: 20px; font-size: .75rem; font-weight: 600; }
+  .badge-danger { background: #FDECEA; color: #B71C1C; }
+  .badge-safe { background: #E8F5E9; color: #2E7D32; }
+  .badge-warn { background: #FFF3E0; color: #E65100; }
+  .badge-info { background: var(--blue-pale); color: var(--blue-dark); }
+  .badge-pending { background: #FFF8E1; color: #F57F17; }
+
+  .data-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+  .data-item .dt { font-size: .72rem; text-transform: uppercase; letter-spacing: .7px; color: var(--text-light); margin-bottom: 3px; }
+  .data-item .dd { font-size: .95rem; font-weight: 600; color: var(--text-dark); word-break: break-word; }
+
+  .notes-box { background: var(--beige); border-left: 4px solid var(--tan); border-radius: 0 8px 8px 0; padding: 14px 18px; font-size: .88rem; color: var(--text-mid); line-height: 1.55; white-space: pre-wrap; }
+
+  /* Breakdown table */
+  .breakdown-table { width: 100%; border-collapse: collapse; }
+  .breakdown-table th { text-align: left; font-size: .72rem; text-transform: uppercase; letter-spacing: .6px; color: var(--text-light); padding: 8px 12px; border-bottom: 2px solid var(--beige-dark); }
+  .breakdown-table td { padding: 10px 12px; border-bottom: 1px solid var(--beige); font-size: .9rem; }
+  .breakdown-table tr:last-child td { border-bottom: none; font-weight: 700; background: var(--beige); }
+
+  /* Plan option cards */
+  .plan-option { border: 2px solid var(--beige-dark); border-radius: 10px; padding: 16px 18px; margin-bottom: 12px; transition: border-color .2s; }
+  .plan-option.active-plan { border-color: var(--blue); background: var(--blue-pale); }
+  .plan-option .plan-title { font-weight: 700; font-size: .92rem; margin-bottom: 6px; }
+  .plan-option .plan-detail { font-size: .82rem; color: var(--text-mid); }
+
+  .sidebar { display: flex; flex-direction: column; gap: 16px; }
+  .sidebar .card-body { padding: 14px 16px; }
+  .action-btn { display: block; width: 100%; padding: 11px 14px; border: none; border-radius: 8px; font-size: .85rem; font-weight: 600; cursor: pointer; text-align: left; transition: all .2s; margin-bottom: 8px; text-decoration: none; }
+  .action-btn:last-child { margin-bottom: 0; }
+  .action-btn.primary { background: var(--terracotta); color: var(--white); }
+  .action-btn.primary:hover { background: var(--terracotta-dark); }
+  .action-btn.secondary { background: var(--blue-pale); color: var(--blue-dark); }
+  .action-btn.secondary:hover { background: #c0e4ef; }
+  .action-btn.outline { background: transparent; color: var(--terracotta); border: 1.5px solid var(--tan); }
+  .action-btn.outline:hover { background: var(--tan-light); }
+
+  .info-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--beige-dark); font-size: .84rem; }
+  .info-row:last-child { border-bottom: none; }
+  .info-row .lbl { color: var(--text-light); }
+  .info-row .val { font-weight: 600; }
+
+  .agreement-link { display: inline-flex; align-items: center; gap: 6px; color: var(--blue-dark); text-decoration: none; font-weight: 600; padding: 6px 0; }
+  .agreement-link:hover { text-decoration: underline; }
+</style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="panel">
-      <div class="header">
-        <div><h1 class="title">Repayment Plan</h1><div style="color:var(--muted);font-size:13px">View or confirm repayment details</div></div>
-        <div id="loadStatus" style="color:var(--muted)">Loading…</div>
+
+<div class="topbar">
+  <h1>📋 Santa Fe Utility — Repayment Information</h1>
+  <nav class="nav-pills">
+    <a href="#" id="nav-agent">Agent Script</a>
+    <a href="#" class="active" id="nav-repayment">Repayment</a>
+    <a href="#" id="nav-payment">Take Payment</a>
+  </nav>
+</div>
+
+<div class="layout">
+  <div class="main">
+    <!-- Hero -->
+    <div class="hero">
+      <div class="hero-row">
+        <div>
+          <div class="label">Current Balance</div>
+          <div class="balance" id="heroBalance">—</div>
+          <div class="sub">Account #<span id="heroAcct">—</span> · <span id="heroName">—</span></div>
+        </div>
+        <div style="text-align:right;">
+          <div class="label">Repayment Status</div>
+          <div id="heroRepayStatus" class="badge badge-info" style="font-size:.95rem;">—</div>
+        </div>
       </div>
+    </div>
 
-      <div class="grid" style="margin-bottom:12px">
-        <div class="card"><div class="label">Customer</div><div id="d-name" class="value">—</div></div>
-        <div class="card"><div class="label">Account</div><div id="d-acc" class="value">—</div></div>
-        <div class="card"><div class="label">Balance</div><div id="d-bal" class="value">$0.00</div></div>
-        <div class="card"><div class="label">Status</div><div id="d-status" class="value">—</div></div>
-
-        <div class="card"><div class="label">Months</div><div id="d-months" class="value">—</div></div>
-        <div class="card"><div class="label">Down Payment</div><div id="d-down" class="value">—</div></div>
-        <div class="card"><div class="label">Monthly Payment</div><div id="d-monthly" class="value">—</div></div>
-        <div class="card"><div class="label">Confirm #</div><div id="d-conf" class="value">—</div></div>
+    <!-- Repayment Plan Details -->
+    <div class="card" style="margin-bottom:20px;">
+      <div class="card-header"><span class="icon" style="background:var(--blue-pale);color:var(--blue-dark);">📄</span> Repayment Plan Details</div>
+      <div class="card-body">
+        <div class="data-grid" id="repayGrid"></div>
       </div>
+    </div>
 
-      <div class="actions">
-        <a id="backBtn" class="btn alt">Back to Account</a>
-        <a id="openAgent" class="btn">Open in Agent Script</a>
-        <div style="flex:1"></div>
-        <div style="color:var(--muted)">Data source: GitHub</div>
+    <!-- Agreement Status -->
+    <div class="card" style="margin-bottom:20px;">
+      <div class="card-header"><span class="icon" style="background:var(--tan-light);color:var(--terracotta);">✍️</span> Agreement Status</div>
+      <div class="card-body">
+        <div class="data-grid" id="agreementGrid"></div>
+        <div id="agreementLinkWrap" style="margin-top:14px;display:none;">
+          <a id="agreementLink" class="agreement-link" href="#" target="_blank">🔗 View Signed Agreement</a>
+        </div>
       </div>
+    </div>
 
-      <div style="margin-top:12px">
-        <button class="toggle" id="toggleDebug">Show debug info</button>
-        <div id="debug" class="debug" aria-hidden="true"></div>
+    <!-- Balance Breakdown -->
+    <div class="card" style="margin-bottom:20px;">
+      <div class="card-header"><span class="icon" style="background:var(--blue-pale);color:var(--blue-dark);">💰</span> Balance Breakdown</div>
+      <div class="card-body">
+        <table class="breakdown-table" id="breakdownTable">
+          <thead><tr><th>Item</th><th style="text-align:right;">Amount</th></tr></thead>
+          <tbody id="breakdownBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Payment Plan Options -->
+    <div class="card" style="margin-bottom:20px;">
+      <div class="card-header"><span class="icon" style="background:var(--tan-light);color:var(--terracotta);">📊</span> Payment Plan Options</div>
+      <div class="card-body" id="planOptions">
+        <p style="color:var(--text-light);font-size:.88rem;">No plan options available.</p>
+      </div>
+    </div>
+
+    <!-- Notes -->
+    <div class="card" style="margin-bottom:20px;">
+      <div class="card-header"><span class="icon" style="background:var(--tan-light);color:var(--terracotta);">📝</span> Repayment Notes</div>
+      <div class="card-body">
+        <div class="notes-box" id="notesBox">—</div>
       </div>
     </div>
   </div>
 
-  <script>
-    (async function(){
-      const DATA_RAW_URL = 'https://raw.githubusercontent.com/astarrett/Demo-Scripts/main/data-actions/Utility-Accounts';
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="card">
+      <div class="card-header">Quick Actions</div>
+      <div class="card-body">
+        <a class="action-btn primary" id="btn-agent">🏠 Agent Dashboard</a>
+        <a class="action-btn secondary" id="btn-payment">💰 Take Payment</a>
+        <button class="action-btn outline" onclick="window.print()">🖨️ Print Repayment</button>
+      </div>
+    </div>
 
-      const params = new URLSearchParams(window.location.search);
-      const acct = (params.get('accountNumber') || '').trim();
-      const el = id => document.getElementById(id);
-      const set = (id, v) => { const e = el(id); if(e) e.innerText = (v === undefined || v === null || v === '') ? '—' : v; };
+    <div class="card">
+      <div class="card-header">Eligibility</div>
+      <div class="card-body" id="eligBody"></div>
+    </div>
 
-      function currency(v){
-        if(v === undefined || v === null || v === '') return '—';
-        const n = Number(String(v).replace(/[^0-9.-]/g,''));
-        return isNaN(n) ? String(v) : n.toLocaleString(undefined,{style:'currency',currency:'USD'});
-      }
+    <div class="card">
+      <div class="card-header">Account Info</div>
+      <div class="card-body" id="acctInfo"></div>
+    </div>
+  </div>
+</div>
 
-      const debug = el('debug'), toggle = el('toggleDebug');
-      toggle.addEventListener('click', ()=> {
-        const showing = debug.style.display === 'block';
-        debug.style.display = showing ? 'none' : 'block';
-        toggle.innerText = showing ? 'Show debug info' : 'Hide debug info';
-      });
+<script>
+  const P = Object.fromEntries(new URLSearchParams(window.location.search));
+  const g = (k) => P[k] || '';
+  const d = (k, fmt) => { const v = g(k); if (!v) return '—'; if (fmt === '$') return '$' + parseFloat(v).toFixed(2); return v; };
+  function qs() { return new URLSearchParams(P).toString(); }
 
-      if(!acct){
-        set('d-name','No accountNumber in URL');
-        return;
-      }
+  // Navigation
+  document.getElementById('nav-agent').href = 'agent-script.html?' + qs();
+  document.getElementById('nav-repayment').href = 'repayment-script.html?' + qs();
+  document.getElementById('nav-payment').href = 'take-payment-script.html?' + qs();
+  document.getElementById('btn-agent').href = 'agent-script.html?' + qs();
+  document.getElementById('btn-payment').href = 'take-payment-script.html?' + qs();
 
-      let rawText=null, data=null;
-      try {
-        const r = await fetch(DATA_RAW_URL, {cache: 'no-store'});
-        rawText = await r.text();
-        if(!r.ok) throw new Error('Fetch failed ' + r.status + ' ' + DATA_RAW_URL);
-        data = JSON.parse(rawText);
-      } catch (err) {
-        el('debug').innerText = 'ERROR:\n' + err.message + '\n\nRaw (truncated):\n' + (rawText ? rawText.substring(0,2000) : '(none)');
-        el('debug').style.display = 'block';
-        set('d-name','Error loading data');
-        return;
-      }
+  // Hero
+  document.getElementById('heroBalance').textContent = d('currentBalance', '$');
+  document.getElementById('heroAcct').textContent = d('key');
+  document.getElementById('heroName').textContent = d('customerName');
+  const repayStatus = g('repaymentPlanStatus');
+  const rsEl = document.getElementById('heroRepayStatus');
+  if (repayStatus === 'PENDING') { rsEl.className = 'badge badge-pending'; rsEl.textContent = '⏳ Pending'; }
+  else if (repayStatus === 'ACTIVE') { rsEl.className = 'badge badge-safe'; rsEl.textContent = '✓ Active'; }
+  else if (repayStatus === 'NONE') { rsEl.className = 'badge badge-info'; rsEl.textContent = 'None'; }
+  else { rsEl.textContent = repayStatus || '—'; }
 
-      const rec = data[acct] || {};
-      if(!Object.keys(rec).length){
-        el('debug').innerText = 'Account not found. Available keys: ' + Object.keys(data).slice(0,30).join(', ');
-        el('debug').style.display = 'block';
-        set('d-name','Account Not Found');
-        set('d-acc', acct);
-        return;
-      }
+  // Data grids
+  function makeGrid(id, items) {
+    document.getElementById(id).innerHTML = items.map(i => `<div class="data-item"><div class="dt">${i[0]}</div><div class="dd">${i[1]}</div></div>`).join('');
+  }
 
-      const getVal = (k) => {
-        if(params.has(k) && params.get(k) !== null && params.get(k) !== '') return params.get(k);
-        return rec[k] || rec[k.charAt(0).toLowerCase() + k.slice(1)] || rec[k.toUpperCase()] || '';
-      };
+  makeGrid('repayGrid', [
+    ['Account Number', d('key')],
+    ['Customer Name', d('customerName')],
+    ['Repayment Status', d('repaymentPlanStatus')],
+    ['Confirmation #', d('repaymentConfirmationNumber')],
+    ['Down Payment', d('repaymentDownPayment', '$')],
+    ['Monthly Payment', d('repaymentMonthlyPayment', '$')],
+    ['# of Months', d('repaymentMonths')],
+    ['Start Date', d('repaymentStartDate')],
+  ]);
 
-      set('d-name', getVal('customerName') || rec.customerName || rec.customer || '—');
-      set('d-acc', acct);
-      set('d-bal', currency(getVal('currentBalance') || rec.currentBalance || rec.balance));
-      set('d-status', getVal('repaymentPlanStatus') || rec.repaymentPlanStatus || rec.repaymentPlan || 'None');
+  const agStat = g('agreementStatus');
+  const agStatDisplay = agStat === 'NOT_SENT' ? 'Not Sent' : agStat === 'SENT' ? 'Sent' : agStat === 'SIGNED' ? 'Signed' : agStat || '—';
+  makeGrid('agreementGrid', [
+    ['Agreement Status', agStatDisplay],
+    ['Sent At', g('agreementSentAt') ? new Date(g('agreementSentAt')).toLocaleString() : '—'],
+    ['Received At', g('agreementReceivedAt') ? new Date(g('agreementReceivedAt')).toLocaleString() : '—'],
+    ['Signed By', d('agreementSignedName')],
+  ]);
+  if (g('agreementLink')) {
+    document.getElementById('agreementLinkWrap').style.display = 'block';
+    document.getElementById('agreementLink').href = g('agreementLink');
+  }
 
-      set('d-months', getVal('repaymentMonths') || '—');
-      set('d-down', getVal('repaymentDownPayment') ? currency(getVal('repaymentDownPayment')) : '—');
-      set('d-monthly', getVal('repaymentMonthlyPayment') ? currency(getVal('repaymentMonthlyPayment')) : '—');
-      set('d-conf', getVal('repaymentConfirmationNumber') || '—');
+  // Breakdown
+  const bal = parseFloat(g('currentBalance')) || 0;
+  const down = parseFloat(g('repaymentDownPayment')) || 0;
+  const monthly = parseFloat(g('repaymentMonthlyPayment')) || 0;
+  const months = parseInt(g('repaymentMonths')) || 0;
+  const tbody = document.getElementById('breakdownBody');
+  let rows = '';
+  rows += `<tr><td>Current Balance</td><td style="text-align:right">${bal ? '$'+bal.toFixed(2) : '—'}</td></tr>`;
+  if (down > 0) rows += `<tr><td>Down Payment</td><td style="text-align:right">−$${down.toFixed(2)}</td></tr>`;
+  if (monthly > 0 && months > 0) rows += `<tr><td>Monthly (${months} × $${monthly.toFixed(2)})</td><td style="text-align:right">$${(monthly*months).toFixed(2)}</td></tr>`;
+  const remaining = bal - down;
+  rows += `<tr><td>Remaining After Down Payment</td><td style="text-align:right">${remaining > 0 ? '$'+remaining.toFixed(2) : '—'}</td></tr>`;
+  tbody.innerHTML = rows;
 
-      el('backBtn').href = 'agent-script.html?accountNumber=' + encodeURIComponent(acct);
-      el('openAgent').href = 'agent-script.html?accountNumber=' + encodeURIComponent(acct);
+  // Plan options
+  const eligible = g('arrangementEligible') === 'True';
+  const maxMo = parseInt(g('arrangementMaxMonths')) || 0;
+  const minDown = parseFloat(g('arrangementMinDownPayment')) || 0;
+  const planDiv = document.getElementById('planOptions');
+  if (eligible && maxMo > 0 && bal > 0) {
+    let html = '';
+    for (let m = Math.max(1, Math.ceil(maxMo/3)); m <= maxMo; m += Math.max(1, Math.floor(maxMo/3))) {
+      const afterDown = bal - minDown;
+      const mp = afterDown > 0 ? (afterDown / m).toFixed(2) : '0.00';
+      const isCurrent = m === months;
+      html += `<div class="plan-option ${isCurrent ? 'active-plan' : ''}">
+        <div class="plan-title">${m}-Month Plan ${isCurrent ? '<span class="badge badge-safe">Current</span>' : ''}</div>
+        <div class="plan-detail">Down payment: $${minDown.toFixed(2)} · Monthly: $${mp} × ${m} months</div>
+      </div>`;
+    }
+    if (months > 0 && ![Math.max(1, Math.ceil(maxMo/3)), Math.max(1, Math.ceil(maxMo/3))+Math.max(1, Math.floor(maxMo/3)), maxMo].includes(months)) {
+      const afterDown = bal - minDown;
+      const mp = afterDown > 0 ? (afterDown / months).toFixed(2) : '0.00';
+      html = `<div class="plan-option active-plan">
+        <div class="plan-title">${months}-Month Plan <span class="badge badge-safe">Current</span></div>
+        <div class="plan-detail">Down payment: $${down.toFixed(2)} · Monthly: $${monthly.toFixed(2)} × ${months} months</div>
+      </div>` + html;
+    }
+    planDiv.innerHTML = html;
+  } else if (!eligible) {
+    const reason = g('arrangementIneligibleReason');
+    planDiv.innerHTML = `<div class="notes-box" style="border-left-color:var(--terracotta);">⚠ Customer is <b>not eligible</b> for arrangement plans.${reason ? '<br>Reason: ' + reason : ''}</div>`;
+  }
 
-      debug.innerText = 'Loaded account ' + acct + '\nFields present: ' + Object.keys(rec).join(', ');
-    })();
-  </script>
+  // Notes
+  const notes = [g('notes'), g('arrangementIneligibleReason') ? 'Ineligible Reason: ' + g('arrangementIneligibleReason') : ''].filter(Boolean).join('\n') || '—';
+  document.getElementById('notesBox').textContent = notes;
+
+  // Sidebar eligibility
+  const eligDiv = document.getElementById('eligBody');
+  const eligItems = [];
+  eligItems.push(`<div style="margin-bottom:8px;"><span class="badge ${eligible ? 'badge-safe' : 'badge-danger'}">${eligible ? '✓ Eligible' : '✗ Not Eligible'}</span></div>`);
+  if (maxMo > 0) eligItems.push(`<div class="info-row"><span class="lbl">Max Months</span><span class="val">${maxMo}</span></div>`);
+  if (minDown > 0) eligItems.push(`<div class="info-row"><span class="lbl">Min Down</span><span class="val">$${minDown.toFixed(2)}</span></div>`);
+  eligDiv.innerHTML = eligItems.join('') || '<span style="color:var(--text-light);font-size:.85rem;">—</span>';
+
+  // Sidebar account info
+  const addr = [g('serviceAddress'), g('city'), g('state'), g('zip')].filter(Boolean).join(', ') || '—';
+  document.getElementById('acctInfo').innerHTML = [
+    ['Account #', d('key')],
+    ['Name', d('customerName')],
+    ['Address', addr],
+    ['Status', g('accountStatus') || '—'],
+  ].map(i => `<div class="info-row"><span class="lbl">${i[0]}</span><span class="val">${i[1]}</span></div>`).join('');
+</script>
 </body>
 </html>
