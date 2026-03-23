@@ -1,146 +1,217 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Utility Company - Agent Script</title>
-    <style>
-        :root { --sf-teal: #007a8d; --sf-red: #d9534f; --sf-green: #28a745; --border-color: #e9ecef; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; display: flex; height: 100vh; color: #495057; }
-        .left-panel { flex: 1; padding: 25px; overflow-y: auto; border-right: 1px solid var(--border-color); }
-        .right-panel { width: 350px; background-color: #f8f9fa; padding: 25px; display: flex; flex-direction: column; gap: 20px; }
-        .header { border-bottom: 2px solid var(--sf-teal); padding-bottom: 10px; margin-bottom: 20px; }
-        .section-title { font-size: 12px; font-weight: 800; color: #adb5bd; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px; }
-        .card { background: white; border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-        .label { font-size: 11px; font-weight: 700; color: #6c757d; margin-bottom: 5px; }
-        .value { font-size: 16px; font-weight: 700; color: #212529; }
-        .status-pill { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; color: white; margin-top: 5px; }
-        .map-container { height: 300px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border-color); margin-top: 20px; }
-        .btn { display: block; width: 100%; padding: 12px; background: var(--sf-teal); color: white; text-align: center; text-decoration: none; border-radius: 6px; font-weight: 700; transition: background 0.2s; }
-        .btn:hover { background: #005f6d; }
-        .debug-info { font-size: 10px; color: #ced4da; margin-top: auto; }
-    </style>
+  <meta charset="utf-8" />
+  <title>Utility Company — Agent Script</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    :root{--teal:#007a8d;--red:#d9534f;--muted:#6c757d;--border:#e9eef2;--bg:#f7f9fb}
+    html,body{height:100%;margin:0;font-family:"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:#222}
+    .container{display:flex;height:100vh;gap:0}
+    .left{flex:1;padding:26px 28px;overflow:auto}
+    .right{width:360px;background:#fff;border-left:1px solid var(--border);padding:22px;display:flex;flex-direction:column}
+    .title{color:var(--teal);font-size:22px;margin:0 0 6px 0;font-weight:800}
+    .sub{color:var(--muted);font-size:13px;margin-bottom:12px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+    .card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px 14px;box-shadow:0 2px 6px rgba(0,0,0,0.02)}
+    .label{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.6px}
+    .value{margin-top:8px;font-size:16px;font-weight:800}
+    .big{font-size:24px;color:var(--teal)}
+    .pill{display:inline-block;padding:6px 12px;border-radius:20px;color:#fff;font-weight:800;font-size:12px}
+    .map{margin-top:18px;height:300px;border-radius:10px;overflow:hidden;border:1px solid var(--border);background:#fafafa}
+    .btn{display:block;width:100%;text-align:center;padding:12px;border-radius:8px;color:#fff;text-decoration:none;font-weight:800;background:var(--teal);margin-top:18px}
+    .meta{margin-top:12px;color:var(--muted);font-size:12px}
+    .debug{margin-top:14px;background:#0b1220;color:#cfe8ff;padding:10px;border-radius:8px;font-family:monospace;font-size:12px;display:none;white-space:pre-wrap;max-height:160px;overflow:auto}
+    .toggle{background:transparent;border:0;color:var(--teal);text-decoration:underline;cursor:pointer;padding:0;font-size:13px;margin-top:8px}
+    @media (max-width:980px){.right{width:320px}.map{height:260px}}
+    @media (max-width:700px){.container{flex-direction:column}.right{width:100%;order:2}.left{order:1}}
+  </style>
 </head>
 <body>
-    <div class="left-panel">
-        <div class="header">
-            <h1 style="margin:0; color: var(--sf-teal); font-size: 24px;">Customer Overview</h1>
-        </div>
-        
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-            <div class="card">
-                <div class="label">Customer Name</div>
-                <div class="value" id="d-name">Loading...</div>
-            </div>
-            <div class="card">
-                <div class="label">Account Number</div>
-                <div class="value" id="d-acc">—</div>
-            </div>
+  <div class="container">
+    <div class="left">
+      <h1 class="title">Customer Overview</h1>
+      <div class="sub">Agent view — dynamic data from accounts JSON</div>
+
+      <div class="grid">
+        <div class="card">
+          <div class="label">Customer</div>
+          <div id="name" class="value">—</div>
+          <div id="notes" style="margin-top:8px;color:var(--muted);font-weight:600">—</div>
         </div>
 
         <div class="card">
-            <div class="label">Service Address</div>
-            <div class="value" id="d-address">—</div>
+          <div class="label">Account #</div>
+          <div id="account" class="value">—</div>
+          <div style="margin-top:12px">
+            <div class="label">Status</div>
+            <div id="status" class="value" style="font-size:14px">—</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:14px">
+        <div class="label">Service Address</div>
+        <div id="address" class="value">—</div>
+      </div>
+
+      <div class="card" style="height:360px; display:flex; flex-direction:column; justify-content:flex-start">
+        <div class="label">Account Notes</div>
+        <div id="notesLarge" style="margin-top:8px;color:var(--muted);font-weight:600">—</div>
+        <div class="map" id="map"></div>
+      </div>
+    </div>
+
+    <div class="right">
+      <div style="flex:0 0 auto">
+        <div class="label" style="margin-bottom:6px">Financial Summary</div>
+        <div class="card" style="margin-bottom:12px">
+          <div class="label">Current Balance</div>
+          <div id="balance" class="value big">$0.00</div>
         </div>
 
+        <div class="card" style="margin-bottom:12px">
+          <div class="label">Last Payment</div>
+          <div id="last" class="value">—</div>
+        </div>
+
+        <div class="label" style="margin-bottom:6px;margin-top:6px">Risk & Eligibility</div>
         <div class="card">
-            <div class="label">Account Notes</div>
-            <div class="value" id="d-notes" style="font-weight: 400; font-style: italic;">—</div>
+          <div class="label">Shut-off Risk</div>
+          <div id="risk" class="value"><span id="riskPill" class="pill" style="background:var(--teal)">Checking...</span></div>
         </div>
 
-        <div class="map-container" id="map-frame">
-            <!-- Map will load here -->
-        </div>
+        <a id="repayBtn" class="btn" href="#">Open Repayment Script</a>
+        <div class="meta" id="sourceNote">Source: GitHub raw</div>
+      </div>
+
+      <button class="toggle" id="toggleDebug">Show debug</button>
+      <div id="debug" class="debug" aria-hidden="true"></div>
     </div>
+  </div>
 
-    <div class="right-panel">
-        <div>
-            <div class="section-title">Financial Summary</div>
-            <div class="card">
-                <div class="label">Current Balance</div>
-                <div class="value" id="d-bal" style="font-size: 24px; color: var(--sf-teal);">$0.00</div>
-            </div>
-            <div class="card">
-                <div class="label">Last Payment</div>
-                <div class="value" id="d-last-pay">—</div>
-            </div>
-        </div>
+  <script>
+    (async function(){
+      // Raw GitHub URL(s) to your data (explicit, per your repo)
+      const rawUrls = [
+        'https://raw.githubusercontent.com/astarrett/Demo-Scripts/main/data-actions/Utility-Accounts',
+        'https://raw.githubusercontent.com/astarrett/Demo-Scripts/main/data-actions/Utility-Accounts.json',
+        'https://raw.githubusercontent.com/astarrett/Demo-Scripts/main/data-actions/accounts.json'
+      ];
 
-        <div>
-            <div class="section-title">Risk & Eligibility</div>
-            <div class="card">
-                <div class="label">Shut-off Risk</div>
-                <div id="d-risk-pill" class="status-pill" style="background: #6c757d;">Checking...</div>
-            </div>
-        </div>
+      const params = new URLSearchParams(window.location.search);
+      const acct = (params.get('accountNumber') || '').trim();
+      const el = id => document.getElementById(id);
+      const set = (id, v) => { const e = el(id); if(e) e.innerText = (v === undefined || v === null || v === '') ? '—' : v; };
+      const setHTML = (id, html) => { const e = el(id); if(e) e.innerHTML = html; };
 
-        <a href="#" id="btn-repayment" class="btn">Open Repayment Script</a>
-        
-        <div class="debug-info" id="debug-log">Source: data-actions/Utility-Accounts</div>
-    </div>
+      function currency(v){
+        if(v === undefined || v === null || v === '') return '—';
+        const n = Number(String(v).replace(/[^0-9.-]/g,''));
+        if(isNaN(n)) return String(v);
+        return n.toLocaleString(undefined, {style:'currency', currency:'USD'});
+      }
 
-    <script>
-        async function loadData() {
-            const params = new URLSearchParams(window.location.search);
-            const acct = params.get('accountNumber');
-            const dataUrl = 'https://astarrett.github.io/Demo-Scripts/data-actions/Utility-Accounts';
+      // debug toggle
+      const debug = el('debug'), toggle = el('toggleDebug');
+      toggle.onclick = () => {
+        const showing = debug.style.display === 'block';
+        debug.style.display = showing ? 'none' : 'block';
+        toggle.innerText = showing ? 'Show debug' : 'Hide debug';
+      };
 
-            if (!acct) {
-                document.getElementById('d-name').innerText = "No Account Number Provided";
-                return;
-            }
+      if(!acct){
+        set('name','No accountNumber in URL');
+        return;
+      }
 
-            try {
-                const response = await fetch(dataUrl);
-                if (!response.ok) throw new Error('Fetch failed: ' + response.status);
-                const data = await response.json();
-                const record = data[acct];
-
-                if (!record) {
-                    document.getElementById('d-name').innerText = "Account Not Found";
-                    document.getElementById('d-acc').innerText = acct;
-                    return;
-                }
-
-                // Populate UI
-                document.getElementById('d-name').innerText = record.customerName || '—';
-                document.getElementById('d-acc').innerText = acct;
-                document.getElementById('d-address').innerText = (record.serviceAddress || '') + ', ' + (record.city || '') + ' ' + (record.state || '');
-                document.getElementById('d-notes').innerText = record.notes || 'No notes on file.';
-                document.getElementById('d-bal').innerText = '$' + (record.currentBalance || '0.00');
-                document.getElementById('d-last-pay').innerText = (record.lastPaymentDate || '—') + ' ($' + (record.lastPaymentAmount || '0') + ')';
-
-                // Risk Pill
-                const riskPill = document.getElementById('d-risk-pill');
-                if (record.shutoffRisk === "true" || record.shutoffRisk === true) {
-                    riskPill.innerText = "HIGH RISK";
-                    riskPill.style.background = "var(--sf-red)";
-                } else {
-                    riskPill.innerText = "NORMAL";
-                    riskPill.style.background = "var(--sf-green)";
-                }
-
-                // Map
-                const lat = "35.6870"; // Default Santa Fe
-                const lon = "-105.9378";
-                const bbox = 0.01;
-                const left = parseFloat(lon) - bbox;
-                const right = parseFloat(lon) + bbox;
-                const top = parseFloat(lat) + bbox;
-                const bottom = parseFloat(lat) - bbox;
-                
-                document.getElementById('map-frame').innerHTML = `<iframe width="100%" height="100%" frameborder="0" scrolling="no" src="https://www.openstreetmap.org/export/embed.html?bbox=${left},${bottom},${right},${top}&layer=mapnik&marker=${lat},${lon}"></iframe>`;
-
-                // Update Button Link
-                document.getElementById('btn-repayment').href = `repayment-script.html?accountNumber=${acct}`;
-
-            } catch (error) {
-                console.error(error);
-                document.getElementById('d-name').innerText = "Error Loading Data";
-                document.getElementById('debug-log').innerText = "Error: " + error.message;
-            }
+      // Try raw URLs until one returns parseable JSON
+      let rawText = null, data = null, lastErr = '';
+      for(const u of rawUrls){
+        try {
+          const r = await fetch(u, {cache: 'no-store'});
+          rawText = await r.text();
+          if(!r.ok){
+            lastErr = `Fetch failed ${r.status} ${u}`;
+            continue;
+          }
+          try {
+            data = JSON.parse(rawText);
+            el('sourceNote').innerText = 'Source: ' + u;
+            break;
+          } catch(parseErr){
+            lastErr = `JSON parse failed for ${u}: ${parseErr.message}`;
+            continue;
+          }
+        } catch(netErr){
+          lastErr = `Network error for ${u}: ${netErr.message}`;
+          continue;
         }
+      }
 
-        loadData();
-    </script>
+      if(!data){
+        set('name','Error Loading Data');
+        debug.innerText = 'ERROR:\n' + (lastErr || 'No response') + '\n\nRaw (truncated):\n' + (rawText ? rawText.substring(0,2000) : '(none)');
+        debug.style.display = 'block';
+        return;
+      }
+
+      // Lookup record
+      const rec = data[acct] || null;
+      if(!rec){
+        debug.innerText = 'Account not found. Sample keys: ' + Object.keys(data).slice(0,20).join(', ');
+        debug.style.display = 'block';
+        set('name','Account Not Found');
+        set('account', acct);
+        return;
+      }
+
+      // flexible key picker
+      const pick = (o, keys) => {
+        for(const k of keys){
+          if(!o) break;
+          if(k in o) return o[k];
+          const alt = k.charAt(0).toLowerCase() + k.slice(1);
+          if(alt in o) return o[alt];
+        }
+        return undefined;
+      };
+
+      set('name', pick(rec,['customerName','customer_name','customer']) || '—');
+      set('account', acct);
+      set('address', (pick(rec,['serviceAddress','service_address','address']) || '') );
+      set('notes', pick(rec,['notes','note','AccountNotes']) || '—');
+      set('notesLarge', pick(rec,['notes','note','AccountNotes']) || '—');
+      set('balance', currency(pick(rec,['currentBalance','current_balance','balance'])));
+      set('last', (pick(rec,['lastPaymentDate','last_payment_date']) || '—') + ' (' + (pick(rec,['lastPaymentAmount','last_payment_amount']) || '—') + ')');
+
+      // Risk
+      const riskVal = pick(rec,['shutoffRisk','shutOffRisk','shutoff_risk']);
+      const riskPill = el('riskPill');
+      if(riskVal === true || String(riskVal).toLowerCase() === 'true' || Number(riskVal) === 1){
+        riskPill.innerText = 'HIGH RISK';
+        riskPill.style.background = 'var(--red)';
+      } else {
+        riskPill.innerText = 'NORMAL';
+        riskPill.style.background = 'var(--teal)';
+      }
+
+      // Map
+      const lat = pick(rec,['latitude','lat']) || '35.6870';
+      const lon = pick(rec,['longitude','lon','lng']) || '-105.9378';
+      const bbox = 0.012;
+      const left = (parseFloat(lon) - bbox).toFixed(6);
+      const right = (parseFloat(lon) + bbox).toFixed(6);
+      const top = (parseFloat(lat) + bbox).toFixed(6);
+      const bottom = (parseFloat(lat) - bbox).toFixed(6);
+      el('map').innerHTML = `<iframe width="100%" height="100%" frameborder="0" scrolling="no" src="https://www.openstreetmap.org/export/embed.html?bbox=${left},${bottom},${right},${top}&layer=mapnik&marker=${lat},${lon}"></iframe>`;
+
+      // Repayment link
+      el('repayBtn').href = 'repayment-script.html?accountNumber=' + encodeURIComponent(acct);
+
+      // optional debug summary
+      debug.innerText = 'Loaded record for ' + acct + '\nFields: ' + Object.keys(rec).join(', ');
+    })();
+  </script>
 </body>
 </html>
