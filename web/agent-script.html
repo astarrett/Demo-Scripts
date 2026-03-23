@@ -2,170 +2,211 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Santa Fe Utility - Agent Script</title>
+  <title>Utility Company — Agent Script</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <style>
-    :root { --sf-teal:#007a8d; --sf-red:#d9534f; --sf-green:#28a745; --muted:#6c757d; --border:#e9ecef; }
-    body { font-family: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial; margin:20px; color:#333; background:#fafafa; }
-    .panel { max-width:1000px; margin:0 auto; background:#fff; border:1px solid var(--border); border-radius:8px; padding:18px; box-shadow:0 1px 2px rgba(0,0,0,0.04); }
-    .header { display:flex; justify-content:space-between; align-items:center; border-bottom:3px solid var(--sf-teal); padding-bottom:10px; margin-bottom:16px; }
-    .title { font-size:20px; color:var(--sf-teal); margin:0; }
-    .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:12px; }
-    .card { background:#fff; border:1px solid #f1f1f1; padding:12px; border-radius:6px; }
-    .label { font-size:11px; color:var(--muted); font-weight:700; text-transform:uppercase; }
-    .value { font-size:16px; font-weight:700; margin-top:6px; color:#222; word-break:break-word; }
-    .row { display:flex; gap:12px; margin-bottom:12px; }
-    .map { border-radius:6px; overflow:hidden; border:1px solid #ececec; height:260px; }
-    .actions { margin-top:14px; display:flex; gap:10px; }
-    .btn { padding:10px 14px; background:var(--sf-teal); color:#fff; text-decoration:none; border-radius:6px; font-weight:700; }
-    .btn.secondary { background:#f7f7f7; color:#333; border:1px solid #ddd; }
-    .muted { color:var(--muted); font-size:13px; }
-    .small { font-size:13px; color:#555; }
-    @media (max-width:700px) { .grid { grid-template-columns:1fr; } .row { flex-direction:column; } }
+    :root{
+      --brand:#00607a; --accent:#ffb400; --danger:#d9534f; --muted:#6c757d; --border:#e9eef2;
+      --bg:#f7f9fb; --card:#ffffff;
+    }
+    html,body{height:100%}
+    body{font-family: "Segoe UI", Roboto, Arial; background:var(--bg); margin:18px; color:#222}
+    .wrap{max-width:1100px;margin:0 auto}
+    .panel{background:var(--card); border:1px solid var(--border); border-radius:10px; padding:20px; box-shadow:0 6px 18px rgba(0,0,0,0.04)}
+    .header{display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid var(--brand);padding-bottom:12px;margin-bottom:16px}
+    .title{color:var(--brand);font-size:20px;margin:0}
+    .sub{color:var(--muted);font-size:13px}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
+    .card{background:linear-gradient(180deg,#fff,#fbfdff);padding:12px;border-radius:8px;border:1px solid #eef3f6}
+    .label{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase}
+    .value{font-size:16px;font-weight:800;margin-top:6px;word-break:break-word}
+    .wide{grid-column:1 / span 3; display:flex; gap:12px}
+    .address{flex:1}
+    .meta{width:340px}
+    .map{border-radius:8px; overflow:hidden; border:1px solid #e6ecf0; height:300px}
+    .actions{display:flex;gap:10px;align-items:center;margin-top:14px}
+    .btn{padding:10px 14px;border-radius:8px;font-weight:700;color:#fff;text-decoration:none;background:var(--brand)}
+    .btn.alt{background:#fff;color:#222;border:1px solid #d7dde1}
+    .debug{margin-top:12px;background:#0f1720;color:#fff;padding:10px;border-radius:6px;font-family:monospace;font-size:12px;display:none}
+    .debug pre{margin:0; white-space:pre-wrap; word-break:break-word}
+    .toggle-debug{cursor:pointer;color:var(--brand);text-decoration:underline;font-size:13px;background:none;border:none;padding:0}
+    @media (max-width:900px){ .grid{grid-template-columns:1fr} .wide{flex-direction:column} .meta{width:auto} .map{height:220px} }
   </style>
 </head>
 <body>
-  <div class="panel">
-    <div class="header">
-      <h1 class="title">Santa Fe Utility — Account</h1>
-      <div class="small" id="load-status">Loading…</div>
-    </div>
-
-    <div class="grid">
-      <div class="card">
-        <div class="label">Customer</div>
-        <div id="name" class="value">—</div>
-        <div class="small muted" id="notes">—</div>
+  <div class="wrap">
+    <div class="panel">
+      <div class="header">
+        <div>
+          <h1 class="title">Utility Company — Account</h1>
+          <div class="sub">Agent view — dynamic data from accounts.json</div>
+        </div>
+        <div id="loadStatus" class="sub">Loading…</div>
       </div>
 
-      <div class="card">
-        <div class="label">Account #</div>
-        <div id="account" class="value">—</div>
+      <div class="grid">
+        <div class="card">
+          <div class="label">Customer</div>
+          <div id="name" class="value">—</div>
+          <div id="notes" class="sub" style="margin-top:8px">—</div>
+        </div>
 
-        <div style="margin-top:10px">
-          <span class="label">Status</span>
-          <div id="status" class="value" style="font-size:14px; font-weight:700">—</div>
+        <div class="card">
+          <div class="label">Account #</div>
+          <div id="account" class="value">—</div>
+
+          <div style="margin-top:10px">
+            <div class="label">Status</div>
+            <div id="status" class="value" style="font-size:14px">—</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="label">Balance</div>
+          <div id="balance" class="value">$0.00</div>
+
+          <div style="margin-top:10px">
+            <div class="label">Last Payment</div>
+            <div id="lastPayment" class="value" style="font-size:14px">—</div>
+          </div>
         </div>
       </div>
 
-      <div class="card">
-        <div class="label">Balance</div>
-        <div id="balance" class="value">$0.00</div>
+      <div class="wide" style="margin-bottom:12px">
+        <div class="card address">
+          <div class="label">Service Address</div>
+          <div id="address" class="value">—</div>
+          <div id="citystatezip" class="sub" style="margin-top:8px">—</div>
+        </div>
 
-        <div style="margin-top:10px">
-          <span class="label">Last Payment</span>
-          <div id="lastPay" class="value" style="font-size:14px; font-weight:700">—</div>
+        <div class="card meta">
+          <div class="label">Grid Status</div>
+          <div id="gridStatus" class="value">—</div>
+
+          <div style="margin-top:12px">
+            <div class="label">Repayment Plan</div>
+            <div id="repaymentSummary" class="value">—</div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="row">
-      <div class="card" style="flex:1">
-        <div class="label">Service Address</div>
-        <div id="address" class="value">—</div>
-        <div class="small muted" id="citystatezip">—</div>
+      <div class="map" id="mapContainer" aria-hidden="false"></div>
+
+      <div class="actions">
+        <a id="openRepayment" class="btn">Open Repayment</a>
+        <a id="refreshBtn" class="btn alt">Refresh</a>
+        <div style="flex:1"></div>
+        <div class="sub">Data source: <strong>accounts.json</strong> (GitHub)</div>
       </div>
 
-      <div class="card" style="width:320px">
-        <div class="label">Current Grid Status</div>
-        <div id="grid-status" class="value">—</div>
-
-        <div style="margin-top:10px">
-          <div class="label">Repayment Plan</div>
-          <div id="repaymentPlan" class="value">—</div>
-        </div>
+      <div style="margin-top:12px">
+        <button class="toggle-debug" id="toggleDebug">Show debug info</button>
+        <div id="debug" class="debug" aria-hidden="true"><pre id="debugText"></pre></div>
       </div>
-    </div>
-
-    <div class="map" id="mapContainer" aria-hidden="false">
-      <!-- Map iframe inserted dynamically -->
-    </div>
-
-    <div class="actions">
-      <a id="openRepayment" class="btn">Open Repayment Script</a>
-      <a id="refresh" class="btn secondary">Refresh</a>
-      <div style="flex:1"></div>
-      <div class="muted">Data source: accounts.json (GitHub)</div>
     </div>
   </div>
 
   <script>
     (async function(){
-      const dataUrl = '/Demo-Scripts/data-actions/accounts.json'; // relative to GH pages root
-      // If using raw.githubusercontent or custom domain, replace the path accordingly:
-      // const dataUrl = 'https://astarrett.github.io/Demo-Scripts/data-actions/accounts.json';
+      // Absolute path to the accounts.json hosted on GitHub Pages
+      const dataUrl = 'https://astarrett.github.io/Demo-Scripts/data-actions/accounts.json';
       const params = new URLSearchParams(window.location.search);
       const acct = (params.get('accountNumber') || '').trim();
 
-      const setText = (id, val) => { const el = document.getElementById(id); if(el) el.innerText = val ?? '—'; };
+      const el = id => document.getElementById(id);
+      const set = (id, v) => { const e = el(id); if(e) e.innerText = (v !== undefined && v !== null && v !== '') ? v : '—'; };
 
-      function currency(v){
-        if(!v) return '—';
-        // allow numbers or already formatted strings
-        const n = Number(String(v).replace(/[^0-9.-]/g,'')); 
-        return isNaN(n) ? String(v) : n.toLocaleString(undefined, {style:'currency', currency:'USD'});
+      function formatCurrency(v){
+        if(v === undefined || v === null || v === '') return '—';
+        const n = Number(String(v).replace(/[^0-9.-]/g,''));
+        return isNaN(n) ? String(v) : n.toLocaleString(undefined,{style:'currency',currency:'USD'});
       }
 
-      try {
-        const res = await fetch(dataUrl);
-        if(!res.ok) throw new Error('Fetch failed ' + res.status);
-        const all = await res.json();
+      function pick(obj, keys){
+        // Try a list of keys with case variations
+        for(const k of keys){
+          if(obj === null || obj === undefined) break;
+          if(k in obj) return obj[k];
+          const alt = k.charAt(0).toLowerCase() + k.slice(1);
+          if(alt in obj) return obj[alt];
+          const up = k.toUpperCase();
+          if(up in obj) return obj[up];
+        }
+        return undefined;
+      }
 
-        setText('load-status','Loaded');
+      // Debug UI
+      const debug = el('debug');
+      const debugText = el('debugText');
+      const toggle = el('toggleDebug');
+      toggle.addEventListener('click', ()=>{
+        const showing = debug.style.display === 'block';
+        debug.style.display = showing ? 'none' : 'block';
+        debug.setAttribute('aria-hidden', showing ? 'true' : 'false');
+        toggle.innerText = showing ? 'Show debug info' : 'Hide debug info';
+      });
+
+      try{
+        const resp = await fetch(dataUrl, { cache: "no-store" });
+        if(!resp.ok) throw new Error('Fetch failed: ' + resp.status);
+        const all = await resp.json();
+        el('loadStatus').innerText = 'Loaded';
+        // Debug print of raw params + keys count
+        debugText.innerText = 'URL params:\n' + JSON.stringify(Object.fromEntries(params.entries()), null, 2) + '\n\nData keys count: ' + Object.keys(all || {}).length;
 
         if(!acct){
-          setText('name','No account number passed');
-          setText('account','—');
-          setText('balance','—');
-          setText('status','—');
+          set('name', 'No accountNumber in URL');
           return;
         }
 
-        const rec = all[acct];
+        const rec = all[acct] || null;
+        debugText.innerText += '\n\nLooking up account: ' + acct + '\nFound record: ' + (rec ? 'yes' : 'no') + (rec ? '\n\n' + JSON.stringify(rec, null, 2) : '');
+
         if(!rec){
-          setText('name','Account not found');
-          setText('account',acct);
-          setText('balance','—');
-          setText('status','—');
+          set('name', 'Account not found');
+          set('account', acct);
           return;
         }
 
-        // Populate fields
-        setText('name', rec.customerName || '—');
-        setText('account', acct);
-        setText('balance', currency(rec.currentBalance));
-        setText('status', rec.accountStatus || rec.repaymentPlanStatus || '—');
-        setText('lastPay', (rec.lastPaymentAmount ? currency(rec.lastPaymentAmount) : '—') + ' • ' + (rec.lastPaymentDate || '—'));
-        setText('address', rec.serviceAddress || '—');
-        setText('citystatezip', [rec.city, rec.state, rec.zip].filter(Boolean).join(', '));
-        setText('notes', rec.notes || ' ');
-        setText('grid-status', rec.shutoffRisk === 'true' || rec.shutOffRisk === 'true' ? 'At Risk' : 'Normal');
-        setText('repaymentPlan', rec.repaymentPlanStatus || 'None');
+        // Populate using flexible key names
+        set('name', pick(rec, ['customerName','customer','customer_name']) || '—');
+        set('account', acct);
+        set('balance', formatCurrency(pick(rec, ['currentBalance','current_balance','balance'])));
+        set('status', pick(rec, ['accountStatus','account_status','status','repaymentPlanStatus']) || '—');
+        const lastAmt = pick(rec, ['lastPaymentAmount','last_payment_amount','lastPayment']);
+        const lastDate = pick(rec, ['lastPaymentDate','last_payment_date']);
+        set('lastPayment', (lastAmt ? formatCurrency(lastAmt) : '—') + ' • ' + (lastDate || '—'));
+        set('address', pick(rec, ['serviceAddress','service_address','address']) || '—');
+        set('citystatezip', [pick(rec,['city']), pick(rec,['state']), pick(rec,['zip'])].filter(Boolean).join(', '));
+        set('notes', pick(rec,['notes','note']) || ' ');
+        // Grid / risk
+        const risk = (pick(rec,['shutoffRisk','shutoff_risk','shutOffRisk']) === 'true' || pick(rec,['shutoffRisk','shutoff_risk']) === true);
+        set('gridStatus', risk ? 'At Risk' : 'Normal');
+        set('repaymentSummary', pick(rec,['repaymentPlanStatus','repaymentPlan','planStatus']) || 'None');
 
-        // Map: use OpenStreetMap embed centered near Santa Fe; if address geocoding available later, replace marker coords dynamically
-        // Center set to Santa Fe lat/lon; zoomed closer for city-area view
-        const lat = rec.latitude || '35.6870';
-        const lon = rec.longitude || '-105.9378';
+        // Map - center on record lat/lon if present, otherwise default to a city center
+        const lat = pick(rec,['latitude','lat']) || '35.6870';
+        const lon = pick(rec,['longitude','lon','lng']) || '-105.9378';
         const zoom = 13;
-        const bboxSize = 0.03; // small bbox for zoom
-        const left = (parseFloat(lon) - bboxSize).toFixed(6);
-        const right = (parseFloat(lon) + bboxSize).toFixed(6);
-        const top = (parseFloat(lat) + bboxSize).toFixed(6);
-        const bottom = (parseFloat(lat) - bboxSize).toFixed(6);
-        const iframeSrc = `https://www.openstreetmap.org/export/embed.html?bbox=${left},${bottom},${right},${top}&layer=mapnik&marker=${lat},${lon}`;
-        document.getElementById('mapContainer').innerHTML = '<iframe width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="'+iframeSrc+'"></iframe>';
+        const bbox = 0.03;
+        const left = (parseFloat(lon) - bbox).toFixed(6);
+        const right = (parseFloat(lon) + bbox).toFixed(6);
+        const top = (parseFloat(lat) + bbox).toFixed(6);
+        const bottom = (parseFloat(lat) - bbox).toFixed(6);
+        const iframeSrc = 'https://www.openstreetmap.org/export/embed.html?bbox=' + left + ',' + bottom + ',' + right + ',' + top + '&layer=mapnik&marker=' + lat + ',' + lon;
+        el('mapContainer').innerHTML = '<iframe width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="'+iframeSrc+'"></iframe>';
 
-        // Build link to repayment page (pass accountNumber only - repayment fields will be filled later by AVA)
-        const repUrl = 'agent-script.html'.replace('agent-script.html','repayment-script.html') + '?accountNumber=' + encodeURIComponent(acct);
-        document.getElementById('openRepayment').href = repUrl;
+        // Open repayment link - pass only acct (AVA will provide repayment fields later if needed)
+        el('openRepayment').href = 'repayment-script.html?accountNumber=' + encodeURIComponent(acct);
 
-      } catch (err) {
+      }catch(err){
         console.error(err);
-        setText('load-status','Error loading data');
+        el('loadStatus').innerText = 'Error loading';
+        debugText.innerText += '\n\nERROR:\n' + (err && err.message ? err.message : String(err));
+        debug.style.display = 'block';
       }
 
-      // Refresh button
-      document.getElementById('refresh').addEventListener('click', ()=> location.reload());
+      el('refreshBtn').addEventListener('click', ()=> location.reload(true));
     })();
   </script>
 </body>
