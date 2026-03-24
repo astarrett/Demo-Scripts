@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Agent Dashboard — City Utilities Department</title>
-
 <style>
 body {
   font-family: Arial, sans-serif;
@@ -12,45 +11,36 @@ body {
   margin: 0;
   padding: 0;
 }
-
 .header {
   background: #c2572a;
   color: white;
   padding: 16px;
   font-size: 20px;
 }
-
 .container {
   padding: 20px;
 }
-
 .card {
   background: white;
   padding: 16px;
   border-radius: 8px;
   margin-bottom: 16px;
 }
-
 .label {
   font-weight: bold;
   margin-bottom: 6px;
 }
-
 .value {
   margin-bottom: 12px;
 }
 </style>
-
 </head>
-
 <body>
-
 <div class="header">
   City Utilities Department — Agent Dashboard
 </div>
 
 <div class="container">
-
   <div class="card">
     <div class="label">Account Number</div>
     <div class="value" id="accountNumber"></div>
@@ -87,12 +77,11 @@ body {
 
     <div class="label">Arrangement Eligible</div>
     <div class="value" id="arrangementEligible"></div>
-
   </div>
-
 </div>
 
 <script>
+const DATA_URL = "https://raw.githubusercontent.com/astarrett/Demo-Scripts/refs/heads/main/data-actions/Utility-Accounts";
 const params = new URLSearchParams(window.location.search);
 
 function g(k) {
@@ -100,22 +89,79 @@ function g(k) {
 }
 
 function set(id, val) {
-  document.getElementById(id).textContent = val || "—";
+  document.getElementById(id).textContent = (val !== undefined && val !== null && String(val) !== "") ? String(val) : "—";
 }
 
-set("accountNumber", g("accountNumber") || g("key"));
-set("customerName", g("customerName"));
-set("currentBalance", g("currentBalance"));
-set("accountStatus", g("accountStatus"));
-set("serviceAddress", g("serviceAddress"));
-set("city", g("city"));
-set("state", g("state"));
-set("zip", g("zip"));
-set("notes", g("notes"));
-set("shutOffRisk", g("shutOffRisk"));
-set("hardshipFlag", g("hardshipFlag"));
-set("arrangementEligible", g("arrangementEligible"));
-</script>
+function accountId() {
+  return g("accountNumber") || g("key") || "";
+}
 
+async function loadAccount() {
+  const acct = accountId();
+  if (!acct) {
+    set("accountNumber", "");
+    return;
+  }
+
+  try {
+    const resp = await fetch(DATA_URL, { cache: "no-store" });
+    const data = await resp.json();
+
+    let record = null;
+
+    if (data && data[acct]) {
+      record = data[acct];
+    } else {
+      const values = Object.values(data || {});
+      record = values.find(r => String((r && (r.accountNumber || r.key)) || "") === acct) || null;
+    }
+
+    if (!record) {
+      set("accountNumber", acct);
+      set("customerName", "Account not found");
+      set("currentBalance", "");
+      set("accountStatus", "");
+      set("serviceAddress", "");
+      set("city", "");
+      set("state", "");
+      set("zip", "");
+      set("notes", "");
+      set("shutOffRisk", "");
+      set("hardshipFlag", "");
+      set("arrangementEligible", "");
+      return;
+    }
+
+    set("accountNumber", record.accountNumber || record.key || acct);
+    set("customerName", record.customerName);
+    set("currentBalance", record.currentBalance);
+    set("accountStatus", record.accountStatus);
+    set("serviceAddress", record.serviceAddress);
+    set("city", record.city);
+    set("state", record.state);
+    set("zip", record.zip);
+    set("notes", record.notes);
+    set("shutOffRisk", record.shutOffRisk);
+    set("hardshipFlag", record.hardshipFlag);
+    set("arrangementEligible", record.arrangementEligible);
+  } catch (e) {
+    set("accountNumber", acct);
+    set("customerName", "Error loading data");
+    set("currentBalance", "");
+    set("accountStatus", "");
+    set("serviceAddress", "");
+    set("city", "");
+    set("state", "");
+    set("zip", "");
+    set("notes", "");
+    set("shutOffRisk", "");
+    set("hardshipFlag", "");
+    set("arrangementEligible", "");
+    console.error(e);
+  }
+}
+
+loadAccount();
+</script>
 </body>
 </html>
