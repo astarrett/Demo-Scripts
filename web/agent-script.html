@@ -4,108 +4,394 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Agent Dashboard — City Utilities Department</title>
-
 <style>
-body {
-  font-family: Arial, sans-serif;
-  background: #f5f0e6;
-  margin: 0;
-  padding: 0;
-}
+  :root {
+    --terracotta: #c2572a;
+    --terracotta-dark: #a84b22;
+    --cream: #f5f0e6;
+    --card: #ffffff;
+    --teal: #4f8f95;
+    --teal-dark: #3d7479;
+    --text: #2f2a24;
+    --muted: #7a6f63;
+    --border: #e6ded1;
+    --good: #2f7d32;
+    --good-bg: #e7f4e8;
+    --warn: #b26a00;
+    --warn-bg: #fff3dd;
+    --bad: #a12622;
+    --bad-bg: #fde8e7;
+  }
 
-.header {
-  background: #c2572a;
-  color: white;
-  padding: 16px;
-  font-size: 20px;
-}
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: var(--cream);
+    color: var(--text);
+  }
 
-.container {
-  padding: 20px;
-}
+  .topbar {
+    background: var(--terracotta);
+    color: #fff;
+    padding: 16px 22px;
+    font-size: 18px;
+    font-weight: 700;
+  }
 
-.card {
-  background: white;
-  padding: 16px;
-  border-radius: 8px;
-  margin-bottom: 16px;
-}
+  .wrap {
+    padding: 16px;
+  }
 
-.label {
-  font-weight: bold;
-  margin-bottom: 6px;
-}
+  .hero {
+    background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+    color: #fff;
+    border-radius: 12px;
+    padding: 22px;
+    margin-bottom: 16px;
+  }
 
-.value {
-  margin-bottom: 12px;
-}
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 20px;
+    align-items: end;
+  }
+
+  .hero-label {
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    opacity: 0.9;
+    margin-bottom: 8px;
+  }
+
+  .hero-balance {
+    font-size: 38px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .hero-sub {
+    font-size: 14px;
+    opacity: 0.95;
+  }
+
+  .pill {
+    display: inline-block;
+    padding: 7px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .pill.good { background: var(--good-bg); color: var(--good); }
+  .pill.warn { background: var(--warn-bg); color: var(--warn); }
+  .pill.bad { background: var(--bad-bg); color: var(--bad); }
+  .pill.neutral { background: rgba(255,255,255,0.2); color: #fff; }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 16px;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .card-title {
+    padding: 14px 16px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    text-transform: uppercase;
+    letter-spacing: .5px;
+  }
+
+  .card-body {
+    padding: 16px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .field-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .7px;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  .field-value {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.35;
+    word-break: break-word;
+  }
+
+  .notes {
+    background: #faf7f1;
+    border-left: 4px solid #d8c5ad;
+    padding: 14px;
+    border-radius: 8px;
+    white-space: pre-wrap;
+    line-height: 1.5;
+  }
+
+  .stack > div + div {
+    margin-top: 10px;
+  }
+
+  .row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .row:last-child {
+    border-bottom: none;
+  }
+
+  .row .k {
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  .row .v {
+    font-size: 14px;
+    font-weight: 700;
+    text-align: right;
+  }
+
+  .alert {
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .alert.good { background: var(--good-bg); color: var(--good); }
+  .alert.warn { background: var(--warn-bg); color: var(--warn); }
+  .alert.bad { background: var(--bad-bg); color: var(--bad); }
+
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    .grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 640px) {
+    .grid { grid-template-columns: 1fr; }
+    .hero-grid { grid-template-columns: 1fr; }
+    .hero-balance { font-size: 30px; }
+  }
 </style>
-
 </head>
-
 <body>
 
-<div class="header">
-  City Utilities Department — Agent Dashboard
-</div>
+<div class="topbar">City Utilities Department — Agent Dashboard</div>
 
-<div class="container">
-
-  <div class="card">
-    <div class="label">Account Number</div>
-    <div class="value" id="accountNumber"></div>
-
-    <div class="label">Customer Name</div>
-    <div class="value" id="customerName"></div>
-
-    <div class="label">Balance</div>
-    <div class="value" id="currentBalance"></div>
-
-    <div class="label">Status</div>
-    <div class="value" id="accountStatus"></div>
-
-    <div class="label">Service Address</div>
-    <div class="value" id="serviceAddress"></div>
-
-    <div class="label">City</div>
-    <div class="value" id="city"></div>
-
-    <div class="label">State</div>
-    <div class="value" id="state"></div>
-
-    <div class="label">ZIP</div>
-    <div class="value" id="zip"></div>
-
-    <div class="label">Notes</div>
-    <div class="value" id="notes"></div>
-
-    <div class="label">Shutoff Risk</div>
-    <div class="value" id="shutOffRisk"></div>
-
-    <div class="label">Hardship Flag</div>
-    <div class="value" id="hardshipFlag"></div>
-
-    <div class="label">Arrangement Eligible</div>
-    <div class="value" id="arrangementEligible"></div>
+<div class="wrap">
+  <div class="hero">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-label">Current Balance</div>
+        <div class="hero-balance" id="heroBalance">—</div>
+        <div class="hero-sub">Account #<span id="heroAccountNumber">—</span> · <span id="heroCustomerName">—</span></div>
+      </div>
+      <div>
+        <div class="hero-label">Status</div>
+        <div class="pill neutral" id="heroStatus">—</div>
+      </div>
+    </div>
   </div>
 
+  <div class="layout">
+    <div class="stack">
+      <div class="card">
+        <div class="card-title">Customer Information</div>
+        <div class="card-body">
+          <div class="grid">
+            <div>
+              <div class="field-label">Account Number</div>
+              <div class="field-value" id="accountNumber">—</div>
+            </div>
+            <div>
+              <div class="field-label">Customer Name</div>
+              <div class="field-value" id="customerName">—</div>
+            </div>
+            <div>
+              <div class="field-label">Balance</div>
+              <div class="field-value" id="currentBalance">—</div>
+            </div>
+            <div>
+              <div class="field-label">Status</div>
+              <div class="field-value" id="accountStatus">—</div>
+            </div>
+            <div>
+              <div class="field-label">Service Address</div>
+              <div class="field-value" id="serviceAddress">—</div>
+            </div>
+            <div>
+              <div class="field-label">City</div>
+              <div class="field-value" id="city">—</div>
+            </div>
+            <div>
+              <div class="field-label">State</div>
+              <div class="field-value" id="state">—</div>
+            </div>
+            <div>
+              <div class="field-label">ZIP</div>
+              <div class="field-value" id="zip">—</div>
+            </div>
+            <div>
+              <div class="field-label">Last Payment Date</div>
+              <div class="field-value" id="lastPaymentDate">—</div>
+            </div>
+            <div>
+              <div class="field-label">Last Payment Amount</div>
+              <div class="field-value" id="lastPaymentAmount">—</div>
+            </div>
+            <div>
+              <div class="field-label">Shutoff Risk</div>
+              <div class="field-value" id="shutOffRisk">—</div>
+            </div>
+            <div>
+              <div class="field-label">Hardship Flag</div>
+              <div class="field-value" id="hardshipFlag">—</div>
+            </div>
+            <div>
+              <div class="field-label">Arrangement Eligible</div>
+              <div class="field-value" id="arrangementEligible">—</div>
+            </div>
+            <div>
+              <div class="field-label">Returned Payments (6 mo)</div>
+              <div class="field-value" id="bouncedCheckCountLast6Months">—</div>
+            </div>
+            <div>
+              <div class="field-label">Arrangement Max Months</div>
+              <div class="field-value" id="arrangementMaxMonths">—</div>
+            </div>
+            <div>
+              <div class="field-label">Min Down Payment</div>
+              <div class="field-value" id="arrangementMinDownPayment">—</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Account Notes</div>
+        <div class="card-body">
+          <div class="notes" id="notes">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stack">
+      <div class="card">
+        <div class="card-title">Flags</div>
+        <div class="card-body" id="flagsBox">
+          <div class="alert good">No flags</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Account Summary</div>
+        <div class="card-body">
+          <div class="row"><div class="k">Repayment Status</div><div class="v" id="repaymentPlanStatus">—</div></div>
+          <div class="row"><div class="k">Confirmation #</div><div class="v" id="repaymentConfirmationNumber">—</div></div>
+          <div class="row"><div class="k">Down Payment</div><div class="v" id="repaymentDownPayment">—</div></div>
+          <div class="row"><div class="k">Months</div><div class="v" id="repaymentMonths">—</div></div>
+          <div class="row"><div class="k">Monthly Payment</div><div class="v" id="repaymentMonthlyPayment">—</div></div>
+          <div class="row"><div class="k">Agreement Status</div><div class="v" id="agreementStatus">—</div></div>
+          <div class="row"><div class="k">Signed Name</div><div class="v" id="agreementSignedName">—</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
 const DATA_URL = "https://raw.githubusercontent.com/astarrett/Demo-Scripts/refs/heads/main/data-actions/Utility-Accounts";
-
 const params = new URLSearchParams(window.location.search);
 
 function g(k) {
   return params.get(k) || "";
 }
 
-function set(id, val) {
-  document.getElementById(id).textContent = (val !== undefined && val !== null && val !== "") ? val : "—";
-}
-
 function accountId() {
   return g("accountNumber") || g("key") || "";
+}
+
+function set(id, val) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = (val !== undefined && val !== null && String(val) !== "") ? String(val) : "—";
+}
+
+function money(val) {
+  const n = parseFloat(String(val).replace(/[$,]/g, ""));
+  return Number.isFinite(n) ? "$" + n.toFixed(2) : "—";
+}
+
+function titleStatus(val) {
+  const s = String(val || "").trim();
+  if (!s) return "—";
+  if (s === "pastDue") return "Past Due";
+  if (s === "finalNotice") return "Final Notice";
+  if (s === "active") return "Active";
+  if (s === "disconnected") return "Disconnected";
+  return s;
+}
+
+function boolText(val) {
+  const s = String(val || "").toLowerCase();
+  if (s === "true") return "Yes";
+  if (s === "false") return "No";
+  return "—";
+}
+
+function statusPill(status) {
+  const el = document.getElementById("heroStatus");
+  if (!el) return;
+  const s = String(status || "");
+  el.className = "pill";
+  if (s === "active") {
+    el.classList.add("good");
+    el.textContent = "Active";
+  } else if (s === "pastDue") {
+    el.classList.add("warn");
+    el.textContent = "Past Due";
+  } else if (s === "finalNotice" || s === "disconnected") {
+    el.classList.add("bad");
+    el.textContent = titleStatus(s);
+  } else {
+    el.classList.add("neutral");
+    el.textContent = titleStatus(s);
+  }
+}
+
+function renderFlags(record) {
+  const flags = [];
+  if (String(record.shutOffRisk).toLowerCase() === "true") flags.push('<div class="alert bad">Shutoff risk</div>');
+  if (String(record.hardshipFlag).toLowerCase() === "true") flags.push('<div class="alert warn">Hardship flag</div>');
+  if (String(record.arrangementEligible).toLowerCase() === "true") flags.push('<div class="alert good">Arrangement eligible</div>');
+  if (String(record.bouncedCheckLast6Month).toLowerCase() === "true") flags.push('<div class="alert warn">Returned payment restriction</div>');
+  if (!flags.length) flags.push('<div class="alert good">No flags</div>');
+  document.getElementById("flagsBox").innerHTML = flags.join("");
 }
 
 async function loadAccount() {
@@ -117,10 +403,8 @@ async function loadAccount() {
   }
 
   try {
-    const resp = await fetch(DATA_URL);
+    const resp = await fetch(DATA_URL, { cache: "no-store" });
     const data = await resp.json();
-
-    // ✅ DIRECT LOOKUP (this fixes your issue)
     const record = data[acct];
 
     if (!record) {
@@ -131,17 +415,34 @@ async function loadAccount() {
 
     set("accountNumber", record.accountNumber || record.key || acct);
     set("customerName", record.customerName);
-    set("currentBalance", record.currentBalance);
-    set("accountStatus", record.accountStatus);
+    set("currentBalance", money(record.currentBalance));
+    set("accountStatus", titleStatus(record.accountStatus));
     set("serviceAddress", record.serviceAddress);
     set("city", record.city);
     set("state", record.state);
     set("zip", record.zip);
+    set("lastPaymentDate", record.lastPaymentDate);
+    set("lastPaymentAmount", money(record.lastPaymentAmount));
     set("notes", record.notes);
-    set("shutOffRisk", record.shutOffRisk);
-    set("hardshipFlag", record.hardshipFlag);
-    set("arrangementEligible", record.arrangementEligible);
+    set("shutOffRisk", boolText(record.shutOffRisk));
+    set("hardshipFlag", boolText(record.hardshipFlag));
+    set("arrangementEligible", boolText(record.arrangementEligible));
+    set("bouncedCheckCountLast6Months", record.bouncedCheckCountLast6Months);
+    set("arrangementMaxMonths", record.arrangementMaxMonths);
+    set("arrangementMinDownPayment", money(record.arrangementMinDownPayment));
+    set("repaymentPlanStatus", record.repaymentPlanStatus);
+    set("repaymentConfirmationNumber", record.repaymentConfirmationNumber);
+    set("repaymentDownPayment", money(record.repaymentDownPayment));
+    set("repaymentMonths", record.repaymentMonths);
+    set("repaymentMonthlyPayment", money(record.repaymentMonthlyPayment));
+    set("agreementStatus", record.agreementStatus);
+    set("agreementSignedName", record.agreementSignedName);
 
+    set("heroAccountNumber", record.accountNumber || record.key || acct);
+    set("heroCustomerName", record.customerName);
+    set("heroBalance", money(record.currentBalance));
+    statusPill(record.accountStatus);
+    renderFlags(record);
   } catch (e) {
     console.error(e);
     set("accountNumber", acct);
