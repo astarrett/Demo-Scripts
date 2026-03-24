@@ -182,66 +182,20 @@
   document.getElementById('nav-payment').href = 'take-payment.html?' + qs();
   document.getElementById('btn-repayment').href = 'repayment-script.html?' + qs();
   document.getElementById('btn-payment').href = 'take-payment.html?' + qs();
-const DATA_URL = "https://raw.githubusercontent.com/astarrett/Demo-Scripts/refs/heads/main/data-actions/Utility-Accounts";
-
-const P = Object.fromEntries(new URLSearchParams(window.location.search));
-const g = (k) => P[k] || '';
-const accountId = () => g('accountNumber') || g('key') || '';
-const isTrueVal = (v) => String(v).trim().toLowerCase() === 'true';
-const isTrue = (k, data) => isTrueVal((data && data[k] != null) ? data[k] : g(k));
-const normStatusVal = (v) => String(v || '').trim().toLowerCase().replace(/\s+/g, '');
-const moneyVal = (v) => {
-  const raw = String(v ?? '').replace(/[$,]/g, '').trim();
-  const n = parseFloat(raw);
-  return Number.isFinite(n) ? '$' + n.toFixed(2) : '—';
-};
-const dVal = (v, fmt) => {
-  if (v == null || v === '') return '—';
-  if (fmt === '$') return moneyVal(v);
-  return String(v);
-};
-function qs() { return new URLSearchParams(P).toString(); }
-
-document.getElementById('nav-agent').href = 'agent-script.html?' + qs();
-document.getElementById('nav-repayment').href = 'repayment-script.html?' + qs();
-document.getElementById('nav-payment').href = 'take-payment.html?' + qs();
-document.getElementById('btn-repayment').href = 'repayment-script.html?' + qs();
-document.getElementById('btn-payment').href = 'take-payment.html?' + qs();
-
-async function loadAccountData() {
-  const acct = accountId();
-  if (!acct) return null;
-
-  const resp = await fetch(DATA_URL);
-  const data = await resp.json();
-
-  if (data && data[acct]) return data[acct];
-
-  const values = Object.values(data || {});
-  return values.find(r => String(r.accountNumber || r.key || '') === String(acct)) || null;
-}
-
-function renderAgent(data) {
-  const acct = accountId();
-  const val = (k) => (data && data[k] != null ? data[k] : g(k));
-  const status = normStatusVal(val('accountStatus'));
-
-  document.getElementById('heroBalance').textContent = dVal(val('currentBalance'), '$');
-  document.getElementById('heroAcct').textContent = acct || '—';
 
   // Hero
   document.getElementById('heroBalance').textContent = d('currentBalance', '$');
   document.getElementById('heroAcct').textContent = accountId() || '—';
   const status = normStatus();
-const statusEl = document.getElementById('heroStatus');
-statusEl.textContent = status || '—';
-if (status === 'finalnotice') { statusEl.className = 'badge badge-danger'; statusEl.textContent = 'Final Notice'; }
-else if (status === 'pastdue') { statusEl.className = 'badge badge-warn'; statusEl.textContent = 'Past Due'; }
-else if (status === 'disconnected') { statusEl.className = 'badge badge-danger'; statusEl.textContent = 'Disconnected'; }
-else if (status === 'active') { statusEl.className = 'badge badge-safe'; statusEl.textContent = 'Active'; }
+  const statusEl = document.getElementById('heroStatus');
+  statusEl.textContent = status || '—';
+  if (status === 'finalnotice') { statusEl.className = 'badge badge-danger'; statusEl.textContent = 'Final Notice'; }
+  else if (status === 'pastdue') { statusEl.className = 'badge badge-warn'; statusEl.textContent = 'Past Due'; }
+  else if (status === 'disconnected') { statusEl.className = 'badge badge-danger'; statusEl.textContent = 'Disconnected'; }
+  else if (status === 'active') { statusEl.className = 'badge badge-safe'; statusEl.textContent = 'Active'; }
 
   const risk = String(g('shutOffRisk')).trim().toLowerCase();
-const riskEl = document.getElementById('heroRisk');
+  const riskEl = document.getElementById('heroRisk');
   if (risk === 'true') { riskEl.className = 'badge badge-danger'; riskEl.textContent = '⚠ HIGH RISK'; riskEl.style.fontSize = '.95rem'; }
   else if (risk === 'false') { riskEl.className = 'badge badge-safe'; riskEl.textContent = '✓ Low Risk'; riskEl.style.fontSize = '.95rem'; }
   else { riskEl.textContent = '—'; }
@@ -250,71 +204,34 @@ const riskEl = document.getElementById('heroRisk');
   function makeGrid(id, items) {
     const el = document.getElementById(id);
     el.innerHTML = items.map(i => `<div class="data-item"><div class="dt">${i[0]}</div><div class="dd">${i[1]}</div></div>`).join('');
-  if (isTrue('shutOffRisk', data)) {
-    riskEl.className = 'badge badge-danger';
-    riskEl.textContent = '⚠ HIGH RISK';
-    riskEl.style.fontSize = '.95rem';
-  } else if (String(val('shutOffRisk')).trim().toLowerCase() === 'false') {
-    riskEl.className = 'badge badge-safe';
-    riskEl.textContent = '✓ Low Risk';
-    riskEl.style.fontSize = '.95rem';
-  } else {
-    riskEl.textContent = '—';
-}
+  }
   const addr = [g('serviceAddress'), g('city'), g('state'), g('zip')].filter(Boolean).join(', ') || '—';
   makeGrid('customerGrid', [
     ['Account Number', accountId() || '—'],
     ['Customer Name', d('customerName')],
     ['Service Address', addr],
-
-  const hardshipEl = document.getElementById('heroHardship');
-  hardshipEl.textContent = isTrue('hardshipFlag', data) ? 'Yes' : (String(val('hardshipFlag')).trim().toLowerCase() === 'false' ? 'No' : '—');
-
-  const makeGrid = (id, items) => {
-    document.getElementById(id).innerHTML = items.map(i =>
-      `<div class="data-item"><div class="dt">${i[0]}</div><div class="dd">${i[1]}</div></div>`
-    ).join('');
-  };
-
-  const fullAddr = [val('serviceAddress'), val('city'), val('state'), val('zip')].filter(Boolean).join(', ') || '—';
-
-  makeGrid('custGrid', [
-    ['Account Number', acct || '—'],
-    ['Customer Name', dVal(val('customerName'))],
-    ['Service Address', fullAddr],
-    ['Current Balance', dVal(val('currentBalance'), '$')],
-['Account Status', status ? (status === 'finalnotice' ? 'Final Notice' : status === 'pastdue' ? 'Past Due' : status.charAt(0).toUpperCase() + status.slice(1)) : '—'],
+    ['Account Status', status ? (status === 'finalnotice' ? 'Final Notice' : status === 'pastdue' ? 'Past Due' : status.charAt(0).toUpperCase() + status.slice(1)) : '—'],
     ['Hardship Flag', isTrue('hardshipFlag') ? '🚩 Yes' : String(g('hardshipFlag')).trim().toLowerCase() === 'false' ? 'No' : '—'],
     ['Bounced Checks (6 mo)', d('bouncedCheckCountLast6Months')],
-    ['Hardship Flag', isTrue('hardshipFlag', data) ? '🚩 Yes' : (String(val('hardshipFlag')).trim().toLowerCase() === 'false' ? 'No' : '—')],
-    ['Bounced Checks (6 mo)', dVal(val('bouncedCheckCountLast6Months'))],
-]);
+  ]);
 
   // Notes
   const notesText = [g('notes'), g('arrangementIneligibleReason') ? 'Ineligible Reason: ' + g('arrangementIneligibleReason') : ''].filter(Boolean).join('\n') || '—';
-  const notesText = [
-    val('notes'),
-    val('arrangementIneligibleReason') ? 'Ineligible Reason: ' + val('arrangementIneligibleReason') : ''
-  ].filter(Boolean).join('\n') || '—';
-document.getElementById('notesBox').textContent = notesText;
+  document.getElementById('notesBox').textContent = notesText;
 
   // Sidebar snapshot
-const snap = document.getElementById('snapshotBody');
-const snapItems = [
+  const snap = document.getElementById('snapshotBody');
+  const snapItems = [
     ['Balance', d('currentBalance', '$')],
     ['Last Payment', d('lastPaymentAmount', '$')],
     ['Last Paid', d('lastPaymentDate')],
     ['Status', status ? status.replace(/([A-Z])/g, ' $1').trim() : '—'],
-    ['Balance', dVal(val('currentBalance'), '$')],
-    ['Last Payment', dVal(val('lastPaymentAmount'), '$')],
-    ['Last Paid', dVal(val('lastPaymentDate'))],
-    ['Status', status ? (status === 'finalnotice' ? 'Final Notice' : status === 'pastdue' ? 'Past Due' : status.charAt(0).toUpperCase() + status.slice(1)) : '—'],
-];
-snap.innerHTML = snapItems.map(i => `<div class="info-row"><span class="lbl">${i[0]}</span><span class="val">${i[1]}</span></div>`).join('');
+  ];
+  snap.innerHTML = snapItems.map(i => `<div class="info-row"><span class="lbl">${i[0]}</span><span class="val">${i[1]}</span></div>`).join('');
 
   // Flags
-const flags = document.getElementById('flagsBody');
-const flagItems = [];
+  const flags = document.getElementById('flagsBody');
+  const flagItems = [];
   if (isTrue('shutOffRisk')) flagItems.push('<span class="badge badge-danger">⚠ Shut-Off Risk</span>');
   if (isTrue('hardshipFlag')) flagItems.push('<span class="badge badge-warn">🚩 Hardship</span>');
   if (isTrue('bouncedCheckLast6Month')) flagItems.push('<span class="badge badge-warn">↩ Bounced Check</span>');
@@ -324,49 +241,22 @@ const flagItems = [];
 
   // Map
   const map = L.map('map').setView([35.0844, -106.6504], 12);
-  if (isTrue('shutOffRisk', data)) flagItems.push('<span class="badge badge-danger">⚠ Shut-Off Risk</span>');
-  if (isTrue('hardshipFlag', data)) flagItems.push('<span class="badge badge-warn">🚩 Hardship</span>');
-  if (isTrue('bouncedCheckLast6Month', data)) flagItems.push('<span class="badge badge-warn">↩ Bounced Check</span>');
-  if (isTrue('arrangementEligible', data)) flagItems.push('<span class="badge badge-safe">✓ Arrangement Eligible</span>');
-  if (String(val('arrangementEligible')).trim().toLowerCase() === 'false') flagItems.push('<span class="badge badge-danger">✗ Not Eligible</span>');
-  flags.innerHTML = flagItems.length ? flagItems.map(f => '<div style="margin-bottom:8px;">' + f + '</div>').join('') : '<span style="color:var(--text-light);font-size:.85rem;">No flags</span>';
-
-  const map = L.map('map').setView([35.1495, -90.0490], 11);
-L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-attribution: '&copy; OpenStreetMap contributors',
-maxZoom: 19
-}).addTo(map);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors',
+    maxZoom: 19
+  }).addTo(map);
 
   const fullAddr = [g('serviceAddress'), g('city'), g('state'), g('zip')].filter(Boolean).join(', ');
   if (fullAddr) {
-  if (fullAddr && fullAddr !== '—') {
-fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(fullAddr))
+    fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(fullAddr))
       .then(r => r.json()).then(data => {
         if (data && data.length) {
           const lat = parseFloat(data[0].lat), lon = parseFloat(data[0].lon);
-      .then(r => r.json())
-      .then(results => {
-        if (results && results.length) {
-          const lat = parseFloat(results[0].lat);
-          const lon = parseFloat(results[0].lon);
-map.setView([lat, lon], 15);
+          map.setView([lat, lon], 15);
           L.marker([lat, lon]).addTo(map).bindPopup('<b>' + d('customerName') + '</b><br>' + fullAddr).openPopup();
-          L.marker([lat, lon]).addTo(map)
-            .bindPopup('<b>' + dVal(val('customerName')) + '</b><br>' + fullAddr)
-            .openPopup();
-}
+        }
       }).catch(() => {});
-      })
-      .catch(() => {});
-}
-}
-
-loadAccountData()
-  .then(renderAgent)
-  .catch(err => {
-    console.error(err);
-    renderAgent(null);
-  });
+  }
 </script>
 </body>
 </html>
