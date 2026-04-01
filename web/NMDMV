@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NM MVD - Agent Transfer Script</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #002147;
+      --navy-light: #003366;
+      --gold: #FFD700;
+      --gold-muted: #D4A017;
+      --turquoise: #1A8A8A;
+      --turquoise-light: #E0F4F4;
+      --red: #C62828;
+      --red-light: #FFEBEE;
+      --green: #2E7D32;
+      --green-light: #E8F5E9;
+      --amber: #E65100;
+      --amber-light: #FFF3E0;
+      --gray-50: #F9FAFB;
+      --gray-100: #F3F4F6;
+      --gray-200: #E5E7EB;
+      --gray-300: #D1D5DB;
+      --gray-400: #9CA3AF;
+      --gray-500: #6B7280;
+      --gray-600: #4B5563;
+      --gray-700: #374151;
+      --gray-900: #111827;
+      --white: #FFFFFF;
+    }
+
+    body {
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--gray-100);
+      color: var(--gray-900);
+      line-height: 1.4;
+      font-size: 13px;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+      color: var(--white);
+      padding: 8px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .header-logo { width: 32px; height: 32px; flex-shrink: 0; }
+    .header-logo img { width: 100%; height: 100%; object-fit: contain; filter: brightness(0) invert(1); }
+    .header-text h1 { font-size: 14px; font-weight: 700; }
+    .header-text p { font-size: 11px; opacity: 0.8; }
+    .header-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+    .header-badge {
+      background: var(--gold); color: var(--navy);
+      font-size: 10px; font-weight: 700; padding: 3px 10px;
+      border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .header-case {
+      font-family: 'Courier New', monospace;
+      font-size: 14px; font-weight: 700; color: var(--gold);
+    }
+
+    /* ── CONTAINER ── */
+    .container { padding: 10px 16px 16px; }
+
+    /* ── TOP BAR: alert + balance side by side ── */
+    .top-bar { display: flex; gap: 10px; margin-bottom: 10px; }
+
+    .alert-banner {
+      flex: 1;
+      background: linear-gradient(135deg, var(--turquoise) 0%, #157575 100%);
+      color: var(--white); border-radius: 8px; padding: 10px 14px;
+      display: flex; align-items: center; gap: 10px; font-size: 12px;
+    }
+    .alert-banner .alert-icon { font-size: 18px; flex-shrink: 0; }
+
+    .balance-card {
+      min-width: 220px; border-radius: 8px; padding: 10px 16px;
+      display: flex; align-items: center; gap: 14px;
+    }
+    .balance-card.has-balance { background: var(--red-light); border-left: 4px solid var(--red); }
+    .balance-card.no-balance { background: var(--green-light); border-left: 4px solid var(--green); }
+    .balance-amount {
+      font-size: 22px; font-weight: 800; font-family: 'Courier New', monospace;
+    }
+    .balance-amount.red { color: var(--red); }
+    .balance-amount.green { color: var(--green); }
+    .balance-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--gray-500); }
+    .balance-note { font-size: 11px; color: var(--gray-600); }
+
+    /* ── GRID LAYOUT ── */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .main-grid .full-width { grid-column: 1 / -1; }
+
+    /* ── CARDS ── */
+    .card {
+      background: var(--white);
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      overflow: hidden;
+    }
+    .card-header {
+      padding: 6px 14px;
+      font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.7px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .card-header .icon { font-size: 13px; }
+    .card-header.navy { background: var(--navy); color: var(--white); }
+    .card-header.turquoise { background: var(--turquoise); color: var(--white); }
+    .card-header.amber { background: var(--amber); color: var(--white); }
+    .card-header.green { background: var(--green); color: var(--white); }
+
+    .card-body { padding: 10px 14px; }
+
+    /* ── FIELD GRID inside cards ── */
+    .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; }
+    .fields.three { grid-template-columns: 1fr 1fr 1fr; }
+    .fields.four { grid-template-columns: 1fr 1fr 1fr 1fr; }
+    .field-label {
+      font-size: 9px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.5px; color: var(--gray-400); margin-bottom: 1px;
+    }
+    .field-value { font-size: 13px; font-weight: 500; color: var(--gray-900); }
+    .field-value.mono { font-family: 'Courier New', monospace; font-weight: 600; }
+
+    /* ── STATUS BADGES ── */
+    .badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; }
+    .badge-valid { background: var(--green-light); color: var(--green); }
+    .badge-suspended { background: var(--red-light); color: var(--red); }
+    .badge-expired { background: var(--amber-light); color: var(--amber); }
+    .badge-none { background: var(--gray-100); color: var(--gray-500); }
+    .badge-yes { background: var(--green-light); color: var(--green); }
+    .badge-no { background: var(--red-light); color: var(--red); }
+
+    /* ── ACTIONS LIST (inline) ── */
+    .actions-inline { display: flex; flex-wrap: wrap; gap: 6px; }
+    .action-pill {
+      display: flex; align-items: center; gap: 6px;
+      background: var(--gray-50); border: 1px solid var(--gray-200);
+      border-radius: 6px; padding: 4px 10px; font-size: 12px;
+    }
+    .action-num {
+      background: var(--navy); color: var(--white);
+      width: 18px; height: 18px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 700; flex-shrink: 0;
+    }
+
+    /* ── RECOMMENDED STEP ── */
+    .rec-step {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+      color: var(--white); border-radius: 6px; padding: 8px 12px;
+      font-size: 12px; display: flex; align-items: center; gap: 8px; margin-top: 8px;
+    }
+    .rec-step strong { font-weight: 600; }
+
+    /* ── SCRIPT BOX ── */
+    .script-box {
+      background: var(--gray-50); border: 1px dashed var(--gray-300);
+      border-radius: 6px; padding: 12px; font-size: 12px;
+      color: var(--gray-700); line-height: 1.6;
+    }
+    .script-box .hl {
+      background: var(--gold); color: var(--navy);
+      padding: 0 5px; border-radius: 3px; font-weight: 600;
+    }
+
+    /* ── FOOTER ── */
+    .footer { text-align: center; padding: 10px; font-size: 10px; color: var(--gray-400); }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-logo"><img src="nm-zia.png" alt="NM Zia"></div>
+    <div class="header-text">
+      <h1>State of New Mexico &mdash; Motor Vehicle Division</h1>
+      <p>Agent Transfer Script</p>
+    </div>
+    <div class="header-right">
+      <span class="header-case" id="headerCase"></span>
+      <span class="header-badge">Agent Transfer</span>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <!-- TOP BAR -->
+    <div class="top-bar">
+      <div class="alert-banner">
+        <span class="alert-icon">&#x1F4DE;</span>
+        <div><strong>Incoming Transfer from AVA</strong> &mdash; Review caller info before greeting.</div>
+      </div>
+      <div class="balance-card" id="balanceCard">
+        <div>
+          <div class="balance-label">Amount Due</div>
+          <div class="balance-amount" id="balanceAmount">$0.00</div>
+        </div>
+        <div>
+          <div class="balance-note" id="balanceNote"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN 2-COLUMN GRID -->
+    <div class="main-grid">
+
+      <!-- LEFT COL: Driver Info -->
+      <div class="card">
+        <div class="card-header navy"><span class="icon">&#x1F464;</span> Driver Information</div>
+        <div class="card-body">
+          <div class="fields">
+            <div><div class="field-label">Full Name</div><div class="field-value" id="fName"></div></div>
+            <div><div class="field-label">Date of Birth</div><div class="field-value mono" id="fDob"></div></div>
+            <div><div class="field-label">Case Number</div><div class="field-value mono" id="fKey"></div></div>
+            <div><div class="field-label">Channel Preference</div><div class="field-value" id="fChannel"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT COL: License & Registration -->
+      <div class="card">
+        <div class="card-header turquoise"><span class="icon">&#x1FAAA;</span> License &amp; Registration</div>
+        <div class="card-body">
+          <div class="fields three">
+            <div><div class="field-label">License</div><div class="field-value"><span class="badge" id="bLic"></span></div></div>
+            <div><div class="field-label">Registration</div><div class="field-value"><span class="badge" id="bReg"></span></div></div>
+            <div><div class="field-label">Suspension</div><div class="field-value" id="fSusp"></div></div>
+          </div>
+          <div class="fields three" style="margin-top:8px;">
+            <div><div class="field-label">Renewal Elig. (License)</div><div class="field-value"><span class="badge" id="bRenLic"></span></div></div>
+            <div><div class="field-label">Renewal Elig. (Reg.)</div><div class="field-value"><span class="badge" id="bRenReg"></span></div></div>
+            <div><div class="field-label">Reinstatement Req.</div><div class="field-value"><span class="badge" id="bReinst"></span></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FULL WIDTH: Actions + Next Step -->
+      <div class="card full-width">
+        <div class="card-header green"><span class="icon">&#x1F4CB;</span> Required Actions &amp; Recommended Step</div>
+        <div class="card-body">
+          <div class="actions-inline" id="actionsList"></div>
+          <div class="rec-step">
+            <span>&#x27A1;&#xFE0F;</span>
+            <div><strong>Next Step:</strong> <span id="nextStep"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FULL WIDTH: SMS Tracking -->
+      <div class="card full-width">
+        <div class="card-header navy"><span class="icon">&#x1F4F1;</span> SMS Form Tracking</div>
+        <div class="card-body">
+          <div class="fields four">
+            <div><div class="field-label">Form Sent At</div><div class="field-value" id="smsSent">&mdash;</div></div>
+            <div><div class="field-label">Form Received At</div><div class="field-value" id="smsRecv">&mdash;</div></div>
+            <div><div class="field-label">Signed Name</div><div class="field-value" id="smsSigned">&mdash;</div></div>
+            <div><div class="field-label">Form Token</div><div class="field-value mono" style="font-size:11px;word-break:break-all;" id="smsToken">&mdash;</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FULL WIDTH: Agent Script -->
+      <div class="card full-width">
+        <div class="card-header turquoise"><span class="icon">&#x1F4AC;</span> Agent Script</div>
+        <div class="card-body">
+          <div class="script-box">
+            &ldquo;Thank you for calling the New Mexico Motor Vehicle Division. My name is <span class="hl">[Your Name]</span>, and I'll be assisting you today.
+            I see here that I'm speaking with <span class="hl" id="sName"></span>, is that correct?
+            I have your case information &mdash; Case Number <span class="hl" id="sKey"></span>. I can see that your <span class="hl" id="sCtx"></span> needs attention.
+            Let me walk you through what we need to take care of today.&rdquo;
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /main-grid -->
+
+    <div class="footer">New Mexico Motor Vehicle Division &mdash; Agent Transfer Script &mdash; Confidential</div>
+  </div>
+
+  <script>
+    // ============================================================
+    // CASE DATA - Replace with Genesys Cloud data action values
+    // or hard-code per case.
+    // ============================================================
+    var caseData = {
+      key: "1002",
+      name: "Sarah Lopez",
+      dob: "9/3/90",
+      licenseStatus: "Suspended",
+      registrationStatus: "Valid",
+      suspensionReason: "Unpaid Citation",
+      outstandingBalance: 150.00,
+      renewalEligibleLicense: false,
+      renewalEligibleRegistration: false,
+      reinstatementRequired: true,
+      requiredActions: "Pay citation; Reinstate license",
+      recommendedNextStep: "Collect payment and reinstate license",
+      channelPreference: "Voice",
+      smsFormSentAt: "",
+      smsReceivedAt: "",
+      smsFormSignedName: "",
+      smsFormToken: ""
+    };
+
+    // ============================================================
+    // RENDER
+    // ============================================================
+    function render(d) {
+      txt('headerCase', '#' + (d.key || ''));
+      txt('fName', d.name);
+      txt('fDob', d.dob);
+      txt('fKey', d.key);
+      txt('fChannel', d.channelPreference);
+      txt('nextStep', d.recommendedNextStep);
+      txt('sName', d.name);
+      txt('sKey', d.key);
+
+      statusBadge('bLic', d.licenseStatus);
+      statusBadge('bReg', d.registrationStatus);
+
+      var suspEl = document.getElementById('fSusp');
+      if (suspEl) {
+        suspEl.textContent = d.suspensionReason || 'None';
+        if (d.suspensionReason && d.suspensionReason !== 'None') {
+          suspEl.style.color = 'var(--red)'; suspEl.style.fontWeight = '600';
+        }
+      }
+
+      yesNo('bRenLic', d.renewalEligibleLicense);
+      yesNo('bRenReg', d.renewalEligibleRegistration);
+      yesNo('bReinst', d.reinstatementRequired, true);
+
+      // Balance
+      var hasBal = (d.outstandingBalance || 0) > 0;
+      var bc = document.getElementById('balanceCard');
+      var ba = document.getElementById('balanceAmount');
+      var bn = document.getElementById('balanceNote');
+      if (bc) bc.className = 'balance-card ' + (hasBal ? 'has-balance' : 'no-balance');
+      if (ba) { ba.textContent = '$' + (d.outstandingBalance || 0).toFixed(2); ba.className = 'balance-amount ' + (hasBal ? 'red' : 'green'); }
+      if (bn) bn.textContent = hasBal ? 'Payment on file — collect & process' : 'No balance due';
+
+      // Actions
+      var al = document.getElementById('actionsList');
+      if (al) {
+        var acts = (d.requiredActions || '').split(';').map(function(a){return a.trim();}).filter(Boolean);
+        al.innerHTML = acts.map(function(a, i) {
+          return '<div class="action-pill"><span class="action-num">' + (i+1) + '</span>' + a + '</div>';
+        }).join('');
+      }
+
+      // SMS
+      txt('smsSent', d.smsFormSentAt || '\u2014');
+      txt('smsRecv', d.smsReceivedAt || '\u2014');
+      txt('smsSigned', d.smsFormSignedName || '\u2014');
+      txt('smsToken', d.smsFormToken || '\u2014');
+
+      // Script context
+      var parts = [];
+      if (d.licenseStatus === 'Suspended' || d.licenseStatus === 'Expired') parts.push('license');
+      if (d.registrationStatus === 'Expired') parts.push('registration');
+      txt('sCtx', parts.length > 0 ? parts.join(' and ') : 'account');
+    }
+
+    function txt(id, v) { var e = document.getElementById(id); if (e) e.textContent = v || '\u2014'; }
+
+    function statusBadge(id, v) {
+      var e = document.getElementById(id); if (!e) return;
+      e.textContent = v || '\u2014';
+      var lv = (v || '').toLowerCase();
+      e.className = 'badge badge-' + (lv === 'valid' ? 'valid' : lv === 'suspended' ? 'suspended' : lv === 'expired' ? 'expired' : 'none');
+    }
+
+    function yesNo(id, val, invert) {
+      var e = document.getElementById(id); if (!e) return;
+      e.textContent = val ? 'Yes' : 'No';
+      var y = invert ? !val : val;
+      e.className = 'badge ' + (y ? 'badge-yes' : 'badge-no');
+    }
+
+    render(caseData);
+  </script>
+</body>
+</html>
