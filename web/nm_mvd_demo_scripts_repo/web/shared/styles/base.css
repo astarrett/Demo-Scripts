@@ -1,0 +1,7 @@
+*,:before,:after{box-sizing:border-box}
+body{margin:0;font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,sans-serif;background:#f3f4f6;color:#111827}
+.container{padding:16px}
+.card{background:#fff;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.08);overflow:hidden}
+.card-header{padding:8px 14px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px}
+.card-body{padding:12px 14px}
+.mono{font-family:'Courier New',monospace}

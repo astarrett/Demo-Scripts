@@ -1,0 +1,20 @@
+{
+  "key": "1005",
+  "name": "Michael Romero",
+  "dob": "11/15/82",
+  "licenseStatus": "Suspended",
+  "registrationStatus": "Expired",
+  "suspensionReason": "Notice of Suspension",
+  "outstandingBalance": 325.0,
+  "reinstatementRequired": true,
+  "hasTicket": true,
+  "ticketNumber": "NM-582144",
+  "ticketStatus": "Open",
+  "requiredActions": "Renew registration; Pay balance; Sign reinstatement form",
+  "recommendedNextStep": "Complete reinstatement with agent",
+  "channelPreference": "Either",
+  "smsFormSentAt": "2026-04-03 09:53",
+  "smsReceivedAt": "",
+  "smsFormSignedName": "",
+  "smsFormToken": "cc23575c3bca85a3cdd4bcfa46260a28"
+}
