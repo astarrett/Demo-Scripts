@@ -82,7 +82,6 @@ function render(d) {
   txt('smsSent', d.smsFormSentAt);
   txt('smsRecv', d.smsReceivedAt);
   txt('smsSigned', d.smsFormSignedName);
-  txt('smsToken', d.smsFormToken);
 
   const reinstatementRequired = String(d.reinstatementRequired).toLowerCase() === 'true' || d.reinstatementRequired === true;
   const transferReason = reinstatementRequired
