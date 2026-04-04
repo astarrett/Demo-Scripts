@@ -6,12 +6,10 @@
   <title>NM MVD - Agent Transfer Script</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
       --navy: #002147;
       --navy-light: #003366;
       --gold: #FFD700;
-      --gold-muted: #D4A017;
       --turquoise: #1A8A8A;
       --turquoise-light: #E0F4F4;
       --red: #C62828;
@@ -31,7 +29,6 @@
       --gray-900: #111827;
       --white: #FFFFFF;
     }
-
     body {
       font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--gray-100);
@@ -39,8 +36,6 @@
       line-height: 1.4;
       font-size: 13px;
     }
-
-    /* ── HEADER ── */
     .header {
       background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
       color: var(--white);
@@ -63,13 +58,8 @@
       font-family: 'Courier New', monospace;
       font-size: 14px; font-weight: 700; color: var(--gold);
     }
-
-    /* ── CONTAINER ── */
     .container { padding: 10px 16px 16px; }
-
-    /* ── TOP BAR: alert + balance side by side ── */
     .top-bar { display: flex; gap: 10px; margin-bottom: 10px; }
-
     .alert-banner {
       flex: 1;
       background: linear-gradient(135deg, var(--turquoise) 0%, #157575 100%);
@@ -77,9 +67,8 @@
       display: flex; align-items: center; gap: 10px; font-size: 12px;
     }
     .alert-banner .alert-icon { font-size: 18px; flex-shrink: 0; }
-
     .balance-card {
-      min-width: 220px; border-radius: 8px; padding: 10px 16px;
+      min-width: 240px; border-radius: 8px; padding: 10px 16px;
       display: flex; align-items: center; gap: 14px;
     }
     .balance-card.has-balance { background: var(--red-light); border-left: 4px solid var(--red); }
@@ -91,16 +80,12 @@
     .balance-amount.green { color: var(--green); }
     .balance-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--gray-500); }
     .balance-note { font-size: 11px; color: var(--gray-600); }
-
-    /* ── GRID LAYOUT ── */
     .main-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
     }
     .main-grid .full-width { grid-column: 1 / -1; }
-
-    /* ── CARDS ── */
     .card {
       background: var(--white);
       border-radius: 8px;
@@ -116,12 +101,8 @@
     .card-header .icon { font-size: 13px; }
     .card-header.navy { background: var(--navy); color: var(--white); }
     .card-header.turquoise { background: var(--turquoise); color: var(--white); }
-    .card-header.amber { background: var(--amber); color: var(--white); }
     .card-header.green { background: var(--green); color: var(--white); }
-
     .card-body { padding: 10px 14px; }
-
-    /* ── FIELD GRID inside cards ── */
     .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; }
     .fields.three { grid-template-columns: 1fr 1fr 1fr; }
     .fields.four { grid-template-columns: 1fr 1fr 1fr 1fr; }
@@ -131,17 +112,15 @@
     }
     .field-value { font-size: 13px; font-weight: 500; color: var(--gray-900); }
     .field-value.mono { font-family: 'Courier New', monospace; font-weight: 600; }
-
-    /* ── STATUS BADGES ── */
     .badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; }
     .badge-valid { background: var(--green-light); color: var(--green); }
     .badge-suspended { background: var(--red-light); color: var(--red); }
     .badge-expired { background: var(--amber-light); color: var(--amber); }
+    .badge-open { background: var(--amber-light); color: var(--amber); }
+    .badge-closed { background: var(--green-light); color: var(--green); }
     .badge-none { background: var(--gray-100); color: var(--gray-500); }
-    .badge-yes { background: var(--green-light); color: var(--green); }
-    .badge-no { background: var(--red-light); color: var(--red); }
-
-    /* ── ACTIONS LIST (inline) ── */
+    .badge-yes { background: var(--red-light); color: var(--red); }
+    .badge-no { background: var(--green-light); color: var(--green); }
     .actions-inline { display: flex; flex-wrap: wrap; gap: 6px; }
     .action-pill {
       display: flex; align-items: center; gap: 6px;
@@ -154,16 +133,17 @@
       display: flex; align-items: center; justify-content: center;
       font-size: 10px; font-weight: 700; flex-shrink: 0;
     }
-
-    /* ── RECOMMENDED STEP ── */
     .rec-step {
       background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
       color: var(--white); border-radius: 6px; padding: 8px 12px;
       font-size: 12px; display: flex; align-items: center; gap: 8px; margin-top: 8px;
     }
     .rec-step strong { font-weight: 600; }
-
-    /* ── SCRIPT BOX ── */
+    .transfer-box {
+      background: var(--amber-light); border-left: 4px solid var(--amber);
+      border-radius: 6px; padding: 10px 12px; margin-top: 10px; font-size: 12px; color: var(--gray-900);
+    }
+    .transfer-box strong { color: var(--amber); }
     .script-box {
       background: var(--gray-50); border: 1px dashed var(--gray-300);
       border-radius: 6px; padding: 12px; font-size: 12px;
@@ -173,14 +153,10 @@
       background: var(--gold); color: var(--navy);
       padding: 0 5px; border-radius: 3px; font-weight: 600;
     }
-
-    /* ── FOOTER ── */
     .footer { text-align: center; padding: 10px; font-size: 10px; color: var(--gray-400); }
   </style>
 </head>
 <body>
-
-  <!-- HEADER -->
   <div class="header">
     <div class="header-logo"><img src="nm-zia.png" alt="NM Zia"></div>
     <div class="header-text">
@@ -194,12 +170,10 @@
   </div>
 
   <div class="container">
-
-    <!-- TOP BAR -->
     <div class="top-bar">
       <div class="alert-banner">
         <span class="alert-icon">&#x1F4DE;</span>
-        <div><strong>Incoming Transfer from AVA</strong> &mdash; Review caller info before greeting.</div>
+        <div><strong>Incoming Transfer from AVA</strong> &mdash; The resident has completed available self-service steps.</div>
       </div>
       <div class="balance-card" id="balanceCard">
         <div>
@@ -212,10 +186,7 @@
       </div>
     </div>
 
-    <!-- MAIN 2-COLUMN GRID -->
     <div class="main-grid">
-
-      <!-- LEFT COL: Driver Info -->
       <div class="card">
         <div class="card-header navy"><span class="icon">&#x1F464;</span> Driver Information</div>
         <div class="card-body">
@@ -228,24 +199,23 @@
         </div>
       </div>
 
-      <!-- RIGHT COL: License & Registration -->
       <div class="card">
-        <div class="card-header turquoise"><span class="icon">&#x1FAAA;</span> License &amp; Registration</div>
+        <div class="card-header turquoise"><span class="icon">&#x1FAAA;</span> License, Registration &amp; Ticket</div>
         <div class="card-body">
           <div class="fields three">
             <div><div class="field-label">License</div><div class="field-value"><span class="badge" id="bLic"></span></div></div>
             <div><div class="field-label">Registration</div><div class="field-value"><span class="badge" id="bReg"></span></div></div>
-            <div><div class="field-label">Suspension</div><div class="field-value" id="fSusp"></div></div>
+            <div><div class="field-label">Reinstatement</div><div class="field-value"><span class="badge" id="bReinst"></span></div></div>
           </div>
-          <div class="fields three" style="margin-top:8px;">
-            <div><div class="field-label">Renewal Elig. (License)</div><div class="field-value"><span class="badge" id="bRenLic"></span></div></div>
-            <div><div class="field-label">Renewal Elig. (Reg.)</div><div class="field-value"><span class="badge" id="bRenReg"></span></div></div>
-            <div><div class="field-label">Reinstatement Req.</div><div class="field-value"><span class="badge" id="bReinst"></span></div></div>
+          <div class="fields" style="margin-top:8px;">
+            <div><div class="field-label">Suspension Reason</div><div class="field-value" id="fSusp"></div></div>
+            <div><div class="field-label">Ticket</div><div class="field-value"><span class="badge" id="bTicket"></span></div></div>
+            <div><div class="field-label">Ticket Number</div><div class="field-value mono" id="fTicketNum"></div></div>
+            <div><div class="field-label">Ticket Status</div><div class="field-value"><span class="badge" id="bTicketStatus"></span></div></div>
           </div>
         </div>
       </div>
 
-      <!-- FULL WIDTH: Actions + Next Step -->
       <div class="card full-width">
         <div class="card-header green"><span class="icon">&#x1F4CB;</span> Required Actions &amp; Recommended Step</div>
         <div class="card-body">
@@ -254,10 +224,12 @@
             <span>&#x27A1;&#xFE0F;</span>
             <div><strong>Next Step:</strong> <span id="nextStep"></span></div>
           </div>
+          <div class="transfer-box" id="transferBox">
+            <strong>Transfer Reason:</strong> <span id="transferReason"></span>
+          </div>
         </div>
       </div>
 
-      <!-- FULL WIDTH: SMS Tracking -->
       <div class="card full-width">
         <div class="card-header navy"><span class="icon">&#x1F4F1;</span> SMS Form Tracking</div>
         <div class="card-body">
@@ -270,52 +242,44 @@
         </div>
       </div>
 
-      <!-- FULL WIDTH: Agent Script -->
       <div class="card full-width">
         <div class="card-header turquoise"><span class="icon">&#x1F4AC;</span> Agent Script</div>
         <div class="card-body">
           <div class="script-box">
-            &ldquo;Thank you for calling the New Mexico Motor Vehicle Division. My name is <span class="hl">[Your Name]</span>, and I'll be assisting you today.
-            I see here that I'm speaking with <span class="hl" id="sName"></span>, is that correct?
-            I have your case information &mdash; Case Number <span class="hl" id="sKey"></span>. I can see that your <span class="hl" id="sCtx"></span> needs attention.
-            Let me walk you through what we need to take care of today.&rdquo;
+            &ldquo;Thank you for calling the New Mexico Motor Vehicle Division. My name is <span class="hl">[Your Name]</span>, and I&rsquo;ll be assisting you today.
+            I see here that I&rsquo;m speaking with <span class="hl" id="sName"></span>, is that correct?
+            I have your case information &mdash; Case Number <span class="hl" id="sKey"></span>.
+            I can see the virtual assistant already helped with the available self-service steps, and I&rsquo;ll now help complete the reinstatement portion of your request.&rdquo;
           </div>
         </div>
       </div>
-
-    </div><!-- /main-grid -->
+    </div>
 
     <div class="footer">New Mexico Motor Vehicle Division &mdash; Agent Transfer Script &mdash; Confidential</div>
   </div>
 
   <script>
-    // ============================================================
-    // CASE DATA - Replace with Genesys Cloud data action values
-    // or hard-code per case.
-    // ============================================================
     var caseData = {
-      key: "1002",
-      name: "Sarah Lopez",
-      dob: "9/3/90",
+      key: "1005",
+      name: "Michael Romero",
+      dob: "11/15/82",
       licenseStatus: "Suspended",
-      registrationStatus: "Valid",
-      suspensionReason: "Unpaid Citation",
-      outstandingBalance: 150.00,
-      renewalEligibleLicense: false,
-      renewalEligibleRegistration: false,
+      registrationStatus: "Expired",
+      suspensionReason: "Notice of Suspension",
+      outstandingBalance: 325.00,
       reinstatementRequired: true,
-      requiredActions: "Pay citation; Reinstate license",
-      recommendedNextStep: "Collect payment and reinstate license",
-      channelPreference: "Voice",
-      smsFormSentAt: "",
+      hasTicket: true,
+      ticketNumber: "NM-582144",
+      ticketStatus: "Open",
+      requiredActions: "Renew registration; Pay balance; Sign reinstatement form",
+      recommendedNextStep: "Complete reinstatement with agent",
+      channelPreference: "Either",
+      smsFormSentAt: "2026-04-03 09:53",
       smsReceivedAt: "",
       smsFormSignedName: "",
-      smsFormToken: ""
+      smsFormToken: "cc23575c3bca85a3cdd4bcfa46260a28"
     };
 
-    // ============================================================
-    // RENDER
-    // ============================================================
     function render(d) {
       txt('headerCase', '#' + (d.key || ''));
       txt('fName', d.name);
@@ -328,64 +292,77 @@
 
       statusBadge('bLic', d.licenseStatus);
       statusBadge('bReg', d.registrationStatus);
-
-      var suspEl = document.getElementById('fSusp');
-      if (suspEl) {
-        suspEl.textContent = d.suspensionReason || 'None';
-        if (d.suspensionReason && d.suspensionReason !== 'None') {
-          suspEl.style.color = 'var(--red)'; suspEl.style.fontWeight = '600';
-        }
-      }
-
-      yesNo('bRenLic', d.renewalEligibleLicense);
-      yesNo('bRenReg', d.renewalEligibleRegistration);
       yesNo('bReinst', d.reinstatementRequired, true);
+      yesNo('bTicket', d.hasTicket, false);
+      txt('fSusp', d.suspensionReason || 'None');
+      txt('fTicketNum', d.ticketNumber || '—');
+      ticketBadge('bTicketStatus', d.ticketStatus || 'None');
 
-      // Balance
-      var hasBal = (d.outstandingBalance || 0) > 0;
+      var hasBal = (Number(d.outstandingBalance) || 0) > 0;
       var bc = document.getElementById('balanceCard');
       var ba = document.getElementById('balanceAmount');
       var bn = document.getElementById('balanceNote');
       if (bc) bc.className = 'balance-card ' + (hasBal ? 'has-balance' : 'no-balance');
-      if (ba) { ba.textContent = '$' + (d.outstandingBalance || 0).toFixed(2); ba.className = 'balance-amount ' + (hasBal ? 'red' : 'green'); }
-      if (bn) bn.textContent = hasBal ? 'Payment on file — collect & process' : 'No balance due';
+      if (ba) {
+        ba.textContent = '$' + (Number(d.outstandingBalance) || 0).toFixed(2);
+        ba.className = 'balance-amount ' + (hasBal ? 'red' : 'green');
+      }
+      if (bn) bn.textContent = hasBal ? 'Outstanding balance handled in self-service' : 'No balance due';
 
-      // Actions
       var al = document.getElementById('actionsList');
       if (al) {
-        var acts = (d.requiredActions || '').split(';').map(function(a){return a.trim();}).filter(Boolean);
+        var acts = (d.requiredActions || '').split(';').map(function(a){ return a.trim(); }).filter(Boolean);
         al.innerHTML = acts.map(function(a, i) {
-          return '<div class="action-pill"><span class="action-num">' + (i+1) + '</span>' + a + '</div>';
+          return '<div class="action-pill"><span class="action-num">' + (i + 1) + '</span>' + a + '</div>';
         }).join('');
       }
 
-      // SMS
-      txt('smsSent', d.smsFormSentAt || '\u2014');
-      txt('smsRecv', d.smsReceivedAt || '\u2014');
-      txt('smsSigned', d.smsFormSignedName || '\u2014');
-      txt('smsToken', d.smsFormToken || '\u2014');
+      txt('smsSent', d.smsFormSentAt || '—');
+      txt('smsRecv', d.smsReceivedAt || '—');
+      txt('smsSigned', d.smsFormSignedName || '—');
+      txt('smsToken', d.smsFormToken || '—');
 
-      // Script context
-      var parts = [];
-      if (d.licenseStatus === 'Suspended' || d.licenseStatus === 'Expired') parts.push('license');
-      if (d.registrationStatus === 'Expired') parts.push('registration');
-      txt('sCtx', parts.length > 0 ? parts.join(' and ') : 'account');
+      var transferReason = d.reinstatementRequired
+        ? 'Reinstatement still requires agent completion after self-service.'
+        : 'Agent requested for additional assistance.';
+      txt('transferReason', transferReason);
     }
 
-    function txt(id, v) { var e = document.getElementById(id); if (e) e.textContent = v || '\u2014'; }
+    function txt(id, v) {
+      var e = document.getElementById(id);
+      if (e) e.textContent = v || '—';
+    }
 
     function statusBadge(id, v) {
-      var e = document.getElementById(id); if (!e) return;
-      e.textContent = v || '\u2014';
+      var e = document.getElementById(id);
+      if (!e) return;
+      e.textContent = v || '—';
       var lv = (v || '').toLowerCase();
-      e.className = 'badge badge-' + (lv === 'valid' ? 'valid' : lv === 'suspended' ? 'suspended' : lv === 'expired' ? 'expired' : 'none');
+      e.className = 'badge badge-' + (
+        lv === 'valid' ? 'valid' :
+        lv === 'suspended' ? 'suspended' :
+        lv === 'expired' ? 'expired' : 'none'
+      );
     }
 
-    function yesNo(id, val, invert) {
-      var e = document.getElementById(id); if (!e) return;
-      e.textContent = val ? 'Yes' : 'No';
-      var y = invert ? !val : val;
-      e.className = 'badge ' + (y ? 'badge-yes' : 'badge-no');
+    function ticketBadge(id, v) {
+      var e = document.getElementById(id);
+      if (!e) return;
+      e.textContent = v || '—';
+      var lv = (v || '').toLowerCase();
+      e.className = 'badge badge-' + (
+        lv === 'open' ? 'open' :
+        lv === 'closed' ? 'closed' : 'none'
+      );
+    }
+
+    function yesNo(id, val, invertForReinstatement) {
+      var e = document.getElementById(id);
+      if (!e) return;
+      var boolVal = !!val;
+      e.textContent = boolVal ? 'Yes' : 'No';
+      var showAlertStyle = invertForReinstatement ? boolVal : !boolVal;
+      e.className = 'badge ' + (showAlertStyle ? 'badge-yes' : 'badge-no');
     }
 
     render(caseData);
