@@ -1,107 +1,184 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NM MVD - Agent Transfer</title>
-  <link rel="stylesheet" href="../../shared/styles/base.css" />
-  <link rel="stylesheet" href="../../shared/styles/theme-nm.css" />
-  <link rel="stylesheet" href="./styles.css" />
-  <style>
-    .top-bar{display:flex;gap:10px;margin-bottom:10px}
-    .alert-banner{flex:1;background:linear-gradient(135deg,var(--turquoise) 0%,#157575 100%);color:#fff;border-radius:8px;padding:10px 14px;font-size:12px}
-    .balance-card{min-width:240px;border-radius:8px;padding:10px 16px;background:#fff}
-    .main-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .full-width{grid-column:1 / -1}
-    .fields{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px}
-    .fields.three{grid-template-columns:1fr 1fr 1fr}
-    .fields.four{grid-template-columns:1fr 1fr 1fr 1fr}
-    .field-label{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:#9ca3af;margin-bottom:1px}
-    .field-value{font-size:13px;font-weight:500}
-    .action-pill{display:flex;align-items:center;gap:6px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:6px;padding:4px 10px;font-size:12px}
-    .action-num{background:var(--navy);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700}
-    .actions-inline{display:flex;flex-wrap:wrap;gap:6px}
-    .rec-step{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-light) 100%);color:#fff;border-radius:6px;padding:8px 12px;font-size:12px;display:flex;gap:8px;margin-top:8px}
-    .transfer-box{background:#FFF3E0;border-left:4px solid var(--amber);border-radius:6px;padding:10px 12px;margin-top:10px;font-size:12px}
-    .script-box{background:#f9fafb;border:1px dashed #d1d5db;border-radius:6px;padding:12px;font-size:12px;line-height:1.6;color:#374151}
-    .hl{background:var(--gold);color:var(--navy);padding:0 5px;border-radius:3px;font-weight:600}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NM MVD - Agent Transfer Script</title>
+
+<link rel="stylesheet" href="../../shared/styles/base.css">
+<link rel="stylesheet" href="../../shared/styles/theme-nm.css">
+<link rel="stylesheet" href="./styles.css">
+
+<style>
+.top-bar{display:flex;gap:10px;margin-bottom:10px}
+.alert-banner{flex:1;background:linear-gradient(135deg,var(--turquoise) 0%,#157575 100%);color:#fff;border-radius:8px;padding:10px 14px;font-size:12px}
+.balance-card{min-width:240px;border-radius:8px;padding:10px 16px;background:#fff}
+.main-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.full-width{grid-column:1 / -1}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px}
+.fields.three{grid-template-columns:1fr 1fr 1fr}
+.field-label{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:#9ca3af;margin-bottom:1px}
+.field-value{font-size:13px;font-weight:500}
+.action-pill{display:flex;align-items:center;gap:6px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:6px;padding:4px 10px;font-size:12px}
+.action-num{background:var(--navy);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700}
+.actions-inline{display:flex;flex-wrap:wrap;gap:6px}
+.rec-step{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-light) 100%);color:#fff;border-radius:6px;padding:8px 12px;font-size:12px;display:flex;gap:8px;margin-top:8px}
+.transfer-box{background:#FFF3E0;border-left:4px solid var(--amber);border-radius:6px;padding:10px 12px;margin-top:10px;font-size:12px}
+.script-box{background:#f9fafb;border:1px dashed #d1d5db;border-radius:6px;padding:12px;font-size:12px;line-height:1.6;color:#374151}
+.hl{background:var(--gold);color:var(--navy);padding:0 5px;border-radius:3px;font-weight:600}
+</style>
 </head>
+
 <body>
-  <div class="header">
-    <div><strong>State of New Mexico — Motor Vehicle Division</strong><div style="font-size:11px;opacity:.8">Agent Transfer Script</div></div>
-    <div class="header-right"><span id="headerCase" class="mono"></span></div>
+
+<div class="header">
+  <div>
+    <strong>State of New Mexico — Motor Vehicle Division</strong>
+    <div style="font-size:11px;opacity:.8">Agent Transfer Script</div>
   </div>
-  <div class="container">
-    <div class="top-bar">
-      <div class="alert-banner"><strong>Incoming Transfer from AVA</strong> — The resident has completed available self-service steps.</div>
-      <div class="balance-card">
-        <div style="font-size:10px;font-weight:600;text-transform:uppercase;color:#6b7280">Amount Due</div>
-        <div id="balanceAmount" class="mono" style="font-size:22px;font-weight:800">$0.00</div>
-        <div id="balanceNote" style="font-size:11px;color:#4b5563"></div>
-      </div>
+  <div class="header-right">
+    <span id="headerCase" class="mono"></span>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="top-bar">
+    <div class="alert-banner">
+      <strong>Incoming Transfer from AVA</strong> — The resident has completed available self-service steps.
     </div>
-    <div class="main-grid">
-      <div class="card">
-        <div class="card-header" style="background:var(--navy);color:#fff">Driver Information</div>
-        <div class="card-body">
-          <div class="fields">
-            <div><div class="field-label">Full Name</div><div class="field-value" id="fName"></div></div>
-            <div><div class="field-label">Date of Birth</div><div class="field-value mono" id="fDob"></div></div>
-            <div><div class="field-label">Case Number</div><div class="field-value mono" id="fKey"></div></div>
-            <div><div class="field-label">Channel Preference</div><div class="field-value" id="fChannel"></div></div>
+
+    <div class="balance-card">
+      <div style="font-size:10px;font-weight:600;text-transform:uppercase;color:#6b7280">Amount Due</div>
+      <div id="balanceAmount" class="mono" style="font-size:22px;font-weight:800">$0.00</div>
+      <div id="balanceNote" style="font-size:11px;color:#4b5563"></div>
+    </div>
+  </div>
+
+  <div class="main-grid">
+
+    <!-- DRIVER INFO -->
+    <div class="card">
+      <div class="card-header" style="background:var(--navy);color:#fff">Driver Information</div>
+      <div class="card-body">
+        <div class="fields">
+          <div>
+            <div class="field-label">Full Name</div>
+            <div class="field-value" id="fName"></div>
           </div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-header" style="background:var(--turquoise);color:#fff">License, Registration &amp; Ticket</div>
-        <div class="card-body">
-          <div class="fields three">
-            <div><div class="field-label">License</div><div class="field-value"><span class="badge" id="bLic"></span></div></div>
-            <div><div class="field-label">Registration</div><div class="field-value"><span class="badge" id="bReg"></span></div></div>
-            <div><div class="field-label">Reinstatement</div><div class="field-value"><span class="badge" id="bReinst"></span></div></div>
+          <div>
+            <div class="field-label">Date of Birth</div>
+            <div class="field-value mono" id="fDob"></div>
           </div>
-          <div class="fields" style="margin-top:8px">
-            <div><div class="field-label">Suspension Reason</div><div class="field-value" id="fSusp"></div></div>
-            <div><div class="field-label">Ticket</div><div class="field-value"><span class="badge" id="bTicket"></span></div></div>
-            <div><div class="field-label">Ticket Number</div><div class="field-value mono" id="fTicketNum"></div></div>
-            <div><div class="field-label">Ticket Status</div><div class="field-value"><span class="badge" id="bTicketStatus"></span></div></div>
-          </div>
-        </div>
-      </div>
-      <div class="card full-width">
-        <div class="card-header" style="background:var(--green);color:#fff">Required Actions &amp; Recommended Step</div>
-        <div class="card-body">
-          <div class="actions-inline" id="actionsList"></div>
-          <div class="rec-step"><strong>Next Step:</strong> <span id="nextStep"></span></div>
-          <div class="transfer-box"><strong>Transfer Reason:</strong> <span id="transferReason"></span></div>
-        </div>
-      </div>
-      <div class="card full-width">
-        <div class="card-header" style="background:var(--navy);color:#fff">SMS Form Tracking</div>
-        <div class="card-body">
-          <div class="fields four">
-            <div><div class="field-label">Form Sent At</div><div class="field-value" id="smsSent">—</div></div>
-            <div><div class="field-label">Form Received At</div><div class="field-value" id="smsRecv">—</div></div>
-            <div><div class="field-label">Signed Name</div><div class="field-value" id="smsSigned">—</div></div>
-            <div><div class="field-label">Form Token</div><div class="field-value mono" id="smsToken">—</div></div>
-          </div>
-        </div>
-      </div>
-      <div class="card full-width">
-        <div class="card-header" style="background:var(--turquoise);color:#fff">Agent Script</div>
-        <div class="card-body">
-          <div class="script-box">
-            “Thank you for calling the New Mexico Motor Vehicle Division. My name is <span class="hl">[Your Name]</span>, and I’ll be assisting you today.
-            I see here that I’m speaking with <span class="hl" id="sName"></span>, is that correct?
-            I have your case information — Case Number <span class="hl" id="sKey"></span>.
-            I can see the virtual assistant already helped with the available self-service steps, and I’ll now help complete the reinstatement portion of your request.”
+          <div>
+            <div class="field-label">Case Number</div>
+            <div class="field-value mono" id="fKey"></div>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- STATUS -->
+    <div class="card">
+      <div class="card-header" style="background:var(--turquoise);color:#fff">License, Registration & Ticket</div>
+      <div class="card-body">
+
+        <div class="fields three">
+          <div>
+            <div class="field-label">License</div>
+            <div class="field-value"><span class="badge" id="bLic"></span></div>
+          </div>
+          <div>
+            <div class="field-label">Registration</div>
+            <div class="field-value"><span class="badge" id="bReg"></span></div>
+          </div>
+          <div>
+            <div class="field-label">Reinstatement</div>
+            <div class="field-value"><span class="badge" id="bReinst"></span></div>
+          </div>
+        </div>
+
+        <div class="fields" style="margin-top:8px">
+          <div>
+            <div class="field-label">Suspension Reason</div>
+            <div class="field-value" id="fSusp"></div>
+          </div>
+          <div>
+            <div class="field-label">Ticket</div>
+            <div class="field-value"><span class="badge" id="bTicket"></span></div>
+          </div>
+          <div>
+            <div class="field-label">Ticket Number</div>
+            <div class="field-value mono" id="fTicketNum"></div>
+          </div>
+          <div>
+            <div class="field-label">Ticket Status</div>
+            <div class="field-value"><span class="badge" id="bTicketStatus"></span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="card full-width">
+      <div class="card-header" style="background:var(--green);color:#fff">Required Actions & Recommended Step</div>
+      <div class="card-body">
+
+        <div class="actions-inline" id="actionsList"></div>
+
+        <div class="rec-step">
+          <strong>Next Step:</strong> <span id="nextStep"></span>
+        </div>
+
+        <div class="transfer-box">
+          <strong>Transfer Reason:</strong> <span id="transferReason"></span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SMS -->
+    <div class="card full-width">
+      <div class="card-header" style="background:var(--navy);color:#fff">SMS Form Tracking</div>
+      <div class="card-body">
+
+        <div class="fields three">
+          <div>
+            <div class="field-label">Form Sent At</div>
+            <div class="field-value" id="smsSent">—</div>
+          </div>
+          <div>
+            <div class="field-label">Form Received At</div>
+            <div class="field-value" id="smsRecv">—</div>
+          </div>
+          <div>
+            <div class="field-label">Signed Name</div>
+            <div class="field-value" id="smsSigned">—</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SCRIPT -->
+    <div class="card full-width">
+      <div class="card-header" style="background:var(--turquoise);color:#fff">Agent Script</div>
+      <div class="card-body">
+        <div class="script-box">
+          “Thank you for calling the New Mexico Motor Vehicle Division. My name is <span class="hl">[Your Name]</span>, and I’ll be assisting you today.
+          I see here that I’m speaking with <span class="hl" id="sName"></span>, is that correct?
+          I have your case information — Case Number <span class="hl" id="sKey"></span>.
+          I can see the virtual assistant already helped with the available self-service steps, and I’ll now help complete the reinstatement portion of your request.”
+        </div>
+      </div>
+    </div>
+
   </div>
-  <script src="./config.sample.js"></script>
-  <script src="./app.js"></script>
+</div>
+
+<script src="./config.sample.js"></script>
+<script src="./app.js"></script>
+
 </body>
 </html>
