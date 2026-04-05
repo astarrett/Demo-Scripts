@@ -34,12 +34,15 @@ function getQueryParams() {
   return Object.fromEntries(params.entries());
 }
 
-function getRuntimeData() {
-  const queryData = getQueryParams();
-  if (Object.keys(queryData).length > 0) {
-    return queryData;
-  }
-  return window.caseData || {};
+function getHashKey() {
+  // supports index.html#1002
+  const h = (window.location.hash || '').replace('#', '').trim();
+  return h || null;
+}
+
+function setBannerMessage(msg) {
+  const banner = document.querySelector('.alert-banner');
+  if (banner) banner.innerHTML = msg;
 }
 
 function render(d) {
@@ -90,4 +93,75 @@ function render(d) {
   txt('transferReason', transferReason);
 }
 
-render(getRuntimeData());
+/**
+ * Configure this to point to a JSON endpoint that returns a record for a given account/customerId.
+ *
+ * Example patterns (one of these is what DeepAgent likely exposed):
+ * - https://nm-dmv-reinstatement-cmgspv.abacusai.app/api/record?account=1002
+ * - https://nm-dmv-reinstatement-cmgspv.abacusai.app/api/account/1002
+ *
+ * The endpoint MUST return JSON with keys that match your render() usage:
+ * name, dob, key, licenseStatus, registrationStatus, suspensionReason, outstandingBalance, reinstatementRequired, hasTicket, ticketNumber, ticketStatus, requiredActions, recommendedNextStep, smsFormSentAt, smsReceivedAt, smsFormSignedName
+ */
+const LOOKUP_ENDPOINT = 'https://nm-dmv-reinstatement-cmgspv.abacusai.app/api/record?account=';
+
+async function fetchCaseByKey(key) {
+  const url = LOOKUP_ENDPOINT + encodeURIComponent(key);
+
+  const res = await fetch(url, { cache: 'no-store' });
+  const contentType = res.headers.get('content-type') || '';
+
+  if (!res.ok) {
+    throw new Error(`Lookup failed: ${res.status} ${res.statusText}`);
+  }
+  if (!contentType.includes('application/json')) {
+    const text = await res.text();
+    throw new Error(`Expected JSON but got ${contentType}. First 120 chars: ${text.slice(0, 120)}`);
+  }
+  return await res.json();
+}
+
+async function init() {
+  const queryData = getQueryParams();
+  const hashKey = getHashKey();
+
+  // If query string has a full payload (more than just key), render it directly
+  const queryKeys = Object.keys(queryData);
+  const hasPayload = queryKeys.length > 1;
+
+  if (hasPayload) {
+    // Ensure we always have a key field if caller uses customerId
+    if (!queryData.key && queryData.customerId) queryData.key = queryData.customerId;
+    render(queryData);
+    return;
+  }
+
+  // Determine key from query (?key=) or hash (#)
+  const key = queryData.key || hashKey;
+
+  if (key) {
+    // render minimal immediately, then replace with fetched data
+    render({ key });
+
+    try {
+      setBannerMessage(`<strong>Incoming Transfer from AVA</strong> — Loading record for case ${key}...`);
+      const record = await fetchCaseByKey(key);
+
+      // normalize key fields
+      if (!record.key) record.key = key;
+      render(record);
+
+      setBannerMessage(`<strong>Incoming Transfer from AVA</strong> — The resident has completed available self-service steps.`);
+      return;
+    } catch (e) {
+      console.error(e);
+      setBannerMessage(`<strong>Incoming Transfer from AVA</strong> — Could not load record for case ${key}.`);
+      return;
+    }
+  }
+
+  // Fallback for preview-only environments that inject data
+  render(window.caseData || {});
+}
+
+init();
