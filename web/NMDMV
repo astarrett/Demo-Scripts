@@ -63,22 +63,39 @@
     .alert-banner {
       flex: 1;
       background: linear-gradient(135deg, var(--turquoise) 0%, #157575 100%);
-      color: var(--white); border-radius: 8px; padding: 10px 14px;
-      display: flex; align-items: center; gap: 10px; font-size: 12px;
+      color: var(--white);
+      border-radius: 8px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
     }
     .alert-banner .alert-icon { font-size: 18px; flex-shrink: 0; }
     .balance-card {
-      min-width: 240px; border-radius: 8px; padding: 10px 16px;
-      display: flex; align-items: center; gap: 14px;
+      min-width: 240px;
+      border-radius: 8px;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
     }
     .balance-card.has-balance { background: var(--red-light); border-left: 4px solid var(--red); }
     .balance-card.no-balance { background: var(--green-light); border-left: 4px solid var(--green); }
     .balance-amount {
-      font-size: 22px; font-weight: 800; font-family: 'Courier New', monospace;
+      font-size: 22px;
+      font-weight: 800;
+      font-family: 'Courier New', monospace;
     }
     .balance-amount.red { color: var(--red); }
     .balance-amount.green { color: var(--green); }
-    .balance-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--gray-500); }
+    .balance-label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--gray-500);
+    }
     .balance-note { font-size: 11px; color: var(--gray-600); }
     .main-grid {
       display: grid;
@@ -94,9 +111,13 @@
     }
     .card-header {
       padding: 6px 14px;
-      font-size: 10px; font-weight: 700;
-      text-transform: uppercase; letter-spacing: 0.7px;
-      display: flex; align-items: center; gap: 6px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
     .card-header .icon { font-size: 13px; }
     .card-header.navy { background: var(--navy); color: var(--white); }
@@ -107,12 +128,22 @@
     .fields.three { grid-template-columns: 1fr 1fr 1fr; }
     .fields.four { grid-template-columns: 1fr 1fr 1fr 1fr; }
     .field-label {
-      font-size: 9px; font-weight: 600; text-transform: uppercase;
-      letter-spacing: 0.5px; color: var(--gray-400); margin-bottom: 1px;
+      font-size: 9px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--gray-400);
+      margin-bottom: 1px;
     }
     .field-value { font-size: 13px; font-weight: 500; color: var(--gray-900); }
     .field-value.mono { font-family: 'Courier New', monospace; font-weight: 600; }
-    .badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; }
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
     .badge-valid { background: var(--green-light); color: var(--green); }
     .badge-suspended { background: var(--red-light); color: var(--red); }
     .badge-expired { background: var(--amber-light); color: var(--amber); }
@@ -123,37 +154,72 @@
     .badge-no { background: var(--green-light); color: var(--green); }
     .actions-inline { display: flex; flex-wrap: wrap; gap: 6px; }
     .action-pill {
-      display: flex; align-items: center; gap: 6px;
-      background: var(--gray-50); border: 1px solid var(--gray-200);
-      border-radius: 6px; padding: 4px 10px; font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 12px;
     }
     .action-num {
-      background: var(--navy); color: var(--white);
-      width: 18px; height: 18px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 10px; font-weight: 700; flex-shrink: 0;
+      background: var(--navy);
+      color: var(--white);
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+      flex-shrink: 0;
     }
     .rec-step {
       background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
-      color: var(--white); border-radius: 6px; padding: 8px 12px;
-      font-size: 12px; display: flex; align-items: center; gap: 8px; margin-top: 8px;
+      color: var(--white);
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
     }
     .rec-step strong { font-weight: 600; }
     .transfer-box {
-      background: var(--amber-light); border-left: 4px solid var(--amber);
-      border-radius: 6px; padding: 10px 12px; margin-top: 10px; font-size: 12px; color: var(--gray-900);
+      background: var(--amber-light);
+      border-left: 4px solid var(--amber);
+      border-radius: 6px;
+      padding: 10px 12px;
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--gray-900);
     }
     .transfer-box strong { color: var(--amber); }
     .script-box {
-      background: var(--gray-50); border: 1px dashed var(--gray-300);
-      border-radius: 6px; padding: 12px; font-size: 12px;
-      color: var(--gray-700); line-height: 1.6;
+      background: var(--gray-50);
+      border: 1px dashed var(--gray-300);
+      border-radius: 6px;
+      padding: 12px;
+      font-size: 12px;
+      color: var(--gray-700);
+      line-height: 1.6;
     }
     .script-box .hl {
-      background: var(--gold); color: var(--navy);
-      padding: 0 5px; border-radius: 3px; font-weight: 600;
+      background: var(--gold);
+      color: var(--navy);
+      padding: 0 5px;
+      border-radius: 3px;
+      font-weight: 600;
     }
-    .footer { text-align: center; padding: 10px; font-size: 10px; color: var(--gray-400); }
+    .footer {
+      text-align: center;
+      padding: 10px;
+      font-size: 10px;
+      color: var(--gray-400);
+    }
   </style>
 </head>
 <body>
@@ -194,7 +260,7 @@
             <div><div class="field-label">Full Name</div><div class="field-value" id="fName"></div></div>
             <div><div class="field-label">Date of Birth</div><div class="field-value mono" id="fDob"></div></div>
             <div><div class="field-label">Case Number</div><div class="field-value mono" id="fKey"></div></div>
-            <div><div class="field-label">Channel Preference</div><div class="field-value" id="fChannel"></div></div>
+            <div><div class="field-label">Channel</div><div class="field-value" id="fChannel"></div></div>
           </div>
         </div>
       </div>
@@ -233,11 +299,10 @@
       <div class="card full-width">
         <div class="card-header navy"><span class="icon">&#x1F4F1;</span> SMS Form Tracking</div>
         <div class="card-body">
-          <div class="fields four">
+          <div class="fields three">
             <div><div class="field-label">Form Sent At</div><div class="field-value" id="smsSent">&mdash;</div></div>
             <div><div class="field-label">Form Received At</div><div class="field-value" id="smsRecv">&mdash;</div></div>
             <div><div class="field-label">Signed Name</div><div class="field-value" id="smsSigned">&mdash;</div></div>
-            <div><div class="field-label">Form Token</div><div class="field-value mono" style="font-size:11px;word-break:break-all;" id="smsToken">&mdash;</div></div>
           </div>
         </div>
       </div>
@@ -249,13 +314,13 @@
             &ldquo;Thank you for calling the New Mexico Motor Vehicle Division. My name is <span class="hl">[Your Name]</span>, and I&rsquo;ll be assisting you today.
             I see here that I&rsquo;m speaking with <span class="hl" id="sName"></span>, is that correct?
             I have your case information &mdash; Case Number <span class="hl" id="sKey"></span>.
-            I can see the virtual assistant already helped with the available self-service steps, and I&rsquo;ll now help complete the reinstatement portion of your request.&rdquo;
+            I can see the virtual assistant already helped with the available self-service steps, and I&rsquo;ll now help complete the remaining portion of your request.&rdquo;
           </div>
         </div>
       </div>
     </div>
 
-    <div class="footer">New Mexico Motor Vehicle Division &mdash; Agent Transfer Script &mdash; Confidential</div>
+    <div class="footer">NM MVD Script v2026-04-07c</div>
   </div>
 
   <script>
@@ -266,6 +331,42 @@
 
     function toBool(value) {
       return String(value).toLowerCase() === 'true';
+    }
+
+    function txt(id, v) {
+      const e = document.getElementById(id);
+      if (e) e.textContent = v || '—';
+    }
+
+    function statusBadge(id, v) {
+      const e = document.getElementById(id);
+      if (!e) return;
+      e.textContent = v || '—';
+      const lv = String(v || '').toLowerCase();
+      e.className = 'badge badge-' + (
+        lv === 'valid' ? 'valid' :
+        lv === 'suspended' ? 'suspended' :
+        lv === 'expired' ? 'expired' : 'none'
+      );
+    }
+
+    function ticketBadge(id, v) {
+      const e = document.getElementById(id);
+      if (!e) return;
+      e.textContent = v || '—';
+      const lv = String(v || '').toLowerCase();
+      e.className = 'badge badge-' + (
+        lv === 'open' ? 'open' :
+        lv === 'closed' ? 'closed' : 'none'
+      );
+    }
+
+    function yesNo(id, val, alertWhenTrue) {
+      const e = document.getElementById(id);
+      if (!e) return;
+      const boolVal = !!val;
+      e.textContent = boolVal ? 'Yes' : 'No';
+      e.className = 'badge ' + (alertWhenTrue ? (boolVal ? 'badge-yes' : 'badge-no') : (boolVal ? 'badge-no' : 'badge-yes'));
     }
 
     const caseData = {
@@ -282,11 +383,10 @@
       ticketStatus: getParam('ticketStatus'),
       requiredActions: getParam('requiredActions'),
       recommendedNextStep: getParam('recommendedNextStep'),
-      channelPreference: getParam('channelPreference'),
       smsFormSentAt: getParam('smsFormSentAt'),
       smsReceivedAt: getParam('smsReceivedAt'),
       smsFormSignedName: getParam('smsFormSignedName'),
-      smsFormToken: getParam('smsFormToken')
+      channelPreference: getParam('channelPreference')
     };
 
     function render(d) {
@@ -294,7 +394,7 @@
       txt('fName', d.name);
       txt('fDob', d.dob);
       txt('fKey', d.key);
-      txt('fChannel', d.channelPreference || '—');
+      txt('fChannel', d.channelPreference || 'Voice');
       txt('nextStep', d.recommendedNextStep);
       txt('sName', d.name);
       txt('sKey', d.key);
@@ -302,80 +402,46 @@
       statusBadge('bLic', d.licenseStatus);
       statusBadge('bReg', d.registrationStatus);
       yesNo('bReinst', d.reinstatementRequired, true);
-      yesNo('bTicket', d.hasTicket, false);
+      yesNo('bTicket', d.hasTicket, true);
       txt('fSusp', d.suspensionReason || 'None');
       txt('fTicketNum', d.ticketNumber || '—');
       ticketBadge('bTicketStatus', d.ticketStatus || 'None');
 
-      var hasBal = (Number(d.outstandingBalance) || 0) > 0;
-      var bc = document.getElementById('balanceCard');
-      var ba = document.getElementById('balanceAmount');
-      var bn = document.getElementById('balanceNote');
+      const balance = Number(d.outstandingBalance) || 0;
+      const hasBal = balance > 0;
+      const bc = document.getElementById('balanceCard');
+      const ba = document.getElementById('balanceAmount');
+      const bn = document.getElementById('balanceNote');
+
       if (bc) bc.className = 'balance-card ' + (hasBal ? 'has-balance' : 'no-balance');
       if (ba) {
-        ba.textContent = '$' + (Number(d.outstandingBalance) || 0).toFixed(2);
+        ba.textContent = '$' + balance.toFixed(2);
         ba.className = 'balance-amount ' + (hasBal ? 'red' : 'green');
       }
-      if (bn) bn.textContent = hasBal ? 'Outstanding balance handled in self-service' : 'No balance due';
+      if (bn) bn.textContent = hasBal ? 'Outstanding balance on record' : 'No balance due';
 
-      var al = document.getElementById('actionsList');
+      const al = document.getElementById('actionsList');
       if (al) {
-        var acts = (d.requiredActions || '').split(';').map(function(a){ return a.trim(); }).filter(Boolean);
-        al.innerHTML = acts.map(function(a, i) {
-          return '<div class="action-pill"><span class="action-num">' + (i + 1) + '</span>' + a + '</div>';
-        }).join('');
+        const acts = String(d.requiredActions || '')
+          .split(';')
+          .map(a => a.trim())
+          .filter(Boolean);
+        al.innerHTML = acts.map((a, i) =>
+          '<div class="action-pill"><span class="action-num">' + (i + 1) + '</span>' + a + '</div>'
+        ).join('');
       }
 
       txt('smsSent', d.smsFormSentAt || '—');
       txt('smsRecv', d.smsReceivedAt || '—');
       txt('smsSigned', d.smsFormSignedName || '—');
-      txt('smsToken', d.smsFormToken || '—');
 
-      var transferReason = d.reinstatementRequired
+      const transferReason = d.reinstatementRequired
         ? 'Reinstatement still requires agent completion after self-service.'
-        : 'Agent requested for additional assistance.';
+        : (d.hasTicket ? 'Open ticket requires agent review.' : 'Agent requested for additional assistance.');
       txt('transferReason', transferReason);
-    }
-
-    function txt(id, v) {
-      var e = document.getElementById(id);
-      if (e) e.textContent = v || '—';
-    }
-
-    function statusBadge(id, v) {
-      var e = document.getElementById(id);
-      if (!e) return;
-      e.textContent = v || '—';
-      var lv = (v || '').toLowerCase();
-      e.className = 'badge badge-' + (
-        lv === 'valid' ? 'valid' :
-        lv === 'suspended' ? 'suspended' :
-        lv === 'expired' ? 'expired' : 'none'
-      );
-    }
-
-    function ticketBadge(id, v) {
-      var e = document.getElementById(id);
-      if (!e) return;
-      e.textContent = v || '—';
-      var lv = (v || '').toLowerCase();
-      e.className = 'badge badge-' + (
-        lv === 'open' ? 'open' :
-        lv === 'closed' ? 'closed' : 'none'
-      );
-    }
-
-    function yesNo(id, val, invertForReinstatement) {
-      var e = document.getElementById(id);
-      if (!e) return;
-      var boolVal = !!val;
-      e.textContent = boolVal ? 'Yes' : 'No';
-      var showAlertStyle = invertForReinstatement ? boolVal : !boolVal;
-      e.className = 'badge ' + (showAlertStyle ? 'badge-yes' : 'badge-no');
     }
 
     render(caseData);
   </script>
 </body>
 </html>
-```}
