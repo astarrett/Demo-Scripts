@@ -50,13 +50,20 @@
     .header-text p { font-size: 11px; opacity: 0.8; }
     .header-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
     .header-badge {
-      background: var(--gold); color: var(--navy);
-      font-size: 10px; font-weight: 700; padding: 3px 10px;
-      border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px;
+      background: var(--gold);
+      color: var(--navy);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
     .header-case {
       font-family: 'Courier New', monospace;
-      font-size: 14px; font-weight: 700; color: var(--gold);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--gold);
     }
     .container { padding: 10px 16px 16px; }
     .top-bar { display: flex; gap: 10px; margin-bottom: 10px; }
@@ -137,6 +144,7 @@
     }
     .field-value { font-size: 13px; font-weight: 500; color: var(--gray-900); }
     .field-value.mono { font-family: 'Courier New', monospace; font-weight: 600; }
+
     .badge {
       display: inline-block;
       font-size: 11px;
@@ -152,6 +160,7 @@
     .badge-none { background: var(--gray-100); color: var(--gray-500); }
     .badge-yes { background: var(--red-light); color: var(--red); }
     .badge-no { background: var(--green-light); color: var(--green); }
+
     .actions-inline { display: flex; flex-wrap: wrap; gap: 6px; }
     .action-pill {
       display: flex;
@@ -176,6 +185,35 @@
       font-weight: 700;
       flex-shrink: 0;
     }
+
+    .completed-inline { display: flex; flex-wrap: wrap; gap: 8px; }
+    .completed-pill {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      background: var(--green-light);
+      color: var(--green);
+      border: 1px solid #b7e0bb;
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .completed-pill.show { display: inline-flex; }
+    .completed-icon {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--green);
+      color: var(--white);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
     .rec-step {
       background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
       color: var(--white);
@@ -283,6 +321,26 @@
       </div>
 
       <div class="card full-width">
+        <div class="card-header navy"><span class="icon">&#x2728;</span> AVA Completed Steps</div>
+        <div class="card-body">
+          <div class="completed-inline">
+            <div class="completed-pill" id="stepPayment">
+              <span class="completed-icon">&#10003;</span>
+              Payment completed
+            </div>
+            <div class="completed-pill" id="stepRegistration">
+              <span class="completed-icon">&#10003;</span>
+              Registration renewed
+            </div>
+            <div class="completed-pill" id="stepSms">
+              <span class="completed-icon">&#10003;</span>
+              SMS form sent
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card full-width">
         <div class="card-header green"><span class="icon">&#x1F4CB;</span> Required Actions &amp; Recommended Step</div>
         <div class="card-body">
           <div class="actions-inline" id="actionsList"></div>
@@ -320,7 +378,7 @@
       </div>
     </div>
 
-    <div class="footer">NM MVD Script v2026-04-07c</div>
+    <div class="footer">NM MVD Script v2026-04-07d</div>
   </div>
 
   <script>
@@ -336,6 +394,11 @@
     function txt(id, v) {
       const e = document.getElementById(id);
       if (e) e.textContent = v || '—';
+    }
+
+    function show(id, shouldShow) {
+      const e = document.getElementById(id);
+      if (e) e.classList.toggle('show', !!shouldShow);
     }
 
     function statusBadge(id, v) {
@@ -395,7 +458,7 @@
       txt('fDob', d.dob);
       txt('fKey', d.key);
       txt('fChannel', d.channelPreference || 'Voice');
-      txt('nextStep', d.recommendedNextStep);
+      txt('nextStep', d.recommendedNextStep || '—');
       txt('sName', d.name);
       txt('sKey', d.key);
 
@@ -434,6 +497,14 @@
       txt('smsSent', d.smsFormSentAt || '—');
       txt('smsRecv', d.smsReceivedAt || '—');
       txt('smsSigned', d.smsFormSignedName || '—');
+
+      const paymentCompleted = balance === 0;
+      const registrationCompleted = String(d.registrationStatus || '').toLowerCase() === 'valid';
+      const smsSent = !!d.smsFormSentAt;
+
+      show('stepPayment', paymentCompleted);
+      show('stepRegistration', registrationCompleted);
+      show('stepSms', smsSent);
 
       const transferReason = d.reinstatementRequired
         ? 'Reinstatement still requires agent completion after self-service.'
