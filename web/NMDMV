@@ -379,31 +379,3 @@
 </body>
 </html>
 ```}
-
-A couple of important notes:
-
-1. Your current HTML still includes `channelPreference` and `smsFormToken`, but you had decided not to use those in the script. You can leave them in harmlessly, or I can strip them out cleanly.
-
-2. Your Scripter Web Page Source URL must pass the same parameter names this HTML expects:
-- `key`
-- `name`
-- `dob`
-- `licenseStatus`
-- `registrationStatus`
-- `suspensionReason`
-- `outstandingBalance`
-- `reinstatementRequired`
-- `hasTicket`
-- `ticketNumber`
-- `ticketStatus`
-- `requiredActions`
-- `recommendedNextStep`
-- `smsFormSentAt`
-- `smsReceivedAt`
-- `smsFormSignedName`
-
-3. If you want, I can give you one final cleaned production version that removes:
-- `channelPreference`
-- `smsFormToken`
-- the static transfer text fallback
-and tightens the transfer reason logic to match your current AVA behavior.
