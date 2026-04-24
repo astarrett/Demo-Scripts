@@ -50,13 +50,76 @@
     letter-spacing: .3px;
   }
 
+  .page-wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px 24px;
+  }
+
+  .hero {
+    background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+    color: var(--white);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .hero .label {
+    font-size: .78rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: .85;
+    margin-bottom: 4px;
+  }
+
+  .hero .balance {
+    font-size: 2.4rem;
+    font-weight: 700;
+  }
+
+  .hero .sub {
+    font-size: .82rem;
+    opacity: .8;
+    margin-top: 6px;
+  }
+
+  .hero-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .nav-actions {
+    margin-top: 16px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .nav-btn {
+    background: var(--white);
+    color: var(--terracotta);
+    border: 2px solid var(--white);
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all .2s ease;
+  }
+
+  .nav-btn:hover {
+    background: var(--terracotta-dark);
+    color: var(--white);
+    border-color: var(--terracotta-dark);
+  }
+
   .layout {
     display: grid;
     grid-template-columns: 1fr 300px;
     gap: 20px;
-    padding: 20px 24px;
-    max-width: 1400px;
-    margin: 0 auto;
   }
 
   @media (max-width: 900px) {
@@ -94,42 +157,6 @@
 
   .card-body {
     padding: 18px 20px;
-  }
-
-  .hero {
-    background: linear-gradient(135deg, var(--blue), var(--blue-dark));
-    color: var(--white);
-    border-radius: var(--radius);
-    padding: 24px 28px;
-    margin-bottom: 20px;
-    box-shadow: var(--shadow-lg);
-  }
-
-  .hero .label {
-    font-size: .78rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    opacity: .85;
-    margin-bottom: 4px;
-  }
-
-  .hero .balance {
-    font-size: 2.4rem;
-    font-weight: 700;
-  }
-
-  .hero .sub {
-    font-size: .82rem;
-    opacity: .8;
-    margin-top: 6px;
-  }
-
-  .hero-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    flex-wrap: wrap;
-    gap: 16px;
   }
 
   .badge {
@@ -271,70 +298,86 @@
   .alert-warn { background: #FFF3E0; border: 1px solid #FFE0B2; color: #E65100; }
   .alert-danger { background: #FDECEA; border: 1px solid #F5C6CB; color: #B71C1C; }
   .alert-info { background: var(--blue-pale); border: 1px solid #B3E0EC; color: var(--blue-dark); }
+
+  @media (max-width: 640px) {
+    .nav-actions {
+      flex-direction: column;
+    }
+
+    .nav-btn {
+      width: 100%;
+    }
+  }
 </style>
 </head>
 <body>
 
 <div class="topbar">
-  <h1>💰 City Utilities Department - Take Payment</h1>
+  <h1>City Utilities Department - Take Payment</h1>
 </div>
 
-<div class="layout">
-  <div class="main">
-    <div class="hero">
-      <div class="hero-row">
-        <div>
-          <div class="label">Amount Due</div>
-          <div class="balance" id="heroBalance">—</div>
-          <div class="sub">Account #<span id="heroAcct">—</span> · <span id="heroName">—</span></div>
-        </div>
-        <div style="text-align:right;">
-          <div class="label">Account Status</div>
-          <div id="heroStatus" class="badge badge-info" style="font-size:.95rem;">—</div>
-        </div>
+<div class="page-wrap">
+  <div class="hero">
+    <div class="hero-row">
+      <div>
+        <div class="label">Amount Due</div>
+        <div class="balance" id="heroBalance">—</div>
+        <div class="sub">Account #<span id="heroAcct">—</span> · <span id="heroName">—</span></div>
+      </div>
+      <div style="text-align:right;">
+        <div class="label">Account Status</div>
+        <div id="heroStatus" class="badge badge-info" style="font-size:.95rem;">—</div>
       </div>
     </div>
-
-    <div id="alertsArea"></div>
-
-    <div class="card" style="margin-bottom:20px;">
-      <div class="card-header"><span class="icon" style="background:var(--tan-light);color:var(--terracotta);">👤</span> Customer &amp; Balance</div>
-      <div class="card-body">
-        <div class="data-grid" id="custGrid"></div>
-      </div>
-    </div>
-
-    <div class="card" style="margin-bottom:20px;">
-      <div class="card-header"><span class="icon" style="background:var(--blue-pale);color:var(--blue-dark);">💳</span> Payment Methods</div>
-      <div class="card-body">
-        <div class="method-grid" id="methodGrid"></div>
-      </div>
-    </div>
-
-    <div class="card" style="margin-bottom:20px;">
-      <div class="card-header"><span class="icon" style="background:var(--tan-light);color:var(--terracotta);">🕐</span> Last Payment Information</div>
-      <div class="card-body">
-        <div class="data-grid" id="lastPayGrid"></div>
-      </div>
-    </div>
-
-    <div class="card" style="margin-bottom:20px;">
-      <div class="card-header"><span class="icon" style="background:var(--blue-pale);color:var(--blue-dark);">📝</span> Payment History &amp; Notes</div>
-      <div class="card-body">
-        <div class="notes-box" id="notesBox">—</div>
-      </div>
+    <div class="nav-actions">
+      <button class="nav-btn" onclick="goToAgent()">Agent Dashboard</button>
+      <button class="nav-btn" onclick="goToRepayment()">Repayment</button>
     </div>
   </div>
 
-  <div class="sidebar">
-    <div class="card">
-      <div class="card-header">Payment Summary</div>
-      <div class="card-body" id="paySummary"></div>
+  <div class="layout">
+    <div class="main">
+      <div id="alertsArea"></div>
+
+      <div class="card" style="margin-bottom:20px;">
+        <div class="card-header"><span class="icon" style="background:var(--tan-light);color:var(--terracotta);">C</span> Customer and Balance</div>
+        <div class="card-body">
+          <div class="data-grid" id="custGrid"></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:20px;">
+        <div class="card-header"><span class="icon" style="background:var(--blue-pale);color:var(--blue-dark);">P</span> Payment Methods</div>
+        <div class="card-body">
+          <div class="method-grid" id="methodGrid"></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:20px;">
+        <div class="card-header"><span class="icon" style="background:var(--tan-light);color:var(--terracotta);">L</span> Last Payment Information</div>
+        <div class="card-body">
+          <div class="data-grid" id="lastPayGrid"></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:20px;">
+        <div class="card-header"><span class="icon" style="background:var(--blue-pale);color:var(--blue-dark);">N</span> Payment History and Notes</div>
+        <div class="card-body">
+          <div class="notes-box" id="notesBox">—</div>
+        </div>
+      </div>
     </div>
 
-    <div class="card">
-      <div class="card-header">Flags &amp; Warnings</div>
-      <div class="card-body" id="flagsBody"></div>
+    <div class="sidebar">
+      <div class="card">
+        <div class="card-header">Payment Summary</div>
+        <div class="card-body" id="paySummary"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">Flags and Warnings</div>
+        <div class="card-body" id="flagsBody"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -376,11 +419,22 @@ function boolText(val) {
 function renderStatusBadge(status) {
   const sEl = document.getElementById("heroStatus");
   const s = String(status || "");
-  if (s === "finalNotice") { sEl.className = "badge badge-danger"; sEl.textContent = "Final Notice"; }
-  else if (s === "pastDue") { sEl.className = "badge badge-warn"; sEl.textContent = "Past Due"; }
-  else if (s === "disconnected") { sEl.className = "badge badge-danger"; sEl.textContent = "Disconnected"; }
-  else if (s === "active") { sEl.className = "badge badge-safe"; sEl.textContent = "Active"; }
-  else { sEl.className = "badge badge-info"; sEl.textContent = titleStatus(s); }
+  if (s === "finalNotice") {
+    sEl.className = "badge badge-danger";
+    sEl.textContent = "Final Notice";
+  } else if (s === "pastDue") {
+    sEl.className = "badge badge-warn";
+    sEl.textContent = "Past Due";
+  } else if (s === "disconnected") {
+    sEl.className = "badge badge-danger";
+    sEl.textContent = "Disconnected";
+  } else if (s === "active") {
+    sEl.className = "badge badge-safe";
+    sEl.textContent = "Active";
+  } else {
+    sEl.className = "badge badge-info";
+    sEl.textContent = titleStatus(s);
+  }
 }
 
 function makeGrid(id, items) {
@@ -394,12 +448,12 @@ function renderMethods(record) {
   const isDisconnected = String(record.accountStatus) === "disconnected";
 
   const methods = [
-    { icon: "💳", name: "Credit/Debit Card", desc: "Visa, MC, Amex, Discover", disabled: false },
-    { icon: "🏦", name: "Bank Transfer (ACH)", desc: "Direct from bank account", disabled: false },
-    { icon: "📱", name: "Phone (IVR)", desc: "Automated phone payment", disabled: false },
-    { icon: "🔄", name: "Auto-Pay Enrollment", desc: "Set up recurring payments", disabled: isDisconnected },
+    { icon: "💳", name: "Credit or Debit Card", desc: "Visa, Mastercard, Amex, Discover", disabled: false },
+    { icon: "🏦", name: "Bank Transfer ACH", desc: "Direct payment from bank account", disabled: false },
+    { icon: "📱", name: "Phone Payment", desc: "Automated phone payment", disabled: false },
+    { icon: "🔄", name: "Auto Pay Enrollment", desc: "Set up recurring payments", disabled: isDisconnected },
     { icon: "✉️", name: "Check by Mail", desc: "Mail to payment center", disabled: bouncedCheck },
-    { icon: "🏢", name: "In-Person", desc: "Walk-in payment center", disabled: false }
+    { icon: "🏢", name: "In Person", desc: "Walk in payment center", disabled: false }
   ];
 
   document.getElementById("methodGrid").innerHTML = methods.map(m =>
@@ -417,16 +471,16 @@ function renderFlags(record) {
   const isDisconnected = String(record.accountStatus) === "disconnected";
 
   if (String(record.shutOffRisk).toLowerCase() === "true") {
-    flags.push('<div style="margin-bottom:8px;"><span class="badge badge-danger">⚠ Shut-Off Risk</span></div>');
+    flags.push('<div style="margin-bottom:8px;"><span class="badge badge-danger">Shut Off Risk</span></div>');
   }
   if (String(record.hardshipFlag).toLowerCase() === "true") {
-    flags.push('<div style="margin-bottom:8px;"><span class="badge badge-warn">🚩 Hardship</span></div>');
+    flags.push('<div style="margin-bottom:8px;"><span class="badge badge-warn">Hardship</span></div>');
   }
   if (bouncedCheck) {
-    flags.push('<div style="margin-bottom:8px;"><span class="badge badge-warn">↩ Returned Payment Restriction</span></div>');
+    flags.push('<div style="margin-bottom:8px;"><span class="badge badge-warn">Returned Payment Restriction</span></div>');
   }
   if (isDisconnected) {
-    flags.push('<div style="margin-bottom:8px;"><span class="badge badge-danger">🔌 Disconnected</span></div>');
+    flags.push('<div style="margin-bottom:8px;"><span class="badge badge-danger">Disconnected</span></div>');
   }
 
   document.getElementById("flagsBody").innerHTML = flags.length
@@ -440,19 +494,31 @@ function renderAlerts(record) {
   const isDisconnected = String(record.accountStatus) === "disconnected";
 
   if (bouncedCheck) {
-    alerts.push(`<div class="alert-box alert-danger">⚠️ <div><b>Returned Payment Restriction:</b> Check payments may be unavailable.</div></div>`);
+    alerts.push(`<div class="alert-box alert-danger"><div><b>Returned Payment Restriction:</b> Check payments may be unavailable.</div></div>`);
   }
   if (isDisconnected) {
-    alerts.push(`<div class="alert-box alert-danger">🔌 <div><b>Disconnected:</b> Payment may be required before reconnection.</div></div>`);
+    alerts.push(`<div class="alert-box alert-danger"><div><b>Disconnected:</b> Payment may be required before reconnection.</div></div>`);
   }
   if (String(record.shutOffRisk).toLowerCase() === "true" && !isDisconnected) {
-    alerts.push(`<div class="alert-box alert-warn">⚡ <div><b>Shut-Off Risk:</b> Encourage immediate payment.</div></div>`);
+    alerts.push(`<div class="alert-box alert-warn"><div><b>Shut Off Risk:</b> Encourage immediate payment.</div></div>`);
   }
   if (String(record.hardshipFlag).toLowerCase() === "true") {
-    alerts.push(`<div class="alert-box alert-info">🤝 <div><b>Hardship Flag:</b> Customer may qualify for assistance.</div></div>`);
+    alerts.push(`<div class="alert-box alert-info"><div><b>Hardship Flag:</b> Customer may qualify for assistance.</div></div>`);
   }
 
   document.getElementById("alertsArea").innerHTML = alerts.join("");
+}
+
+function goToAgent() {
+  const acct = accountId();
+  if (!acct) return;
+  window.location.href = `agent-script.html?accountNumber=${encodeURIComponent(acct)}`;
+}
+
+function goToRepayment() {
+  const acct = accountId();
+  if (!acct) return;
+  window.location.href = `repayment-script.html?accountNumber=${encodeURIComponent(acct)}`;
 }
 
 async function loadAccount() {
