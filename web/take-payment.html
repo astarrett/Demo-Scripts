@@ -3,590 +3,193 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Take Payment - City Utilities Department</title>
+<title>Take Payment — City Utilities Department</title>
+
 <style>
-  :root {
-    --terracotta: #C2572A;
-    --terracotta-dark: #A04520;
-    --tan: #D2B48C;
-    --tan-light: #E8D5B7;
-    --beige: #F5F0E6;
-    --beige-dark: #EDE4D0;
-    --blue: #5F9EA0;
-    --blue-light: #87CEEB;
-    --blue-pale: #D6EEF5;
-    --blue-dark: #3D7A7C;
-    --text-dark: #2C1A0E;
-    --text-mid: #5C4A3A;
-    --text-light: #8B7B6B;
-    --white: #FFFFFF;
-    --shadow: 0 2px 12px rgba(44,26,14,.08);
-    --shadow-lg: 0 6px 24px rgba(44,26,14,.12);
-    --radius: 12px;
-  }
+:root {
+  --terracotta:#c2572a;
+  --cream:#f5f0e6;
+  --card:#ffffff;
+  --teal:#4f8f95;
+  --text:#2f2a24;
+  --muted:#7a6f63;
+  --border:#e6ded1;
+}
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  margin:0;
+  font-family: Arial, sans-serif;
+  background:var(--cream);
+  color:var(--text);
+}
 
-  body {
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    background: var(--beige);
-    color: var(--text-dark);
-    min-height: 100vh;
-  }
+.topbar {
+  background:var(--terracotta);
+  color:#fff;
+  padding:16px 22px;
+  font-weight:700;
+}
 
-  .topbar {
-    background: linear-gradient(135deg, var(--terracotta), var(--terracotta-dark));
-    color: var(--white);
-    padding: 14px 28px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    box-shadow: 0 2px 8px rgba(0,0,0,.15);
-  }
+.wrap { padding:16px; }
 
-  .topbar h1 {
-    font-size: 1.15rem;
-    font-weight: 600;
-    letter-spacing: .3px;
-  }
+.hero {
+  background:linear-gradient(135deg,var(--teal),#3d7479);
+  color:#fff;
+  border-radius:12px;
+  padding:22px;
+  margin-bottom:16px;
+}
 
-  .page-wrap {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 20px 24px;
-  }
+.hero-balance {
+  font-size:36px;
+  font-weight:700;
+}
 
-  .hero {
-    background: linear-gradient(135deg, var(--blue), var(--blue-dark));
-    color: var(--white);
-    border-radius: var(--radius);
-    padding: 24px 28px;
-    margin-bottom: 20px;
-    box-shadow: var(--shadow-lg);
-  }
+.nav-actions {
+  margin-top:14px;
+  display:flex;
+  gap:10px;
+}
 
-  .hero .label {
-    font-size: .78rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    opacity: .85;
-    margin-bottom: 4px;
-  }
+.nav-btn {
+  background:#fff;
+  color:var(--terracotta);
+  border:2px solid #fff;
+  padding:10px 14px;
+  border-radius:8px;
+  font-weight:700;
+  cursor:pointer;
+}
 
-  .hero .balance {
-    font-size: 2.4rem;
-    font-weight: 700;
-  }
+.layout {
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:16px;
+}
 
-  .hero .sub {
-    font-size: .82rem;
-    opacity: .8;
-    margin-top: 6px;
-  }
+.card {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+}
 
-  .hero-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    flex-wrap: wrap;
-    gap: 16px;
-  }
+.card-title {
+  padding:14px;
+  font-weight:700;
+  color:var(--muted);
+  border-bottom:1px solid var(--border);
+}
 
-  .nav-actions {
-    margin-top: 16px;
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
+.card-body {
+  padding:16px;
+}
 
-  .nav-btn {
-    background: var(--white);
-    color: var(--terracotta);
-    border: 2px solid var(--white);
-    padding: 10px 14px;
-    border-radius: 8px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all .2s ease;
-  }
+.row {
+  display:flex;
+  justify-content:space-between;
+  padding:10px 0;
+  border-bottom:1px solid var(--border);
+}
 
-  .nav-btn:hover {
-    background: var(--terracotta-dark);
-    color: var(--white);
-    border-color: var(--terracotta-dark);
-  }
+.row:last-child { border:none; }
 
-  .layout {
-    display: grid;
-    grid-template-columns: 1fr 300px;
-    gap: 20px;
-  }
-
-  @media (max-width: 900px) {
-    .layout { grid-template-columns: 1fr; }
-  }
-
-  .card {
-    background: var(--white);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    overflow: hidden;
-  }
-
-  .card-header {
-    padding: 14px 20px;
-    font-weight: 600;
-    font-size: .88rem;
-    text-transform: uppercase;
-    letter-spacing: .6px;
-    border-bottom: 1px solid var(--beige-dark);
-    color: var(--text-mid);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .card-header .icon {
-    width: 22px;
-    height: 22px;
-    border-radius: 6px;
-    display: grid;
-    place-items: center;
-    font-size: .75rem;
-  }
-
-  .card-body {
-    padding: 18px 20px;
-  }
-
-  .badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: .75rem;
-    font-weight: 600;
-  }
-
-  .badge-danger { background: #FDECEA; color: #B71C1C; }
-  .badge-safe { background: #E8F5E9; color: #2E7D32; }
-  .badge-warn { background: #FFF3E0; color: #E65100; }
-  .badge-info { background: var(--blue-pale); color: var(--blue-dark); }
-
-  .data-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 16px;
-  }
-
-  .data-item .dt {
-    font-size: .72rem;
-    text-transform: uppercase;
-    letter-spacing: .7px;
-    color: var(--text-light);
-    margin-bottom: 3px;
-  }
-
-  .data-item .dd {
-    font-size: .95rem;
-    font-weight: 600;
-    color: var(--text-dark);
-    word-break: break-word;
-  }
-
-  .notes-box {
-    background: var(--beige);
-    border-left: 4px solid var(--tan);
-    border-radius: 0 8px 8px 0;
-    padding: 14px 18px;
-    font-size: .88rem;
-    color: var(--text-mid);
-    line-height: 1.55;
-    white-space: pre-wrap;
-  }
-
-  .method-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 14px;
-  }
-
-  .method-card {
-    border: 2px solid var(--beige-dark);
-    border-radius: 10px;
-    padding: 18px 16px;
-    text-align: center;
-    transition: all .2s;
-    background: var(--white);
-  }
-
-  .method-card:hover {
-    border-color: var(--blue);
-    background: var(--blue-pale);
-  }
-
-  .method-card .m-icon {
-    font-size: 1.8rem;
-    margin-bottom: 8px;
-  }
-
-  .method-card .m-name {
-    font-weight: 700;
-    font-size: .9rem;
-    margin-bottom: 4px;
-  }
-
-  .method-card .m-desc {
-    font-size: .76rem;
-    color: var(--text-light);
-  }
-
-  .method-card.disabled {
-    opacity: .45;
-    pointer-events: none;
-  }
-
-  .method-card.disabled .m-name::after {
-    content: ' (Unavailable)';
-    font-weight: 400;
-    font-size: .72rem;
-    color: var(--text-light);
-  }
-
-  .sidebar {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .sidebar .card-body {
-    padding: 14px 16px;
-  }
-
-  .info-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 8px 0;
-    border-bottom: 1px solid var(--beige-dark);
-    font-size: .84rem;
-  }
-
-  .info-row:last-child {
-    border-bottom: none;
-  }
-
-  .info-row .lbl {
-    color: var(--text-light);
-  }
-
-  .info-row .val {
-    font-weight: 600;
-  }
-
-  .alert-box {
-    border-radius: 8px;
-    padding: 12px 16px;
-    font-size: .85rem;
-    margin-bottom: 16px;
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    line-height: 1.5;
-  }
-
-  .alert-warn { background: #FFF3E0; border: 1px solid #FFE0B2; color: #E65100; }
-  .alert-danger { background: #FDECEA; border: 1px solid #F5C6CB; color: #B71C1C; }
-  .alert-info { background: var(--blue-pale); border: 1px solid #B3E0EC; color: var(--blue-dark); }
-
-  @media (max-width: 640px) {
-    .nav-actions {
-      flex-direction: column;
-    }
-
-    .nav-btn {
-      width: 100%;
-    }
-  }
+@media(max-width:900px){
+  .layout{grid-template-columns:1fr;}
+}
 </style>
 </head>
+
 <body>
 
-<div class="topbar">
-  <h1>City Utilities Department - Take Payment</h1>
-</div>
+<div class="topbar">City Utilities — Take Payment</div>
 
-<div class="page-wrap">
+<div class="wrap">
+
   <div class="hero">
-    <div class="hero-row">
-      <div>
-        <div class="label">Amount Due</div>
-        <div class="balance" id="heroBalance">—</div>
-        <div class="sub">Account #<span id="heroAcct">—</span> · <span id="heroName">—</span></div>
-      </div>
-      <div style="text-align:right;">
-        <div class="label">Account Status</div>
-        <div id="heroStatus" class="badge badge-info" style="font-size:.95rem;">—</div>
-      </div>
-    </div>
+    <div class="hero-balance" id="balance">—</div>
+    <div>Account #<span id="acct">—</span> · <span id="name">—</span></div>
+
     <div class="nav-actions">
-      <button class="nav-btn" onclick="goToAgent()">Agent Dashboard</button>
-      <button class="nav-btn" onclick="goToRepayment()">Repayment</button>
+      <button class="nav-btn" onclick="goAgent()">Agent</button>
+      <button class="nav-btn" onclick="goRepayment()">Repayment</button>
     </div>
   </div>
 
   <div class="layout">
-    <div class="main">
-      <div id="alertsArea"></div>
 
-      <div class="card" style="margin-bottom:20px;">
-        <div class="card-header"><span class="icon" style="background:var(--tan-light);color:var(--terracotta);">C</span> Customer and Balance</div>
+    <div>
+      <div class="card">
+        <div class="card-title">Payment Options</div>
         <div class="card-body">
-          <div class="data-grid" id="custGrid"></div>
+          <div class="row"><span>Card</span><span>Available</span></div>
+          <div class="row"><span>Bank (ACH)</span><span>Available</span></div>
+          <div class="row"><span>Phone</span><span>Available</span></div>
+          <div class="row"><span>Check</span><span id="checkStatus">—</span></div>
         </div>
       </div>
 
-      <div class="card" style="margin-bottom:20px;">
-        <div class="card-header"><span class="icon" style="background:var(--blue-pale);color:var(--blue-dark);">P</span> Payment Methods</div>
+      <div class="card" style="margin-top:16px;">
+        <div class="card-title">Last Payment</div>
         <div class="card-body">
-          <div class="method-grid" id="methodGrid"></div>
-        </div>
-      </div>
-
-      <div class="card" style="margin-bottom:20px;">
-        <div class="card-header"><span class="icon" style="background:var(--tan-light);color:var(--terracotta);">L</span> Last Payment Information</div>
-        <div class="card-body">
-          <div class="data-grid" id="lastPayGrid"></div>
-        </div>
-      </div>
-
-      <div class="card" style="margin-bottom:20px;">
-        <div class="card-header"><span class="icon" style="background:var(--blue-pale);color:var(--blue-dark);">N</span> Payment History and Notes</div>
-        <div class="card-body">
-          <div class="notes-box" id="notesBox">—</div>
+          <div class="row"><span>Date</span><span id="lastDate">—</span></div>
+          <div class="row"><span>Amount</span><span id="lastAmt">—</span></div>
         </div>
       </div>
     </div>
 
-    <div class="sidebar">
+    <div>
       <div class="card">
-        <div class="card-header">Payment Summary</div>
-        <div class="card-body" id="paySummary"></div>
-      </div>
-
-      <div class="card">
-        <div class="card-header">Flags and Warnings</div>
-        <div class="card-body" id="flagsBody"></div>
+        <div class="card-title">Summary</div>
+        <div class="card-body">
+          <div class="row"><span>Status</span><span id="status">—</span></div>
+          <div class="row"><span>Balance</span><span id="sumBal">—</span></div>
+        </div>
       </div>
     </div>
+
   </div>
 </div>
 
 <script>
-const DATA_URL = "https://raw.githubusercontent.com/astarrett/Demo-Scripts/refs/heads/main/data-actions/Utility-Accounts";
-const params = new URLSearchParams(window.location.search);
+const DATA_URL="https://raw.githubusercontent.com/astarrett/Demo-Scripts/main/data-actions/Utility-Accounts";
+const p=new URLSearchParams(window.location.search);
 
-function g(k) {
-  return params.get(k) || "";
+function acct(){return p.get("accountNumber")||"";}
+
+function goAgent(){
+  window.location.href="agent-script.html?accountNumber="+acct();
 }
 
-function accountId() {
-  return g("accountNumber") || g("key") || "";
+function goRepayment(){
+  window.location.href="repayment-script.html?accountNumber="+acct();
 }
 
-function money(val) {
-  const n = parseFloat(String(val).replace(/[$,]/g, ""));
-  return Number.isFinite(n) ? "$" + n.toFixed(2) : "—";
+async function load(){
+  const id=acct();
+  if(!id)return;
+
+  const res=await fetch(DATA_URL);
+  const data=await res.json();
+  const r=data[id];
+
+  if(!r)return;
+
+  document.getElementById("balance").textContent="$"+r.currentBalance;
+  document.getElementById("acct").textContent=r.accountNumber;
+  document.getElementById("name").textContent=r.customerName;
+
+  document.getElementById("status").textContent=r.accountStatus;
+  document.getElementById("sumBal").textContent="$"+r.currentBalance;
+
+  document.getElementById("lastDate").textContent=r.lastPaymentDate;
+  document.getElementById("lastAmt").textContent="$"+r.lastPaymentAmount;
+
+  document.getElementById("checkStatus").textContent=
+    r.bouncedCheckLast6Month==="true" ? "Unavailable" : "Available";
 }
 
-function titleStatus(val) {
-  const s = String(val || "").trim();
-  if (!s) return "—";
-  if (s === "pastDue") return "Past Due";
-  if (s === "finalNotice") return "Final Notice";
-  if (s === "active") return "Active";
-  if (s === "disconnected") return "Disconnected";
-  return s;
-}
-
-function boolText(val) {
-  const s = String(val || "").toLowerCase();
-  if (s === "true") return "Yes";
-  if (s === "false") return "No";
-  return "—";
-}
-
-function renderStatusBadge(status) {
-  const sEl = document.getElementById("heroStatus");
-  const s = String(status || "");
-  if (s === "finalNotice") {
-    sEl.className = "badge badge-danger";
-    sEl.textContent = "Final Notice";
-  } else if (s === "pastDue") {
-    sEl.className = "badge badge-warn";
-    sEl.textContent = "Past Due";
-  } else if (s === "disconnected") {
-    sEl.className = "badge badge-danger";
-    sEl.textContent = "Disconnected";
-  } else if (s === "active") {
-    sEl.className = "badge badge-safe";
-    sEl.textContent = "Active";
-  } else {
-    sEl.className = "badge badge-info";
-    sEl.textContent = titleStatus(s);
-  }
-}
-
-function makeGrid(id, items) {
-  document.getElementById(id).innerHTML = items.map(i =>
-    `<div class="data-item"><div class="dt">${i[0]}</div><div class="dd">${i[1]}</div></div>`
-  ).join("");
-}
-
-function renderMethods(record) {
-  const bouncedCheck = String(record.bouncedCheckLast6Month).toLowerCase() === "true";
-  const isDisconnected = String(record.accountStatus) === "disconnected";
-
-  const methods = [
-    { icon: "💳", name: "Credit or Debit Card", desc: "Visa, Mastercard, Amex, Discover", disabled: false },
-    { icon: "🏦", name: "Bank Transfer ACH", desc: "Direct payment from bank account", disabled: false },
-    { icon: "📱", name: "Phone Payment", desc: "Automated phone payment", disabled: false },
-    { icon: "🔄", name: "Auto Pay Enrollment", desc: "Set up recurring payments", disabled: isDisconnected },
-    { icon: "✉️", name: "Check by Mail", desc: "Mail to payment center", disabled: bouncedCheck },
-    { icon: "🏢", name: "In Person", desc: "Walk in payment center", disabled: false }
-  ];
-
-  document.getElementById("methodGrid").innerHTML = methods.map(m =>
-    `<div class="method-card ${m.disabled ? 'disabled' : ''}">
-      <div class="m-icon">${m.icon}</div>
-      <div class="m-name">${m.name}</div>
-      <div class="m-desc">${m.desc}</div>
-    </div>`
-  ).join("");
-}
-
-function renderFlags(record) {
-  const flags = [];
-  const bouncedCheck = String(record.bouncedCheckLast6Month).toLowerCase() === "true";
-  const isDisconnected = String(record.accountStatus) === "disconnected";
-
-  if (String(record.shutOffRisk).toLowerCase() === "true") {
-    flags.push('<div style="margin-bottom:8px;"><span class="badge badge-danger">Shut Off Risk</span></div>');
-  }
-  if (String(record.hardshipFlag).toLowerCase() === "true") {
-    flags.push('<div style="margin-bottom:8px;"><span class="badge badge-warn">Hardship</span></div>');
-  }
-  if (bouncedCheck) {
-    flags.push('<div style="margin-bottom:8px;"><span class="badge badge-warn">Returned Payment Restriction</span></div>');
-  }
-  if (isDisconnected) {
-    flags.push('<div style="margin-bottom:8px;"><span class="badge badge-danger">Disconnected</span></div>');
-  }
-
-  document.getElementById("flagsBody").innerHTML = flags.length
-    ? flags.join("")
-    : '<span style="color:var(--text-light);font-size:.85rem;">No flags</span>';
-}
-
-function renderAlerts(record) {
-  const alerts = [];
-  const bouncedCheck = String(record.bouncedCheckLast6Month).toLowerCase() === "true";
-  const isDisconnected = String(record.accountStatus) === "disconnected";
-
-  if (bouncedCheck) {
-    alerts.push(`<div class="alert-box alert-danger"><div><b>Returned Payment Restriction:</b> Check payments may be unavailable.</div></div>`);
-  }
-  if (isDisconnected) {
-    alerts.push(`<div class="alert-box alert-danger"><div><b>Disconnected:</b> Payment may be required before reconnection.</div></div>`);
-  }
-  if (String(record.shutOffRisk).toLowerCase() === "true" && !isDisconnected) {
-    alerts.push(`<div class="alert-box alert-warn"><div><b>Shut Off Risk:</b> Encourage immediate payment.</div></div>`);
-  }
-  if (String(record.hardshipFlag).toLowerCase() === "true") {
-    alerts.push(`<div class="alert-box alert-info"><div><b>Hardship Flag:</b> Customer may qualify for assistance.</div></div>`);
-  }
-
-  document.getElementById("alertsArea").innerHTML = alerts.join("");
-}
-
-function goToAgent() {
-  const acct = accountId();
-  if (!acct) return;
-  window.location.href = `agent-script.html?accountNumber=${encodeURIComponent(acct)}`;
-}
-
-function goToRepayment() {
-  const acct = accountId();
-  if (!acct) return;
-  window.location.href = `repayment-script.html?accountNumber=${encodeURIComponent(acct)}`;
-}
-
-async function loadAccount() {
-  const acct = accountId();
-  if (!acct) {
-    document.getElementById("heroAcct").textContent = "—";
-    return;
-  }
-
-  try {
-    const resp = await fetch(DATA_URL, { cache: "no-store" });
-    const data = await resp.json();
-    const record = data[acct];
-
-    if (!record) {
-      document.getElementById("heroAcct").textContent = acct;
-      document.getElementById("heroName").textContent = "Account not found";
-      return;
-    }
-
-    document.getElementById("heroBalance").textContent = money(record.currentBalance);
-    document.getElementById("heroAcct").textContent = record.accountNumber || record.key || acct;
-    document.getElementById("heroName").textContent = record.customerName;
-    renderStatusBadge(record.accountStatus);
-
-    const fullAddr = [
-      record.serviceAddress,
-      record.city,
-      record.state,
-      record.zip
-    ].filter(Boolean).join(", ") || "—";
-
-    makeGrid("custGrid", [
-      ["Account Number", record.accountNumber || record.key || acct],
-      ["Customer Name", record.customerName || "—"],
-      ["Service Address", fullAddr],
-      ["Current Balance", money(record.currentBalance)],
-      ["Account Status", titleStatus(record.accountStatus)],
-      ["Repayment Status", record.repaymentPlanStatus || "—"]
-    ]);
-
-    makeGrid("lastPayGrid", [
-      ["Last Payment Date", record.lastPaymentDate || "—"],
-      ["Last Payment Amount", money(record.lastPaymentAmount)],
-      ["Returned Payments (6 mo)", record.bouncedCheckCountLast6Months || "0"],
-      ["Check Restriction", boolText(record.bouncedCheckLast6Month)]
-    ]);
-
-    document.getElementById("notesBox").textContent = record.notes || "—";
-
-    document.getElementById("paySummary").innerHTML = [
-      ["Balance Due", money(record.currentBalance)],
-      ["Last Payment", money(record.lastPaymentAmount)],
-      ["Last Paid On", record.lastPaymentDate || "—"],
-      ["Repayment Plan", record.repaymentPlanStatus || "—"]
-    ].map(i => `<div class="info-row"><span class="lbl">${i[0]}</span><span class="val">${i[1]}</span></div>`).join("");
-
-    renderMethods(record);
-    renderFlags(record);
-    renderAlerts(record);
-  } catch (e) {
-    console.error(e);
-    document.getElementById("heroAcct").textContent = acct;
-    document.getElementById("heroName").textContent = "Error loading data";
-  }
-}
-
-loadAccount();
+load();
 </script>
+
 </body>
 </html>
