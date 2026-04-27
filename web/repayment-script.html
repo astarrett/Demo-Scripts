@@ -3,85 +3,514 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Repayment — City Utilities</title>
-
+<title>Repayment — City Utilities Department</title>
 <style>
-/* same styles as agent page */
+  :root {
+    --terracotta: #c2572a;
+    --terracotta-dark: #a84b22;
+    --cream: #f5f0e6;
+    --card: #ffffff;
+    --teal: #4f8f95;
+    --teal-dark: #3d7479;
+    --text: #2f2a24;
+    --muted: #7a6f63;
+    --border: #e6ded1;
+    --good: #2f7d32;
+    --good-bg: #e7f4e8;
+    --warn: #b26a00;
+    --warn-bg: #fff3dd;
+    --bad: #a12622;
+    --bad-bg: #fde8e7;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: var(--cream);
+    color: var(--text);
+  }
+
+  .topbar {
+    background: var(--terracotta);
+    color: #fff;
+    padding: 16px 22px;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .wrap {
+    padding: 16px;
+  }
+
+  .hero {
+    background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+    color: #fff;
+    border-radius: 12px;
+    padding: 22px;
+    margin-bottom: 16px;
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 20px;
+    align-items: end;
+  }
+
+  .hero-label {
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    opacity: 0.9;
+    margin-bottom: 8px;
+  }
+
+  .hero-main {
+    font-size: 38px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .hero-sub {
+    font-size: 14px;
+    opacity: 0.95;
+  }
+
+  .pill {
+    display: inline-block;
+    padding: 7px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .pill.good { background: var(--good-bg); color: var(--good); }
+  .pill.warn { background: var(--warn-bg); color: var(--warn); }
+  .pill.bad { background: var(--bad-bg); color: var(--bad); }
+  .pill.neutral { background: rgba(255,255,255,0.2); color: #fff; }
+
+  .nav-actions {
+    margin-top: 14px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .nav-btn {
+    background: #fff;
+    color: var(--terracotta);
+    border: 2px solid #fff;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .nav-btn:hover {
+    background: var(--terracotta-dark);
+    color: #fff;
+    border-color: var(--terracotta-dark);
+  }
+
+  .nav-btn.active {
+    background: var(--terracotta);
+    color: #fff;
+    border-color: var(--terracotta);
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 16px;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .card-title {
+    padding: 14px 16px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    text-transform: uppercase;
+    letter-spacing: .5px;
+  }
+
+  .card-body {
+    padding: 16px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .field-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .7px;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  .field-value {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.35;
+    word-break: break-word;
+  }
+
+  .notes {
+    background: #faf7f1;
+    border-left: 4px solid #d8c5ad;
+    padding: 14px;
+    border-radius: 8px;
+    white-space: pre-wrap;
+    line-height: 1.5;
+  }
+
+  .stack > div + div {
+    margin-top: 10px;
+  }
+
+  .row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .row:last-child {
+    border-bottom: none;
+  }
+
+  .row .k {
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  .row .v {
+    font-size: 14px;
+    font-weight: 700;
+    text-align: right;
+  }
+
+  .alert {
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .alert.good { background: var(--good-bg); color: var(--good); }
+  .alert.warn { background: var(--warn-bg); color: var(--warn); }
+  .alert.bad { background: var(--bad-bg); color: var(--bad); }
+
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    .grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 640px) {
+    .grid { grid-template-columns: 1fr; }
+    .hero-grid { grid-template-columns: 1fr; }
+    .hero-main { font-size: 30px; }
+    .nav-actions { flex-direction: column; }
+    .nav-btn { width: 100%; }
+  }
 </style>
 </head>
-
 <body>
 
-<div class="topbar">City Utilities — Repayment</div>
+<div class="topbar">City Utilities Department — Repayment</div>
 
 <div class="wrap">
+  <div class="hero">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-label">Repayment Overview</div>
+        <div class="hero-main" id="heroBalance">—</div>
+        <div class="hero-sub">Account #<span id="heroAccountNumber">—</span> · <span id="heroCustomerName">—</span></div>
+      </div>
+      <div>
+        <div class="hero-label">Eligibility</div>
+        <div class="pill neutral" id="heroEligibility">—</div>
+      </div>
+    </div>
+    <div class="nav-actions">
+      <button class="nav-btn" onclick="goToAgent()">Agent</button>
+      <button class="nav-btn active">Repayment</button>
+      <button class="nav-btn" onclick="goToPayment()">Take Payment</button>
+    </div>
+  </div>
 
-<div class="hero">
-  <div class="hero-main" id="balance">—</div>
-  <div>Account #<span id="acct"></span> · <span id="name"></span></div>
+  <div class="layout">
+    <div class="stack">
+      <div class="card">
+        <div class="card-title">Repayment Details</div>
+        <div class="card-body">
+          <div class="grid">
+            <div>
+              <div class="field-label">Account Number</div>
+              <div class="field-value" id="accountNumber">—</div>
+            </div>
+            <div>
+              <div class="field-label">Customer Name</div>
+              <div class="field-value" id="customerName">—</div>
+            </div>
+            <div>
+              <div class="field-label">Current Balance</div>
+              <div class="field-value" id="currentBalance">—</div>
+            </div>
+            <div>
+              <div class="field-label">Account Status</div>
+              <div class="field-value" id="accountStatus">—</div>
+            </div>
+            <div>
+              <div class="field-label">Arrangement Eligible</div>
+              <div class="field-value" id="arrangementEligible">—</div>
+            </div>
+            <div>
+              <div class="field-label">Max Months</div>
+              <div class="field-value" id="arrangementMaxMonths">—</div>
+            </div>
+            <div>
+              <div class="field-label">Min Down Payment</div>
+              <div class="field-value" id="arrangementMinDownPayment">—</div>
+            </div>
+            <div>
+              <div class="field-label">Repayment Status</div>
+              <div class="field-value" id="repaymentPlanStatus">—</div>
+            </div>
+            <div>
+              <div class="field-label">Confirmation Number</div>
+              <div class="field-value" id="repaymentConfirmationNumber">—</div>
+            </div>
+            <div>
+              <div class="field-label">Down Payment</div>
+              <div class="field-value" id="repaymentDownPayment">—</div>
+            </div>
+            <div>
+              <div class="field-label">Months</div>
+              <div class="field-value" id="repaymentMonths">—</div>
+            </div>
+            <div>
+              <div class="field-label">Monthly Payment</div>
+              <div class="field-value" id="repaymentMonthlyPayment">—</div>
+            </div>
+            <div>
+              <div class="field-label">Repayment Start Date</div>
+              <div class="field-value" id="repaymentStartDate">—</div>
+            </div>
+            <div>
+              <div class="field-label">Agreement Status</div>
+              <div class="field-value" id="agreementStatus">—</div>
+            </div>
+            <div>
+              <div class="field-label">Agreement Sent At</div>
+              <div class="field-value" id="agreementSentAt">—</div>
+            </div>
+            <div>
+              <div class="field-label">Agreement Received At</div>
+              <div class="field-value" id="agreementReceivedAt">—</div>
+            </div>
+            <div>
+              <div class="field-label">Signed Name</div>
+              <div class="field-value" id="agreementSignedName">—</div>
+            </div>
+            <div>
+              <div class="field-label">Service Address</div>
+              <div class="field-value" id="serviceAddress">—</div>
+            </div>
+            <div>
+              <div class="field-label">Ineligible Reason</div>
+              <div class="field-value" id="arrangementIneligibleReason">—</div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-  <div class="nav-actions">
-    <button class="nav-btn" onclick="goAgent()">Agent</button>
-    <button class="nav-btn active">Repayment</button>
-    <button class="nav-btn" onclick="goPayment()">Take Payment</button>
+      <div class="card">
+        <div class="card-title">Notes</div>
+        <div class="card-body">
+          <div class="notes" id="notes">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stack">
+      <div class="card">
+        <div class="card-title">Eligibility Flags</div>
+        <div class="card-body" id="flagsBox">
+          <div class="alert good">No flags</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Summary</div>
+        <div class="card-body">
+          <div class="row"><div class="k">Status</div><div class="v" id="summaryStatus">—</div></div>
+          <div class="row"><div class="k">Eligible</div><div class="v" id="summaryEligible">—</div></div>
+          <div class="row"><div class="k">Months</div><div class="v" id="summaryMonths">—</div></div>
+          <div class="row"><div class="k">Monthly</div><div class="v" id="summaryMonthly">—</div></div>
+          <div class="row"><div class="k">Agreement</div><div class="v" id="summaryAgreement">—</div></div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
-<div class="layout">
-
-<div>
-<div class="card">
-<div class="card-title">Repayment Details</div>
-<div class="card-body">
-<div class="row"><span>Eligible</span><span id="eligible"></span></div>
-<div class="row"><span>Max Months</span><span id="months"></span></div>
-<div class="row"><span>Monthly Payment</span><span id="monthly"></span></div>
-</div>
-</div>
-</div>
-
-<div>
-<div class="card">
-<div class="card-title">Summary</div>
-<div class="card-body">
-<div class="row"><span>Status</span><span id="status"></span></div>
-</div>
-</div>
-</div>
-
-</div>
-
-</div>
-
 <script>
-const URL="https://raw.githubusercontent.com/astarrett/Demo-Scripts/main/data-actions/Utility-Accounts";
-const p=new URLSearchParams(location.search);
-const acct=p.get("accountNumber");
+const DATA_URL = "https://raw.githubusercontent.com/astarrett/Demo-Scripts/refs/heads/main/data-actions/Utility-Accounts";
+const params = new URLSearchParams(window.location.search);
 
-function goAgent(){
-  location.href=`agent-script.html?accountNumber=${acct}`;
-}
-function goPayment(){
-  location.href=`take-payment.html?accountNumber=${acct}`;
+function g(k) {
+  return params.get(k) || "";
 }
 
-async function load(){
-  const d=await fetch(URL).then(r=>r.json());
-  const r=d[acct];
-
-  if(!r)return;
-
-  document.getElementById("acct").textContent=r.accountNumber;
-  document.getElementById("name").textContent=r.customerName;
-  document.getElementById("balance").textContent="$"+r.currentBalance;
-
-  document.getElementById("eligible").textContent=r.arrangementEligible;
-  document.getElementById("months").textContent=r.arrangementMaxMonths;
-  document.getElementById("monthly").textContent=r.repaymentMonthlyPayment;
-  document.getElementById("status").textContent=r.accountStatus;
+function accountId() {
+  return g("accountNumber") || g("key") || "";
 }
-load();
+
+function set(id, val) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = (val !== undefined && val !== null && String(val) !== "") ? String(val) : "—";
+}
+
+function money(val) {
+  const n = parseFloat(String(val).replace(/[$,]/g, ""));
+  return Number.isFinite(n) ? "$" + n.toFixed(2) : "—";
+}
+
+function titleStatus(val) {
+  const s = String(val || "").trim();
+  if (!s) return "—";
+  if (s === "pastDue") return "Past Due";
+  if (s === "finalNotice") return "Final Notice";
+  if (s === "active") return "Active";
+  if (s === "disconnected") return "Disconnected";
+  return s;
+}
+
+function boolText(val) {
+  const s = String(val || "").toLowerCase();
+  if (s === "true") return "Yes";
+  if (s === "false") return "No";
+  return "—";
+}
+
+function eligibilityPill(val) {
+  const el = document.getElementById("heroEligibility");
+  const s = String(val || "").toLowerCase();
+  el.className = "pill";
+  if (s === "true") {
+    el.classList.add("good");
+    el.textContent = "Eligible";
+  } else if (s === "false") {
+    el.classList.add("bad");
+    el.textContent = "Not Eligible";
+  } else {
+    el.classList.add("neutral");
+    el.textContent = "—";
+  }
+}
+
+function renderFlags(record) {
+  const flags = [];
+  if (String(record.arrangementEligible).toLowerCase() === "true") flags.push('<div class="alert good">Arrangement eligible</div>');
+  if (String(record.arrangementEligible).toLowerCase() === "false") flags.push('<div class="alert bad">Not eligible</div>');
+  if (record.arrangementIneligibleReason) flags.push('<div class="alert warn">' + record.arrangementIneligibleReason + '</div>');
+  if (String(record.shutOffRisk).toLowerCase() === "true") flags.push('<div class="alert bad">Shutoff risk</div>');
+  if (String(record.hardshipFlag).toLowerCase() === "true") flags.push('<div class="alert warn">Hardship flag</div>');
+  if (!flags.length) flags.push('<div class="alert good">No flags</div>');
+  document.getElementById("flagsBox").innerHTML = flags.join("");
+}
+
+function goToAgent() {
+  const acct = accountId();
+  if (!acct) return;
+  window.location.href = `agent-script.html?accountNumber=${encodeURIComponent(acct)}`;
+}
+
+function goToPayment() {
+  const acct = accountId();
+  if (!acct) return;
+  window.location.href = `take-payment.html?accountNumber=${encodeURIComponent(acct)}`;
+}
+
+async function loadAccount() {
+  const acct = accountId();
+  if (!acct) {
+    set("accountNumber", "");
+    return;
+  }
+
+  try {
+    const resp = await fetch(DATA_URL, { cache: "no-store" });
+    const data = await resp.json();
+    const record = data[acct];
+
+    if (!record) {
+      set("accountNumber", acct);
+      set("customerName", "Account not found");
+      return;
+    }
+
+    set("accountNumber", record.accountNumber || record.key || acct);
+    set("customerName", record.customerName);
+    set("currentBalance", money(record.currentBalance));
+    set("accountStatus", titleStatus(record.accountStatus));
+    set("arrangementEligible", boolText(record.arrangementEligible));
+    set("arrangementMaxMonths", record.arrangementMaxMonths);
+    set("arrangementMinDownPayment", money(record.arrangementMinDownPayment));
+    set("repaymentPlanStatus", record.repaymentPlanStatus);
+    set("repaymentConfirmationNumber", record.repaymentConfirmationNumber);
+    set("repaymentDownPayment", money(record.repaymentDownPayment));
+    set("repaymentMonths", record.repaymentMonths);
+    set("repaymentMonthlyPayment", money(record.repaymentMonthlyPayment));
+    set("repaymentStartDate", record.repaymentStartDate);
+    set("agreementStatus", record.agreementStatus);
+    set("agreementSentAt", record.agreementSentAt);
+    set("agreementReceivedAt", record.agreementReceivedAt);
+    set("agreementSignedName", record.agreementSignedName);
+    set("serviceAddress", [record.serviceAddress, record.city, record.state, record.zip].filter(Boolean).join(", "));
+    set("arrangementIneligibleReason", record.arrangementIneligibleReason);
+    set("notes", record.notes);
+
+    set("heroAccountNumber", record.accountNumber || record.key || acct);
+    set("heroCustomerName", record.customerName);
+    set("heroBalance", money(record.currentBalance));
+    eligibilityPill(record.arrangementEligible);
+
+    set("summaryStatus", titleStatus(record.accountStatus));
+    set("summaryEligible", boolText(record.arrangementEligible));
+    set("summaryMonths", record.repaymentMonths || record.arrangementMaxMonths || "—");
+    set("summaryMonthly", money(record.repaymentMonthlyPayment));
+    set("summaryAgreement", record.agreementStatus);
+
+    renderFlags(record);
+  } catch (e) {
+    console.error(e);
+    set("accountNumber", acct);
+    set("customerName", "Error loading data");
+  }
+}
+
+loadAccount();
 </script>
-
 </body>
 </html>
