@@ -4,178 +4,729 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Agent Dashboard — City Utilities</title>
-
 <style>
 :root {
-  --terracotta:#c2572a;
-  --cream:#f5f0e6;
-  --card:#ffffff;
-  --teal:#4f8f95;
-  --text:#2f2a24;
-  --muted:#7a6f63;
-  --border:#e6ded1;
+  --navy: #1a3a5c;
+  --navy-dark: #122a44;
+  --navy-light: #2a5a8c;
+  --accent: #3b82f6;
+  --accent-light: #60a5fa;
+  --bg: #f0f4f8;
+  --card: #ffffff;
+  --text: #1e293b;
+  --muted: #64748b;
+  --border: #e2e8f0;
+  --good: #16a34a;
+  --good-bg: #dcfce7;
+  --warn: #d97706;
+  --warn-bg: #fef3c7;
+  --bad: #dc2626;
+  --bad-bg: #fee2e2;
+  --blue-bg: #dbeafe;
+  --blue-text: #1e40af;
 }
+
+* { box-sizing: border-box; margin: 0; }
 
 body {
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:var(--cream);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
 }
 
+/* Top Bar */
 .topbar {
-  background:var(--terracotta);
-  color:#fff;
-  padding:16px;
-  font-weight:700;
+  background: var(--navy-dark);
+  color: #fff;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.topbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.3px;
+}
+.topbar-icons { display: flex; gap: 4px; }
+.topbar-icons span { font-size: 14px; }
+.topbar-session {
+  font-size: 12px;
+  color: #93c5fd;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
-.wrap { padding:16px; }
+.wrap { max-width: 1400px; margin: 0 auto; padding: 16px; }
 
+/* Hero */
 .hero {
-  background:linear-gradient(135deg,var(--teal),#3d7479);
-  color:#fff;
-  border-radius:12px;
-  padding:20px;
-  margin-bottom:16px;
+  background: linear-gradient(135deg, var(--navy), var(--navy-dark));
+  color: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 12px rgba(26,58,92,0.3);
 }
+.hero-grid {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.hero-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #93c5fd;
+  margin-bottom: 4px;
+}
+.hero-balance {
+  font-size: 38px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.hero-sub { font-size: 14px; color: #bfdbfe; }
+.hero-badges { display: flex; gap: 8px; flex-wrap: wrap; }
 
-.hero-main { font-size:34px; font-weight:700; }
-
-.nav-actions { margin-top:14px; display:flex; gap:10px; }
-
+/* Nav */
+.nav-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
 .nav-btn {
-  background:#fff;
-  color:var(--terracotta);
-  border:2px solid #fff;
-  padding:10px;
-  border-radius:8px;
-  font-weight:700;
-  cursor:pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
 }
-
 .nav-btn.active {
-  background:var(--terracotta);
-  color:#fff;
+  background: #fff;
+  color: var(--navy);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.nav-btn:not(.active) {
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+}
+.nav-btn:not(.active):hover {
+  background: rgba(255,255,255,0.22);
 }
 
+/* Layout */
 .layout {
-  display:grid;
-  grid-template-columns:2fr 1fr;
-  gap:16px;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 16px;
 }
+.stack > * + * { margin-top: 16px; }
 
+/* Cards */
 .card {
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:12px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+.card-header {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.card-header-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--blue-bg);
+  color: var(--blue-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+.card-header h3 {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--muted);
+}
+.card-body { padding: 16px; }
+
+/* Fields Grid */
+.fields {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.field {}
+.field-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: var(--muted);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.field-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  word-break: break-word;
 }
 
-.card-title {
-  padding:12px;
-  font-weight:700;
-  color:var(--muted);
-  border-bottom:1px solid var(--border);
+/* Badges / Pills */
+.pill {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.pill-good { background: var(--good-bg); color: var(--good); }
+.pill-warn { background: var(--warn-bg); color: var(--warn); }
+.pill-bad { background: var(--bad-bg); color: var(--bad); }
+.pill-blue { background: var(--blue-bg); color: var(--blue-text); }
+.pill-neutral { background: #f1f5f9; color: var(--muted); }
+.pill-white { background: rgba(255,255,255,0.2); color: #fff; }
+
+/* Alerts */
+.alert {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid;
+}
+.alert + .alert { margin-top: 8px; }
+.alert-good { background: var(--good-bg); border-color: #bbf7d0; color: var(--good); }
+.alert-warn { background: var(--warn-bg); border-color: #fde68a; color: var(--warn); }
+.alert-bad { background: var(--bad-bg); border-color: #fecaca; color: var(--bad); }
+
+/* Rows */
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.summary-row:last-child { border: none; }
+.summary-row .k { color: var(--muted); }
+.summary-row .v { font-weight: 700; color: var(--text); }
+
+/* Notes */
+.notes-box {
+  background: #f8fafc;
+  border-left: 4px solid var(--navy);
+  border-radius: 0 8px 8px 0;
+  padding: 14px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #475569;
+  white-space: pre-wrap;
 }
 
-.card-body { padding:16px; }
-
-.row {
-  display:flex;
-  justify-content:space-between;
-  padding:10px 0;
-  border-bottom:1px solid var(--border);
+/* AI Box */
+.ai-box {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  padding: 14px;
+  margin-top: 12px;
+}
+.ai-box-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: var(--blue-text);
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.ai-box p {
+  font-size: 13px;
+  color: #1e3a5f;
+  line-height: 1.6;
 }
 
-.row:last-child { border:none; }
+/* Anomaly panel */
+.anomaly-panel {
+  background: linear-gradient(135deg, #fef3c7, #fefce8);
+  border: 1px solid #fde68a;
+  border-radius: 10px;
+  padding: 16px;
+}
+.anomaly-panel.leak {
+  background: linear-gradient(135deg, #fee2e2, #fef2f2);
+  border-color: #fecaca;
+}
+.anomaly-panel.weather {
+  background: linear-gradient(135deg, #dbeafe, #eff6ff);
+  border-color: #bfdbfe;
+}
+.anomaly-panel.estimate {
+  background: linear-gradient(135deg, #fef3c7, #fefce8);
+  border-color: #fde68a;
+}
+.anomaly-panel.rate {
+  background: linear-gradient(135deg, #f3e8ff, #faf5ff);
+  border-color: #e9d5ff;
+}
+.anomaly-panel.hardship {
+  background: linear-gradient(135deg, #ffedd5, #fff7ed);
+  border-color: #fed7aa;
+}
 
-@media(max-width:900px){
-  .layout{grid-template-columns:1fr;}
+.section-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 16px;
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+/* Hidden section */
+.hidden { display: none; }
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; }
+  .fields { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .fields { grid-template-columns: 1fr; }
+  .hero-balance { font-size: 28px; }
+  .nav-actions { flex-direction: column; }
+  .nav-btn { width: 100%; justify-content: center; }
 }
 </style>
 </head>
-
 <body>
 
-<div class="topbar">City Utilities — Agent Dashboard</div>
-
-<div class="wrap">
-
-<div class="hero">
-  <div class="hero-main" id="balance">—</div>
-  <div>Account #<span id="acct"></span> · <span id="name"></span></div>
-
-  <div class="nav-actions">
-    <button class="nav-btn active">Agent</button>
-    <button class="nav-btn" onclick="goRepayment()">Repayment</button>
-    <button class="nav-btn" onclick="goPayment()">Take Payment</button>
+<div class="topbar">
+  <div class="topbar-brand">
+    <div class="topbar-icons"><span>⚡</span><span>🔥</span><span>💧</span></div>
+    <span>City Utilities — Agent Dashboard</span>
+  </div>
+  <div class="topbar-session">
+    <span>⏱</span> Session Active
   </div>
 </div>
 
-<div class="layout">
+<div class="wrap">
 
-<div>
-<div class="card">
-<div class="card-title">Customer Info</div>
-<div class="card-body">
-<div class="row"><span>Name</span><span id="customerName"></span></div>
-<div class="row"><span>Status</span><span id="status"></span></div>
-<div class="row"><span>Balance</span><span id="bal"></span></div>
-</div>
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-label">Current Bill</div>
+        <div class="hero-balance" id="heroBill">—</div>
+        <div class="hero-sub">Account #<span id="heroAcct">—</span> &middot; <span id="heroName">—</span></div>
+      </div>
+      <div class="hero-badges" id="heroBadges"></div>
+    </div>
+    <div class="nav-actions">
+      <button class="nav-btn active" onclick="goAgent()">📋 Agent</button>
+      <button class="nav-btn" onclick="goRepayment()">📝 Repayment</button>
+      <button class="nav-btn" onclick="goPayment()">💳 Take Payment</button>
+    </div>
+  </div>
+
+  <!-- Main layout -->
+  <div class="layout">
+    <div class="stack">
+
+      <!-- Customer Info -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-header-icon">👤</div>
+          <h3>Customer Information</h3>
+        </div>
+        <div class="card-body">
+          <div class="fields">
+            <div class="field">
+              <div class="field-label">Name</div>
+              <div class="field-value" id="customerName">—</div>
+            </div>
+            <div class="field">
+              <div class="field-label">Account Number</div>
+              <div class="field-value" id="accountNumber">—</div>
+            </div>
+            <div class="field">
+              <div class="field-label">Account Status</div>
+              <div class="field-value" id="accountStatus">—</div>
+            </div>
+            <div class="field">
+              <div class="field-label">Service Address</div>
+              <div class="field-value" id="serviceAddress">—</div>
+            </div>
+            <div class="field">
+              <div class="field-label">Language</div>
+              <div class="field-value" id="language">—</div>
+            </div>
+            <div class="field">
+              <div class="field-label">Demo Scenario</div>
+              <div class="field-value" id="demoScenario">—</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Billing -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-header-icon">💰</div>
+          <h3>Billing Overview</h3>
+        </div>
+        <div class="card-body">
+          <div class="fields">
+            <div class="field">
+              <div class="field-label">Current Bill</div>
+              <div class="field-value" id="currentBill">—</div>
+            </div>
+            <div class="field">
+              <div class="field-label">Current Balance</div>
+              <div class="field-value" id="currentBalance">—</div>
+            </div>
+            <div class="field">
+              <div class="field-label">Avg Monthly Bill</div>
+              <div class="field-value" id="avgBill">—</div>
+            </div>
+            <div class="field">
+              <div class="field-label">Bill Increase</div>
+              <div class="field-value" id="billIncrease">—</div>
+            </div>
+            <div class="field">
+              <div class="field-label">Avg Monthly Usage</div>
+              <div class="field-value" id="avgUsage">—</div>
+            </div>
+            <div class="field">
+              <div class="field-label">Meter Read Type</div>
+              <div class="field-value" id="meterRead">—</div>
+            </div>
+            <div class="field">
+              <div class="field-label">Last Payment Date</div>
+              <div class="field-value" id="lastPayDate">—</div>
+            </div>
+            <div class="field">
+              <div class="field-label">Last Payment Amount</div>
+              <div class="field-value" id="lastPayAmt">—</div>
+            </div>
+            <div class="field">
+              <div class="field-label">Bounced Checks (6 mo)</div>
+              <div class="field-value" id="bouncedChecks">—</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- High Bill / Anomaly (conditionally shown) -->
+      <div class="card" id="anomalyCard" style="display:none">
+        <div class="card-header">
+          <div class="card-header-icon">⚠️</div>
+          <h3>High Bill Analysis</h3>
+        </div>
+        <div class="card-body" id="anomalyBody"></div>
+      </div>
+
+      <!-- Notes -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-header-icon">📝</div>
+          <h3>Account Notes</h3>
+        </div>
+        <div class="card-body">
+          <div class="notes-box" id="notes">No notes on file.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right Column -->
+    <div class="stack">
+
+      <!-- Flags -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-header-icon">🛡️</div>
+          <h3>Flags &amp; Alerts</h3>
+        </div>
+        <div class="card-body" id="flagsBox">
+          <div class="alert alert-good">✅ No flags on this account</div>
+        </div>
+      </div>
+
+      <!-- Quick Summary -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-header-icon">ℹ️</div>
+          <h3>Quick Summary</h3>
+        </div>
+        <div class="card-body" id="summaryBox">
+          <div class="summary-row"><span class="k">Status</span><span class="v" id="sumStatus">—</span></div>
+          <div class="summary-row"><span class="k">Balance</span><span class="v" id="sumBalance">—</span></div>
+          <div class="summary-row"><span class="k">Arrangement Eligible</span><span class="v" id="sumEligible">—</span></div>
+          <div class="summary-row"><span class="k">Shutoff Risk</span><span class="v" id="sumShutoff">—</span></div>
+          <div class="summary-row"><span class="k">Repayment Plan</span><span class="v" id="sumRepayment">—</span></div>
+          <div class="summary-row"><span class="k">Recommended Action</span><span class="v" id="sumAction">—</span></div>
+        </div>
+      </div>
+
+      <!-- Containment -->
+      <div class="card" id="containmentCard">
+        <div class="card-header">
+          <div class="card-header-icon">🎯</div>
+          <h3>Containment</h3>
+        </div>
+        <div class="card-body">
+          <div class="summary-row"><span class="k">Containment Eligible</span><span class="v" id="containment">—</span></div>
+          <div class="summary-row"><span class="k">Escalation Trigger</span><span class="v" id="escalation">—</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
 </div>
 
-<div class="card" style="margin-top:16px;">
-<div class="card-title">Notes</div>
-<div class="card-body" id="notes"></div>
-</div>
-</div>
-
-<div>
-<div class="card">
-<div class="card-title">Summary</div>
-<div class="card-body">
-<div class="row"><span>Last Payment</span><span id="lastPay"></span></div>
-<div class="row"><span>Plan Status</span><span id="plan"></span></div>
-</div>
-</div>
-</div>
-
-</div>
-
-</div>
+<div class="footer">City Utilities &middot; Agent Dashboard &middot; Internal Use Only</div>
 
 <script>
-const URL="https://raw.githubusercontent.com/astarrett/Demo-Scripts/main/data-actions/Utility-Accounts";
-const p=new URLSearchParams(location.search);
-const acct=p.get("accountNumber");
+const DATA_URL = "https://raw.githubusercontent.com/astarrett/Demo-Scripts/refs/heads/main/data-actions/Utility-Accounts";
+const params = new URLSearchParams(window.location.search);
 
-function goRepayment(){
-  location.href=`repayment-script.html?accountNumber=${acct}`;
-}
-function goPayment(){
-  location.href=`take-payment.html?accountNumber=${acct}`;
+function accountId() {
+  return params.get("accountNumber") || params.get("key") || "";
 }
 
-async function load(){
-  const d=await fetch(URL).then(r=>r.json());
-  const r=d[acct];
+function goAgent()  { window.location.href = "agent-script.html?accountNumber=" + encodeURIComponent(accountId()); }
+function goRepayment() { window.location.href = "repayment-script.html?accountNumber=" + encodeURIComponent(accountId()); }
+function goPayment()  { window.location.href = "take-payment.html?accountNumber=" + encodeURIComponent(accountId()); }
 
-  if(!r)return;
-
-  document.getElementById("acct").textContent=r.accountNumber;
-  document.getElementById("name").textContent=r.customerName;
-  document.getElementById("balance").textContent="$"+r.currentBalance;
-
-  document.getElementById("customerName").textContent=r.customerName;
-  document.getElementById("status").textContent=r.accountStatus;
-  document.getElementById("bal").textContent="$"+r.currentBalance;
-
-  document.getElementById("notes").textContent=r.notes;
-
-  document.getElementById("lastPay").textContent=r.lastPaymentDate;
-  document.getElementById("plan").textContent=r.repaymentPlanStatus;
+function set(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = (val != null && String(val) !== "") ? String(val) : "—";
 }
+
+function money(val) {
+  const n = parseFloat(String(val || "").replace(/[$,]/g, ""));
+  return Number.isFinite(n) ? "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "—";
+}
+
+function pct(val) {
+  const n = parseFloat(String(val || ""));
+  if (!Number.isFinite(n)) return "—";
+  const p = Math.abs(n) <= 10 && n !== Math.floor(n) ? n * 100 : n;
+  const prefix = p > 0 ? "+" : "";
+  return prefix + Math.round(p) + "%";
+}
+
+function titleStatus(val) {
+  const map = { pastDue: "Past Due", finalNotice: "Final Notice", active: "Active", disconnected: "Disconnected" };
+  return map[val] || val || "—";
+}
+
+function boolYesNo(val) {
+  const s = String(val || "").toLowerCase();
+  if (s === "true") return "Yes";
+  if (s === "false") return "No";
+  return "—";
+}
+
+function statusPill(val) {
+  const s = String(val || "").toLowerCase();
+  if (s === "active") return '<span class="pill pill-good">' + titleStatus(val) + '</span>';
+  if (s === "pastdue" || s === "pastDue") return '<span class="pill pill-warn">Past Due</span>';
+  if (s === "finalnotice" || s === "finalNotice") return '<span class="pill pill-bad">Final Notice</span>';
+  if (s === "disconnected") return '<span class="pill pill-neutral">Disconnected</span>';
+  return '<span class="pill pill-neutral">' + (val || "—") + '</span>';
+}
+
+function buildFlags(r) {
+  const box = document.getElementById("flagsBox");
+  const flags = [];
+
+  if (String(r.shutOffRisk).toLowerCase() === "true")
+    flags.push('<div class="alert alert-bad">❌ Shutoff Risk</div>');
+  if (String(r.hardshipFlag).toLowerCase() === "true")
+    flags.push('<div class="alert alert-warn">⚠️ Hardship Flag</div>');
+  if (parseInt(r.bouncedCheckCountLast6Months) > 0)
+    flags.push('<div class="alert alert-warn">⚠️ ' + r.bouncedCheckCountLast6Months + ' Bounced Check(s) in 6 Months</div>');
+  if (String(r.anomalyDetected).toLowerCase() === "true")
+    flags.push('<div class="alert alert-warn">📈 Anomaly Detected: ' + (r.anomolyDriver || "Unknown") + '</div>');
+  if (String(r.leakSuspectedFlag).toLowerCase() === "true")
+    flags.push('<div class="alert alert-bad">💧 Leak Suspected</div>');
+
+  if (flags.length === 0)
+    flags.push('<div class="alert alert-good">✅ No flags on this account</div>');
+
+  box.innerHTML = flags.join("");
+}
+
+function buildAnomalyPanel(r) {
+  const card = document.getElementById("anomalyCard");
+  const body = document.getElementById("anomalyBody");
+
+  if (String(r.anomalyDetected).toLowerCase() !== "true") {
+    card.style.display = "none";
+    return;
+  }
+  card.style.display = "block";
+
+  const driver = (r.anomolyDriver || "").toLowerCase();
+  let panelClass = "";
+  let driverLabel = r.anomolyDriver || "Unknown";
+  let driverIcon = "⚠️";
+
+  if (driver.includes("weather")) { panelClass = "weather"; driverIcon = "❄️"; driverLabel = "Weather-Related Spike"; }
+  else if (driver.includes("leak")) { panelClass = "leak"; driverIcon = "💧"; driverLabel = "Suspected Leak"; }
+  else if (driver.includes("estimate")) { panelClass = "estimate"; driverIcon = "📏"; driverLabel = "Estimated-to-Actual Catch-Up"; }
+  else if (driver.includes("rate")) { panelClass = "rate"; driverIcon = "📊"; driverLabel = "Rate Plan Change"; }
+  else if (driver.includes("hardship")) { panelClass = "hardship"; driverIcon = "🤝"; driverLabel = "Hardship Usage Pattern"; }
+
+  const confidence = parseFloat(r.anomolyConfidenceScore);
+  const confPct = Number.isFinite(confidence) ? Math.round(confidence * 100) + "%" : "—";
+
+  let html = '<div class="anomaly-panel ' + panelClass + '">';
+  html += '<div class="section-label">' + driverIcon + ' ' + driverLabel + '</div>';
+  html += '<div class="fields" style="margin-bottom:12px">';
+  html += '<div class="field"><div class="field-label">Current Bill</div><div class="field-value">' + money(r.currentBillAmount) + '</div></div>';
+  html += '<div class="field"><div class="field-label">Average Bill</div><div class="field-value">' + money(r.avgMonthlyBill) + '</div></div>';
+  html += '<div class="field"><div class="field-label">Increase</div><div class="field-value">' + pct(r.billIncreasePercent) + '</div></div>';
+  html += '<div class="field"><div class="field-label">Confidence Score</div><div class="field-value">' + confPct + '</div></div>';
+  html += '<div class="field"><div class="field-label">Leak Suspected</div><div class="field-value">' + boolYesNo(r.leakSuspectedFlag) + '</div></div>';
+  html += '<div class="field"><div class="field-label">Rate Plan Change</div><div class="field-value">' + boolYesNo(r.ratePlanChangeFlag) + '</div></div>';
+  html += '<div class="field"><div class="field-label">Estimate to Actual</div><div class="field-value">' + boolYesNo(r.estimateToActualFlag) + '</div></div>';
+  html += '<div class="field"><div class="field-label">Proactive SMS</div><div class="field-value">' + (r.proactiveSmsTemplateId || "—") + '</div></div>';
+  html += '<div class="field"><div class="field-label">Recommended Action</div><div class="field-value">' + (r.recommendedNextAction || "—") + '</div></div>';
+  html += '</div>';
+  html += '</div>';
+
+  if (r.aiExplanationSummary) {
+    html += '<div class="ai-box">';
+    html += '<div class="ai-box-label">🤖 AI Explanation</div>';
+    html += '<p>' + r.aiExplanationSummary + '</p>';
+    html += '</div>';
+  }
+
+  body.innerHTML = html;
+}
+
+function buildHeroBadges(r) {
+  const box = document.getElementById("heroBadges");
+  let html = statusPill(r.accountStatus);
+
+  const eligible = String(r.arrangementEligible).toLowerCase();
+  if (eligible === "true") html += ' <span class="pill pill-good">Eligible</span>';
+  else if (eligible === "false") html += ' <span class="pill pill-bad">Not Eligible</span>';
+
+  if (String(r.anomalyDetected).toLowerCase() === "true")
+    html += ' <span class="pill pill-warn">⚠️ Anomaly</span>';
+
+  box.innerHTML = html;
+}
+
+async function load() {
+  const id = accountId();
+  if (!id) return;
+
+  try {
+    const res = await fetch(DATA_URL, { cache: "no-store" });
+    const data = await res.json();
+    const r = data[id];
+    if (!r) {
+      set("heroAcct", id);
+      set("heroName", "Account not found");
+      return;
+    }
+
+    // Hero
+    set("heroAcct", r.key || id);
+    set("heroName", r.customerName);
+    document.getElementById("heroBill").textContent = money(r.currentBillAmount);
+    buildHeroBadges(r);
+
+    // Customer Info
+    set("customerName", r.customerName);
+    set("accountNumber", r.key || id);
+    document.getElementById("accountStatus").innerHTML = statusPill(r.accountStatus);
+    set("serviceAddress", [r.serviceAddress, r.city, r.state, r.zip].filter(Boolean).join(", "));
+    set("language", r.customerLanguage || "English");
+    set("demoScenario", r.demoScenario);
+
+    // Billing
+    set("currentBill", money(r.currentBillAmount));
+    set("currentBalance", money(r.currentBalance));
+    set("avgBill", money(r.avgMonthlyBill));
+    set("billIncrease", pct(r.billIncreasePercent));
+    set("avgUsage", r.avgMonthlyUseage ? r.avgMonthlyUseage + " " + (r.usageUnit || "kWh") : "—");
+    set("meterRead", r.meterReadType);
+    set("lastPayDate", r.lastPaymentDate);
+    set("lastPayAmt", money(r.lastPaymentAmount));
+    set("bouncedChecks", r.bouncedCheckCountLast6Months || "0");
+
+    // Anomaly
+    buildAnomalyPanel(r);
+
+    // Notes
+    set("notes", r.notes || "No notes on file.");
+
+    // Flags
+    buildFlags(r);
+
+    // Summary
+    set("sumStatus", titleStatus(r.accountStatus));
+    set("sumBalance", money(r.currentBalance));
+    set("sumEligible", boolYesNo(r.arrangementEligible));
+    set("sumShutoff", boolYesNo(r.shutOffRisk));
+    set("sumRepayment", r.repaymentPlanStatus || "NONE");
+    set("sumAction", r.recommendedNextAction);
+
+    // Containment
+    set("containment", boolYesNo(r.containmentEligible));
+    set("escalation", r.escalationTrigger || "none");
+
+  } catch (e) {
+    console.error(e);
+    set("heroAcct", id);
+    set("heroName", "Error loading data");
+  }
+}
+
 load();
 </script>
-
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"f0f03d0605bf45f1a3b17cf7d5e6861f","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>
