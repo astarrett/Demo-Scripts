@@ -3,514 +3,355 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Repayment — City Utilities Department</title>
+<title>Repayment — City Utilities</title>
 <style>
-  :root {
-    --terracotta: #c2572a;
-    --terracotta-dark: #a84b22;
-    --cream: #f5f0e6;
-    --card: #ffffff;
-    --teal: #4f8f95;
-    --teal-dark: #3d7479;
-    --text: #2f2a24;
-    --muted: #7a6f63;
-    --border: #e6ded1;
-    --good: #2f7d32;
-    --good-bg: #e7f4e8;
-    --warn: #b26a00;
-    --warn-bg: #fff3dd;
-    --bad: #a12622;
-    --bad-bg: #fde8e7;
-  }
+:root {
+  --navy: #1a3a5c;
+  --navy-dark: #122a44;
+  --navy-light: #2a5a8c;
+  --accent: #3b82f6;
+  --bg: #f0f4f8;
+  --card: #ffffff;
+  --text: #1e293b;
+  --muted: #64748b;
+  --border: #e2e8f0;
+  --good: #16a34a;
+  --good-bg: #dcfce7;
+  --warn: #d97706;
+  --warn-bg: #fef3c7;
+  --bad: #dc2626;
+  --bad-bg: #fee2e2;
+  --blue-bg: #dbeafe;
+  --blue-text: #1e40af;
+}
 
-  * { box-sizing: border-box; }
+* { box-sizing: border-box; margin: 0; }
 
-  body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: var(--cream);
-    color: var(--text);
-  }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+}
 
-  .topbar {
-    background: var(--terracotta);
-    color: #fff;
-    padding: 16px 22px;
-    font-size: 18px;
-    font-weight: 700;
-  }
+.topbar {
+  background: var(--navy-dark);
+  color: #fff;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.topbar-brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 14px; }
+.topbar-icons { display: flex; gap: 4px; }
+.topbar-icons span { font-size: 14px; }
+.topbar-session { font-size: 12px; color: #93c5fd; display: flex; align-items: center; gap: 6px; }
 
-  .wrap {
-    padding: 16px;
-  }
+.wrap { max-width: 1400px; margin: 0 auto; padding: 16px; }
 
-  .hero {
-    background: linear-gradient(135deg, var(--teal), var(--teal-dark));
-    color: #fff;
-    border-radius: 12px;
-    padding: 22px;
-    margin-bottom: 16px;
-  }
+.hero {
+  background: linear-gradient(135deg, var(--navy), var(--navy-dark));
+  color: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 12px rgba(26,58,92,0.3);
+}
+.hero-grid { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px; }
+.hero-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #93c5fd; margin-bottom: 4px; }
+.hero-balance { font-size: 38px; font-weight: 800; letter-spacing: -1px; line-height: 1; margin-bottom: 6px; }
+.hero-sub { font-size: 14px; color: #bfdbfe; }
 
-  .hero-grid {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 20px;
-    align-items: end;
-  }
+.nav-actions { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+.nav-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 10px 16px; border-radius: 8px; border: none;
+  font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.15s;
+}
+.nav-btn.active { background: #fff; color: var(--navy); box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+.nav-btn:not(.active) { background: rgba(255,255,255,0.12); color: #fff; }
+.nav-btn:not(.active):hover { background: rgba(255,255,255,0.22); }
 
-  .hero-label {
-    font-size: 12px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    opacity: 0.9;
-    margin-bottom: 8px;
-  }
+.layout { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+.stack > * + * { margin-top: 16px; }
 
-  .hero-main {
-    font-size: 38px;
-    font-weight: 700;
-    line-height: 1;
-    margin-bottom: 8px;
-  }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+.card-header { padding: 14px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+.card-header-icon { width: 28px; height: 28px; border-radius: 8px; background: var(--blue-bg); color: var(--blue-text); display: flex; align-items: center; justify-content: center; font-size: 14px; }
+.card-header h3 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--muted); }
+.card-body { padding: 16px; }
 
-  .hero-sub {
-    font-size: 14px;
-    opacity: 0.95;
-  }
+.fields { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.field-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.7px; color: var(--muted); font-weight: 600; margin-bottom: 4px; }
+.field-value { font-size: 14px; font-weight: 600; color: var(--text); word-break: break-word; }
 
-  .pill {
-    display: inline-block;
-    padding: 7px 12px;
-    border-radius: 999px;
-    font-size: 13px;
-    font-weight: 700;
-    white-space: nowrap;
-  }
+.pill { display: inline-block; padding: 4px 12px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+.pill-good { background: var(--good-bg); color: var(--good); }
+.pill-warn { background: var(--warn-bg); color: var(--warn); }
+.pill-bad { background: var(--bad-bg); color: var(--bad); }
+.pill-blue { background: var(--blue-bg); color: var(--blue-text); }
+.pill-neutral { background: #f1f5f9; color: var(--muted); }
+.pill-white { background: rgba(255,255,255,0.2); color: #fff; }
 
-  .pill.good { background: var(--good-bg); color: var(--good); }
-  .pill.warn { background: var(--warn-bg); color: var(--warn); }
-  .pill.bad { background: var(--bad-bg); color: var(--bad); }
-  .pill.neutral { background: rgba(255,255,255,0.2); color: #fff; }
+.alert { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; border: 1px solid; }
+.alert + .alert { margin-top: 8px; }
+.alert-good { background: var(--good-bg); border-color: #bbf7d0; color: var(--good); }
+.alert-warn { background: var(--warn-bg); border-color: #fde68a; color: var(--warn); }
+.alert-bad { background: var(--bad-bg); border-color: #fecaca; color: var(--bad); }
 
-  .nav-actions {
-    margin-top: 14px;
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
+.summary-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+.summary-row:last-child { border: none; }
+.summary-row .k { color: var(--muted); }
+.summary-row .v { font-weight: 700; color: var(--text); }
 
-  .nav-btn {
-    background: #fff;
-    color: var(--terracotta);
-    border: 2px solid #fff;
-    padding: 10px 14px;
-    border-radius: 8px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
+.notes-box { background: #f8fafc; border-left: 4px solid var(--navy); border-radius: 0 8px 8px 0; padding: 14px; font-size: 13px; line-height: 1.6; color: #475569; white-space: pre-wrap; }
 
-  .nav-btn:hover {
-    background: var(--terracotta-dark);
-    color: #fff;
-    border-color: var(--terracotta-dark);
-  }
+.footer { text-align: center; padding: 16px; font-size: 11px; color: #94a3b8; }
 
-  .nav-btn.active {
-    background: var(--terracotta);
-    color: #fff;
-    border-color: var(--terracotta);
-  }
-
-  .layout {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 16px;
-  }
-
-  .card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    overflow: hidden;
-  }
-
-  .card-title {
-    padding: 14px 16px;
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--muted);
-    border-bottom: 1px solid var(--border);
-    text-transform: uppercase;
-    letter-spacing: .5px;
-  }
-
-  .card-body {
-    padding: 16px;
-  }
-
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 16px;
-  }
-
-  .field-label {
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: .7px;
-    color: var(--muted);
-    margin-bottom: 6px;
-  }
-
-  .field-value {
-    font-size: 16px;
-    font-weight: 600;
-    line-height: 1.35;
-    word-break: break-word;
-  }
-
-  .notes {
-    background: #faf7f1;
-    border-left: 4px solid #d8c5ad;
-    padding: 14px;
-    border-radius: 8px;
-    white-space: pre-wrap;
-    line-height: 1.5;
-  }
-
-  .stack > div + div {
-    margin-top: 10px;
-  }
-
-  .row {
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 10px 0;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .row:last-child {
-    border-bottom: none;
-  }
-
-  .row .k {
-    color: var(--muted);
-    font-size: 14px;
-  }
-
-  .row .v {
-    font-size: 14px;
-    font-weight: 700;
-    text-align: right;
-  }
-
-  .alert {
-    padding: 10px 12px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 700;
-    margin-bottom: 10px;
-  }
-
-  .alert.good { background: var(--good-bg); color: var(--good); }
-  .alert.warn { background: var(--warn-bg); color: var(--warn); }
-  .alert.bad { background: var(--bad-bg); color: var(--bad); }
-
-  @media (max-width: 900px) {
-    .layout { grid-template-columns: 1fr; }
-    .grid { grid-template-columns: 1fr 1fr; }
-  }
-
-  @media (max-width: 640px) {
-    .grid { grid-template-columns: 1fr; }
-    .hero-grid { grid-template-columns: 1fr; }
-    .hero-main { font-size: 30px; }
-    .nav-actions { flex-direction: column; }
-    .nav-btn { width: 100%; }
-  }
+@media (max-width: 900px) { .layout { grid-template-columns: 1fr; } .fields { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) { .fields { grid-template-columns: 1fr; } .hero-balance { font-size: 28px; } .nav-actions { flex-direction: column; } .nav-btn { width: 100%; justify-content: center; } }
 </style>
 </head>
 <body>
 
-<div class="topbar">City Utilities Department — Repayment</div>
+<div class="topbar">
+  <div class="topbar-brand">
+    <div class="topbar-icons"><span>⚡</span><span>🔥</span><span>💧</span></div>
+    <span>City Utilities — Repayment</span>
+  </div>
+  <div class="topbar-session"><span>⏱</span> Session Active</div>
+</div>
 
 <div class="wrap">
   <div class="hero">
     <div class="hero-grid">
       <div>
         <div class="hero-label">Repayment Overview</div>
-        <div class="hero-main" id="heroBalance">—</div>
-        <div class="hero-sub">Account #<span id="heroAccountNumber">—</span> · <span id="heroCustomerName">—</span></div>
+        <div class="hero-balance" id="heroBalance">—</div>
+        <div class="hero-sub">Account #<span id="heroAcct">—</span> &middot; <span id="heroName">—</span></div>
       </div>
-      <div>
-        <div class="hero-label">Eligibility</div>
-        <div class="pill neutral" id="heroEligibility">—</div>
-      </div>
+      <div id="heroBadges"></div>
     </div>
     <div class="nav-actions">
-      <button class="nav-btn" onclick="goToAgent()">Agent</button>
-      <button class="nav-btn active">Repayment</button>
-      <button class="nav-btn" onclick="goToPayment()">Take Payment</button>
+      <button class="nav-btn" onclick="goAgent()">📋 Agent</button>
+      <button class="nav-btn active">📝 Repayment</button>
+      <button class="nav-btn" onclick="goPayment()">💳 Take Payment</button>
     </div>
   </div>
 
   <div class="layout">
     <div class="stack">
+
+      <!-- Repayment Details -->
       <div class="card">
-        <div class="card-title">Repayment Details</div>
+        <div class="card-header">
+          <div class="card-header-icon">📝</div>
+          <h3>Repayment Details</h3>
+        </div>
         <div class="card-body">
-          <div class="grid">
-            <div>
-              <div class="field-label">Account Number</div>
-              <div class="field-value" id="accountNumber">—</div>
-            </div>
-            <div>
-              <div class="field-label">Customer Name</div>
-              <div class="field-value" id="customerName">—</div>
-            </div>
-            <div>
-              <div class="field-label">Current Balance</div>
-              <div class="field-value" id="currentBalance">—</div>
-            </div>
-            <div>
-              <div class="field-label">Account Status</div>
-              <div class="field-value" id="accountStatus">—</div>
-            </div>
-            <div>
-              <div class="field-label">Arrangement Eligible</div>
-              <div class="field-value" id="arrangementEligible">—</div>
-            </div>
-            <div>
-              <div class="field-label">Max Months</div>
-              <div class="field-value" id="arrangementMaxMonths">—</div>
-            </div>
-            <div>
-              <div class="field-label">Min Down Payment</div>
-              <div class="field-value" id="arrangementMinDownPayment">—</div>
-            </div>
-            <div>
-              <div class="field-label">Repayment Status</div>
-              <div class="field-value" id="repaymentPlanStatus">—</div>
-            </div>
-            <div>
-              <div class="field-label">Confirmation Number</div>
-              <div class="field-value" id="repaymentConfirmationNumber">—</div>
-            </div>
-            <div>
-              <div class="field-label">Down Payment</div>
-              <div class="field-value" id="repaymentDownPayment">—</div>
-            </div>
-            <div>
-              <div class="field-label">Months</div>
-              <div class="field-value" id="repaymentMonths">—</div>
-            </div>
-            <div>
-              <div class="field-label">Monthly Payment</div>
-              <div class="field-value" id="repaymentMonthlyPayment">—</div>
-            </div>
-            <div>
-              <div class="field-label">Repayment Start Date</div>
-              <div class="field-value" id="repaymentStartDate">—</div>
-            </div>
-            <div>
-              <div class="field-label">Agreement Status</div>
-              <div class="field-value" id="agreementStatus">—</div>
-            </div>
-            <div>
-              <div class="field-label">Agreement Sent At</div>
-              <div class="field-value" id="agreementSentAt">—</div>
-            </div>
-            <div>
-              <div class="field-label">Agreement Received At</div>
-              <div class="field-value" id="agreementReceivedAt">—</div>
-            </div>
-            <div>
-              <div class="field-label">Signed Name</div>
-              <div class="field-value" id="agreementSignedName">—</div>
-            </div>
-            <div>
-              <div class="field-label">Service Address</div>
-              <div class="field-value" id="serviceAddress">—</div>
-            </div>
-            <div>
-              <div class="field-label">Ineligible Reason</div>
-              <div class="field-value" id="arrangementIneligibleReason">—</div>
-            </div>
+          <div class="fields">
+            <div><div class="field-label">Account Number</div><div class="field-value" id="accountNumber">—</div></div>
+            <div><div class="field-label">Customer Name</div><div class="field-value" id="customerName">—</div></div>
+            <div><div class="field-label">Current Balance</div><div class="field-value" id="currentBalance">—</div></div>
+            <div><div class="field-label">Account Status</div><div id="accountStatus">—</div></div>
+            <div><div class="field-label">Arrangement Eligible</div><div id="eligible">—</div></div>
+            <div><div class="field-label">Max Months</div><div class="field-value" id="maxMonths">—</div></div>
+            <div><div class="field-label">Min Down Payment</div><div class="field-value" id="minDown">—</div></div>
+            <div><div class="field-label">Plan Status</div><div class="field-value" id="planStatus">—</div></div>
+            <div><div class="field-label">Confirmation #</div><div class="field-value" id="confNumber">—</div></div>
+            <div><div class="field-label">Down Payment</div><div class="field-value" id="downPayment">—</div></div>
+            <div><div class="field-label">Months</div><div class="field-value" id="months">—</div></div>
+            <div><div class="field-label">Monthly Payment</div><div class="field-value" id="monthly">—</div></div>
+            <div><div class="field-label">Start Date</div><div class="field-value" id="startDate">—</div></div>
+            <div><div class="field-label">Service Address</div><div class="field-value" id="address">—</div></div>
+            <div><div class="field-label">Ineligible Reason</div><div class="field-value" id="ineligibleReason">—</div></div>
           </div>
         </div>
       </div>
 
+      <!-- Agreement Status -->
       <div class="card">
-        <div class="card-title">Notes</div>
+        <div class="card-header">
+          <div class="card-header-icon">✉️</div>
+          <h3>Agreement Status</h3>
+        </div>
         <div class="card-body">
-          <div class="notes" id="notes">—</div>
+          <div class="fields">
+            <div><div class="field-label">Agreement Status</div><div id="agreeStatus">—</div></div>
+            <div><div class="field-label">Sent At</div><div class="field-value" id="agreeSent">—</div></div>
+            <div><div class="field-label">Received At</div><div class="field-value" id="agreeReceived">—</div></div>
+            <div><div class="field-label">Signed Name</div><div class="field-value" id="agreeSigned">—</div></div>
+            <div><div class="field-label">Agreement Link</div><div class="field-value" id="agreeLink">—</div></div>
+          </div>
         </div>
       </div>
+
+      <!-- Notes -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-header-icon">📝</div>
+          <h3>Notes</h3>
+        </div>
+        <div class="card-body">
+          <div class="notes-box" id="notes">No notes on file.</div>
+        </div>
+      </div>
+
     </div>
 
     <div class="stack">
+
+      <!-- Flags -->
       <div class="card">
-        <div class="card-title">Eligibility Flags</div>
+        <div class="card-header">
+          <div class="card-header-icon">🛡️</div>
+          <h3>Flags</h3>
+        </div>
         <div class="card-body" id="flagsBox">
-          <div class="alert good">No flags</div>
+          <div class="alert alert-good">✅ No flags</div>
         </div>
       </div>
 
+      <!-- Summary -->
       <div class="card">
-        <div class="card-title">Summary</div>
+        <div class="card-header">
+          <div class="card-header-icon">ℹ️</div>
+          <h3>Summary</h3>
+        </div>
         <div class="card-body">
-          <div class="row"><div class="k">Status</div><div class="v" id="summaryStatus">—</div></div>
-          <div class="row"><div class="k">Eligible</div><div class="v" id="summaryEligible">—</div></div>
-          <div class="row"><div class="k">Months</div><div class="v" id="summaryMonths">—</div></div>
-          <div class="row"><div class="k">Monthly</div><div class="v" id="summaryMonthly">—</div></div>
-          <div class="row"><div class="k">Agreement</div><div class="v" id="summaryAgreement">—</div></div>
+          <div class="summary-row"><span class="k">Status</span><span class="v" id="sumStatus">—</span></div>
+          <div class="summary-row"><span class="k">Eligible</span><span class="v" id="sumEligible">—</span></div>
+          <div class="summary-row"><span class="k">Months</span><span class="v" id="sumMonths">—</span></div>
+          <div class="summary-row"><span class="k">Monthly</span><span class="v" id="sumMonthly">—</span></div>
+          <div class="summary-row"><span class="k">Agreement</span><span class="v" id="sumAgreement">—</span></div>
         </div>
       </div>
+
     </div>
   </div>
 </div>
+
+<div class="footer">City Utilities &middot; Repayment &middot; Internal Use Only</div>
 
 <script>
 const DATA_URL = "https://raw.githubusercontent.com/astarrett/Demo-Scripts/refs/heads/main/data-actions/Utility-Accounts";
 const params = new URLSearchParams(window.location.search);
 
-function g(k) {
-  return params.get(k) || "";
-}
-
-function accountId() {
-  return g("accountNumber") || g("key") || "";
-}
-
-function set(id, val) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.textContent = (val !== undefined && val !== null && String(val) !== "") ? String(val) : "—";
-}
+function accountId() { return params.get("accountNumber") || params.get("key") || ""; }
+function goAgent() { window.location.href = "agent-script.html?accountNumber=" + encodeURIComponent(accountId()); }
+function goPayment() { window.location.href = "take-payment.html?accountNumber=" + encodeURIComponent(accountId()); }
 
 function money(val) {
-  const n = parseFloat(String(val).replace(/[$,]/g, ""));
-  return Number.isFinite(n) ? "$" + n.toFixed(2) : "—";
+  const n = parseFloat(String(val || "").replace(/[$,]/g, ""));
+  return Number.isFinite(n) ? "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "—";
 }
+function set(id, val) { const el = document.getElementById(id); if (el) el.textContent = (val != null && String(val) !== "") ? String(val) : "—"; }
+function titleStatus(val) { return { pastDue: "Past Due", finalNotice: "Final Notice", active: "Active", disconnected: "Disconnected" }[val] || val || "—"; }
+function boolYesNo(val) { const s = String(val || "").toLowerCase(); return s === "true" ? "Yes" : s === "false" ? "No" : "—"; }
 
-function titleStatus(val) {
-  const s = String(val || "").trim();
-  if (!s) return "—";
-  if (s === "pastDue") return "Past Due";
-  if (s === "finalNotice") return "Final Notice";
-  if (s === "active") return "Active";
-  if (s === "disconnected") return "Disconnected";
-  return s;
-}
-
-function boolText(val) {
+function statusPill(val) {
   const s = String(val || "").toLowerCase();
-  if (s === "true") return "Yes";
-  if (s === "false") return "No";
-  return "—";
+  if (s === "active") return '<span class="pill pill-good">Active</span>';
+  if (s.includes("past")) return '<span class="pill pill-warn">Past Due</span>';
+  if (s.includes("final")) return '<span class="pill pill-bad">Final Notice</span>';
+  if (s === "disconnected") return '<span class="pill pill-neutral">Disconnected</span>';
+  return '<span class="pill pill-neutral">' + (val || "—") + '</span>';
 }
 
-function eligibilityPill(val) {
-  const el = document.getElementById("heroEligibility");
+function eligPill(val) {
   const s = String(val || "").toLowerCase();
-  el.className = "pill";
-  if (s === "true") {
-    el.classList.add("good");
-    el.textContent = "Eligible";
-  } else if (s === "false") {
-    el.classList.add("bad");
-    el.textContent = "Not Eligible";
-  } else {
-    el.classList.add("neutral");
-    el.textContent = "—";
-  }
+  if (s === "true") return '<span class="pill pill-good">Yes</span>';
+  if (s === "false") return '<span class="pill pill-bad">No</span>';
+  return '<span class="pill pill-neutral">—</span>';
 }
 
-function renderFlags(record) {
+function agreePill(val) {
+  const s = String(val || "").toUpperCase();
+  if (s === "SENT") return '<span class="pill pill-blue">Sent</span>';
+  if (s === "SIGNED" || s === "RECEIVED") return '<span class="pill pill-good">' + s.charAt(0) + s.slice(1).toLowerCase() + '</span>';
+  if (s === "PENDING") return '<span class="pill pill-warn">Pending</span>';
+  if (s === "NOT_SENT") return '<span class="pill pill-neutral">Not Sent</span>';
+  return '<span class="pill pill-neutral">' + (val || "—") + '</span>';
+}
+
+function buildFlags(r) {
+  const box = document.getElementById("flagsBox");
   const flags = [];
-  if (String(record.arrangementEligible).toLowerCase() === "true") flags.push('<div class="alert good">Arrangement eligible</div>');
-  if (String(record.arrangementEligible).toLowerCase() === "false") flags.push('<div class="alert bad">Not eligible</div>');
-  if (record.arrangementIneligibleReason) flags.push('<div class="alert warn">' + record.arrangementIneligibleReason + '</div>');
-  if (String(record.shutOffRisk).toLowerCase() === "true") flags.push('<div class="alert bad">Shutoff risk</div>');
-  if (String(record.hardshipFlag).toLowerCase() === "true") flags.push('<div class="alert warn">Hardship flag</div>');
-  if (!flags.length) flags.push('<div class="alert good">No flags</div>');
-  document.getElementById("flagsBox").innerHTML = flags.join("");
+  const ae = String(r.arrangementEligible).toLowerCase();
+  if (ae === "true") flags.push('<div class="alert alert-good">✅ Arrangement eligible</div>');
+  if (ae === "false") flags.push('<div class="alert alert-bad">❌ Not eligible for arrangement</div>');
+  if (r.arrangementIneligibleReason) flags.push('<div class="alert alert-warn">⚠️ ' + r.arrangementIneligibleReason + '</div>');
+  if (String(r.shutOffRisk).toLowerCase() === "true") flags.push('<div class="alert alert-bad">❌ Shutoff risk</div>');
+  if (String(r.hardshipFlag).toLowerCase() === "true") flags.push('<div class="alert alert-warn">⚠️ Hardship flag</div>');
+  if (!flags.length) flags.push('<div class="alert alert-good">✅ No flags</div>');
+  box.innerHTML = flags.join("");
 }
 
-function goToAgent() {
-  const acct = accountId();
-  if (!acct) return;
-  window.location.href = `agent-script.html?accountNumber=${encodeURIComponent(acct)}`;
-}
-
-function goToPayment() {
-  const acct = accountId();
-  if (!acct) return;
-  window.location.href = `take-payment.html?accountNumber=${encodeURIComponent(acct)}`;
-}
-
-async function loadAccount() {
-  const acct = accountId();
-  if (!acct) {
-    set("accountNumber", "");
-    return;
-  }
+async function load() {
+  const id = accountId();
+  if (!id) return;
 
   try {
-    const resp = await fetch(DATA_URL, { cache: "no-store" });
-    const data = await resp.json();
-    const record = data[acct];
+    const res = await fetch(DATA_URL, { cache: "no-store" });
+    const data = await res.json();
+    const r = data[id];
+    if (!r) { set("heroAcct", id); set("heroName", "Not found"); return; }
 
-    if (!record) {
-      set("accountNumber", acct);
-      set("customerName", "Account not found");
-      return;
+    // Hero
+    set("heroAcct", r.key || id);
+    set("heroName", r.customerName);
+    document.getElementById("heroBalance").textContent = money(r.currentBalance);
+    let badges = statusPill(r.accountStatus) + " ";
+    badges += eligPill(r.arrangementEligible);
+    document.getElementById("heroBadges").innerHTML = badges;
+
+    // Details
+    set("accountNumber", r.key || id);
+    set("customerName", r.customerName);
+    set("currentBalance", money(r.currentBalance));
+    document.getElementById("accountStatus").innerHTML = statusPill(r.accountStatus);
+    document.getElementById("eligible").innerHTML = eligPill(r.arrangementEligible);
+    set("maxMonths", r.arrangementMaxMonths);
+    set("minDown", money(r.arrangementMinDownPayment));
+    set("planStatus", r.repaymentPlanStatus);
+    set("confNumber", r.repaymentConfirmationNumber);
+    set("downPayment", money(r.repaymentDownPayment));
+    set("months", r.repaymentMonths);
+    set("monthly", money(r.repaymentMonthlyPayment));
+    set("startDate", r.repaymentStartDate);
+    set("address", [r.serviceAddress, r.city, r.state, r.zip].filter(Boolean).join(", "));
+    set("ineligibleReason", r.arrangementIneligibleReason);
+
+    // Agreement
+    document.getElementById("agreeStatus").innerHTML = agreePill(r.agreementStatus);
+    set("agreeSent", r.agreementSentAt);
+    set("agreeReceived", r.agreementReceivedAt);
+    set("agreeSigned", r.agreementSignedName);
+    if (r.agreementLink) {
+      document.getElementById("agreeLink").innerHTML = '<a href="' + r.agreementLink + '" target="_blank" style="color:var(--blue-text);text-decoration:underline">View Signature</a>';
     }
 
-    set("accountNumber", record.accountNumber || record.key || acct);
-    set("customerName", record.customerName);
-    set("currentBalance", money(record.currentBalance));
-    set("accountStatus", titleStatus(record.accountStatus));
-    set("arrangementEligible", boolText(record.arrangementEligible));
-    set("arrangementMaxMonths", record.arrangementMaxMonths);
-    set("arrangementMinDownPayment", money(record.arrangementMinDownPayment));
-    set("repaymentPlanStatus", record.repaymentPlanStatus);
-    set("repaymentConfirmationNumber", record.repaymentConfirmationNumber);
-    set("repaymentDownPayment", money(record.repaymentDownPayment));
-    set("repaymentMonths", record.repaymentMonths);
-    set("repaymentMonthlyPayment", money(record.repaymentMonthlyPayment));
-    set("repaymentStartDate", record.repaymentStartDate);
-    set("agreementStatus", record.agreementStatus);
-    set("agreementSentAt", record.agreementSentAt);
-    set("agreementReceivedAt", record.agreementReceivedAt);
-    set("agreementSignedName", record.agreementSignedName);
-    set("serviceAddress", [record.serviceAddress, record.city, record.state, record.zip].filter(Boolean).join(", "));
-    set("arrangementIneligibleReason", record.arrangementIneligibleReason);
-    set("notes", record.notes);
+    // Notes
+    set("notes", r.notes || "No notes on file.");
 
-    set("heroAccountNumber", record.accountNumber || record.key || acct);
-    set("heroCustomerName", record.customerName);
-    set("heroBalance", money(record.currentBalance));
-    eligibilityPill(record.arrangementEligible);
+    // Flags
+    buildFlags(r);
 
-    set("summaryStatus", titleStatus(record.accountStatus));
-    set("summaryEligible", boolText(record.arrangementEligible));
-    set("summaryMonths", record.repaymentMonths || record.arrangementMaxMonths || "—");
-    set("summaryMonthly", money(record.repaymentMonthlyPayment));
-    set("summaryAgreement", record.agreementStatus);
+    // Summary
+    set("sumStatus", titleStatus(r.accountStatus));
+    set("sumEligible", boolYesNo(r.arrangementEligible));
+    set("sumMonths", r.repaymentMonths || r.arrangementMaxMonths || "—");
+    set("sumMonthly", money(r.repaymentMonthlyPayment));
+    set("sumAgreement", r.agreementStatus || "—");
 
-    renderFlags(record);
   } catch (e) {
     console.error(e);
-    set("accountNumber", acct);
-    set("customerName", "Error loading data");
+    set("heroAcct", id);
+    set("heroName", "Error loading");
   }
 }
-
-loadAccount();
+load();
 </script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"f0f03d0605bf45f1a3b17cf7d5e6861f","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>
