@@ -3,193 +3,361 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Take Payment — City Utilities Department</title>
-
+<title>Take Payment — City Utilities</title>
 <style>
 :root {
-  --terracotta:#c2572a;
-  --cream:#f5f0e6;
-  --card:#ffffff;
-  --teal:#4f8f95;
-  --text:#2f2a24;
-  --muted:#7a6f63;
-  --border:#e6ded1;
+  --navy: #1a3a5c;
+  --navy-dark: #122a44;
+  --navy-light: #2a5a8c;
+  --accent: #3b82f6;
+  --bg: #f0f4f8;
+  --card: #ffffff;
+  --text: #1e293b;
+  --muted: #64748b;
+  --border: #e2e8f0;
+  --good: #16a34a;
+  --good-bg: #dcfce7;
+  --warn: #d97706;
+  --warn-bg: #fef3c7;
+  --bad: #dc2626;
+  --bad-bg: #fee2e2;
+  --blue-bg: #dbeafe;
+  --blue-text: #1e40af;
 }
 
+* { box-sizing: border-box; margin: 0; }
+
 body {
-  margin:0;
-  font-family: Arial, sans-serif;
-  background:var(--cream);
-  color:var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
 }
 
 .topbar {
-  background:var(--terracotta);
-  color:#fff;
-  padding:16px 22px;
-  font-weight:700;
+  background: var(--navy-dark);
+  color: #fff;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
+.topbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 14px;
+}
+.topbar-icons { display: flex; gap: 4px; }
+.topbar-icons span { font-size: 14px; }
+.topbar-session { font-size: 12px; color: #93c5fd; display: flex; align-items: center; gap: 6px; }
 
-.wrap { padding:16px; }
+.wrap { max-width: 1400px; margin: 0 auto; padding: 16px; }
 
 .hero {
-  background:linear-gradient(135deg,var(--teal),#3d7479);
-  color:#fff;
-  border-radius:12px;
-  padding:22px;
-  margin-bottom:16px;
+  background: linear-gradient(135deg, var(--navy), var(--navy-dark));
+  color: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 12px rgba(26,58,92,0.3);
 }
-
-.hero-balance {
-  font-size:36px;
-  font-weight:700;
+.hero-grid {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 16px;
 }
+.hero-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #93c5fd; margin-bottom: 4px; }
+.hero-balance { font-size: 38px; font-weight: 800; letter-spacing: -1px; line-height: 1; margin-bottom: 6px; }
+.hero-sub { font-size: 14px; color: #bfdbfe; }
 
-.nav-actions {
-  margin-top:14px;
-  display:flex;
-  gap:10px;
-}
-
+.nav-actions { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
 .nav-btn {
-  background:#fff;
-  color:var(--terracotta);
-  border:2px solid #fff;
-  padding:10px 14px;
-  border-radius:8px;
-  font-weight:700;
-  cursor:pointer;
+  display: flex; align-items: center; gap: 6px;
+  padding: 10px 16px; border-radius: 8px; border: none;
+  font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.15s;
 }
+.nav-btn.active { background: #fff; color: var(--navy); box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+.nav-btn:not(.active) { background: rgba(255,255,255,0.12); color: #fff; }
+.nav-btn:not(.active):hover { background: rgba(255,255,255,0.22); }
 
-.layout {
-  display:grid;
-  grid-template-columns:2fr 1fr;
-  gap:16px;
+.layout { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+.stack > * + * { margin-top: 16px; }
+
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+.card-header { padding: 14px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+.card-header-icon { width: 28px; height: 28px; border-radius: 8px; background: var(--blue-bg); color: var(--blue-text); display: flex; align-items: center; justify-content: center; font-size: 14px; }
+.card-header h3 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--muted); }
+.card-body { padding: 16px; }
+
+.summary-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+.summary-row:last-child { border: none; }
+.summary-row .k { color: var(--muted); }
+.summary-row .v { font-weight: 700; color: var(--text); }
+
+.pill { display: inline-block; padding: 4px 12px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+.pill-good { background: var(--good-bg); color: var(--good); }
+.pill-warn { background: var(--warn-bg); color: var(--warn); }
+.pill-bad { background: var(--bad-bg); color: var(--bad); }
+.pill-neutral { background: #f1f5f9; color: var(--muted); }
+
+.field-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.7px; color: var(--muted); font-weight: 600; margin-bottom: 4px; }
+.field-value { font-size: 14px; font-weight: 600; color: var(--text); }
+
+/* Payment form */
+.form-group { margin-bottom: 16px; }
+.form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+.form-input {
+  width: 100%; padding: 12px 14px; border: 1px solid var(--border); border-radius: 8px;
+  font-size: 14px; font-weight: 600; outline: none; transition: border-color 0.15s;
 }
+.form-input:focus { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(26,58,92,0.1); }
 
-.card {
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:12px;
+.method-grid { display: flex; gap: 10px; }
+.method-btn {
+  flex: 1; padding: 12px; border: 2px solid var(--border); border-radius: 8px;
+  background: #fff; font-size: 13px; font-weight: 700; cursor: pointer; text-align: center;
+  transition: all 0.15s;
 }
+.method-btn.selected { border-color: var(--navy); background: var(--navy); color: #fff; }
+.method-btn:not(.selected):hover { border-color: #94a3b8; }
 
-.card-title {
-  padding:14px;
-  font-weight:700;
-  color:var(--muted);
-  border-bottom:1px solid var(--border);
+.pay-btn {
+  width: 100%; padding: 14px; border: none; border-radius: 8px;
+  background: var(--navy); color: #fff; font-size: 14px; font-weight: 700;
+  cursor: pointer; transition: background 0.15s;
 }
+.pay-btn:hover { background: var(--navy-dark); }
+.pay-btn:disabled { background: #cbd5e1; cursor: not-allowed; }
 
-.card-body {
-  padding:16px;
+.success-box { text-align: center; padding: 32px 16px; }
+.success-icon { font-size: 48px; margin-bottom: 12px; }
+.success-title { font-size: 20px; font-weight: 800; color: var(--good); margin-bottom: 4px; }
+.success-detail { font-size: 14px; color: var(--muted); margin-bottom: 6px; }
+.success-conf { font-size: 12px; color: #94a3b8; }
+.reset-btn {
+  margin-top: 20px; padding: 10px 24px; border: 2px solid var(--border); border-radius: 8px;
+  background: #fff; font-size: 13px; font-weight: 700; cursor: pointer;
 }
+.reset-btn:hover { background: #f8fafc; }
 
-.row {
-  display:flex;
-  justify-content:space-between;
-  padding:10px 0;
-  border-bottom:1px solid var(--border);
-}
+.footer { text-align: center; padding: 16px; font-size: 11px; color: #94a3b8; }
 
-.row:last-child { border:none; }
-
-@media(max-width:900px){
-  .layout{grid-template-columns:1fr;}
+@media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+@media (max-width: 600px) {
+  .hero-balance { font-size: 28px; }
+  .nav-actions { flex-direction: column; }
+  .nav-btn { width: 100%; justify-content: center; }
+  .method-grid { flex-direction: column; }
 }
 </style>
 </head>
-
 <body>
 
-<div class="topbar">City Utilities — Take Payment</div>
+<div class="topbar">
+  <div class="topbar-brand">
+    <div class="topbar-icons"><span>⚡</span><span>🔥</span><span>💧</span></div>
+    <span>City Utilities — Take Payment</span>
+  </div>
+  <div class="topbar-session"><span>⏱</span> Session Active</div>
+</div>
 
 <div class="wrap">
-
   <div class="hero">
-    <div class="hero-balance" id="balance">—</div>
-    <div>Account #<span id="acct">—</span> · <span id="name">—</span></div>
-
+    <div class="hero-grid">
+      <div>
+        <div class="hero-label">Current Balance</div>
+        <div class="hero-balance" id="heroBalance">—</div>
+        <div class="hero-sub">Account #<span id="heroAcct">—</span> &middot; <span id="heroName">—</span></div>
+      </div>
+      <div id="heroBadges"></div>
+    </div>
     <div class="nav-actions">
-      <button class="nav-btn" onclick="goAgent()">Agent</button>
-      <button class="nav-btn" onclick="goRepayment()">Repayment</button>
+      <button class="nav-btn" onclick="goAgent()">📋 Agent</button>
+      <button class="nav-btn" onclick="goRepayment()">📝 Repayment</button>
+      <button class="nav-btn active">💳 Take Payment</button>
     </div>
   </div>
 
   <div class="layout">
-
-    <div>
+    <div class="stack">
       <div class="card">
-        <div class="card-title">Payment Options</div>
-        <div class="card-body">
-          <div class="row"><span>Card</span><span>Available</span></div>
-          <div class="row"><span>Bank (ACH)</span><span>Available</span></div>
-          <div class="row"><span>Phone</span><span>Available</span></div>
-          <div class="row"><span>Check</span><span id="checkStatus">—</span></div>
+        <div class="card-header">
+          <div class="card-header-icon">💳</div>
+          <h3>Process Payment</h3>
         </div>
-      </div>
+        <div class="card-body" id="paymentForm">
+          <div style="background:#f8fafc;border-radius:8px;padding:14px;margin-bottom:16px">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+              <div><div class="field-label">Account</div><div class="field-value" id="formAcct">—</div></div>
+              <div><div class="field-label">Customer</div><div class="field-value" id="formName">—</div></div>
+              <div><div class="field-label">Current Balance</div><div class="field-value" style="font-size:18px" id="formBalance">—</div></div>
+              <div><div class="field-label">Status</div><div id="formStatus">—</div></div>
+            </div>
+          </div>
 
-      <div class="card" style="margin-top:16px;">
-        <div class="card-title">Last Payment</div>
-        <div class="card-body">
-          <div class="row"><span>Date</span><span id="lastDate">—</span></div>
-          <div class="row"><span>Amount</span><span id="lastAmt">—</span></div>
+          <div class="form-group">
+            <label>Payment Amount</label>
+            <div style="position:relative">
+              <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#94a3b8;font-weight:700">$</span>
+              <input type="number" step="0.01" min="0" class="form-input" style="padding-left:28px" id="payAmount" placeholder="0.00">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Payment Method</label>
+            <div class="method-grid">
+              <button class="method-btn selected" onclick="selectMethod(this,'card')">💳 Credit Card</button>
+              <button class="method-btn" onclick="selectMethod(this,'check')">📝 Check</button>
+              <button class="method-btn" onclick="selectMethod(this,'ach')">🏦 ACH</button>
+            </div>
+            <div id="checkWarn" style="display:none;margin-top:8px;padding:8px 12px;background:#fee2e2;border-radius:6px;font-size:12px;font-weight:600;color:#dc2626">
+              ⚠️ Check payments unavailable — bounced check(s) on file
+            </div>
+          </div>
+
+          <button class="pay-btn" id="payBtn" onclick="processPayment()" disabled>💵 Process Payment</button>
+        </div>
+
+        <div class="card-body" id="paymentSuccess" style="display:none">
+          <div class="success-box">
+            <div class="success-icon">✅</div>
+            <div class="success-title">Payment Processed</div>
+            <div class="success-detail" id="successDetail"></div>
+            <div class="success-conf" id="successConf"></div>
+            <button class="reset-btn" onclick="resetPayment()">New Payment</button>
+          </div>
         </div>
       </div>
     </div>
 
-    <div>
+    <div class="stack">
       <div class="card">
-        <div class="card-title">Summary</div>
+        <div class="card-header">
+          <div class="card-header-icon">💰</div>
+          <h3>Payment History</h3>
+        </div>
         <div class="card-body">
-          <div class="row"><span>Status</span><span id="status">—</span></div>
-          <div class="row"><span>Balance</span><span id="sumBal">—</span></div>
+          <div class="summary-row"><span class="k">Last Payment</span><span class="v" id="lastDate">—</span></div>
+          <div class="summary-row"><span class="k">Amount</span><span class="v" id="lastAmt">—</span></div>
+          <div class="summary-row"><span class="k">Current Balance</span><span class="v" id="sumBal">—</span></div>
+          <div class="summary-row"><span class="k">Bounced Checks</span><span class="v" id="bounced">—</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-header-icon">ℹ️</div>
+          <h3>Payment Options</h3>
+        </div>
+        <div class="card-body">
+          <div class="summary-row"><span class="k">Credit Card</span><span class="v pill pill-good">Available</span></div>
+          <div class="summary-row"><span class="k">ACH / Bank</span><span class="v pill pill-good">Available</span></div>
+          <div class="summary-row"><span class="k">Check</span><span class="v" id="checkAvail">—</span></div>
         </div>
       </div>
     </div>
-
   </div>
 </div>
 
+<div class="footer">City Utilities &middot; Take Payment &middot; Internal Use Only</div>
+
 <script>
-const DATA_URL="https://raw.githubusercontent.com/astarrett/Demo-Scripts/main/data-actions/Utility-Accounts";
-const p=new URLSearchParams(window.location.search);
+const DATA_URL = "https://raw.githubusercontent.com/astarrett/Demo-Scripts/refs/heads/main/data-actions/Utility-Accounts";
+const params = new URLSearchParams(window.location.search);
+let selectedMethod = "card";
+let bouncedCheck = false;
 
-function acct(){return p.get("accountNumber")||"";}
+function accountId() { return params.get("accountNumber") || params.get("key") || ""; }
+function goAgent() { window.location.href = "agent-script.html?accountNumber=" + encodeURIComponent(accountId()); }
+function goRepayment() { window.location.href = "repayment-script.html?accountNumber=" + encodeURIComponent(accountId()); }
 
-function goAgent(){
-  window.location.href="agent-script.html?accountNumber="+acct();
+function money(val) {
+  const n = parseFloat(String(val || "").replace(/[$,]/g, ""));
+  return Number.isFinite(n) ? "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "—";
+}
+function set(id, val) { const el = document.getElementById(id); if (el) el.textContent = (val != null && String(val) !== "") ? String(val) : "—"; }
+function titleStatus(val) { return { pastDue: "Past Due", finalNotice: "Final Notice", active: "Active", disconnected: "Disconnected" }[val] || val || "—"; }
+function statusPill(val) {
+  const s = String(val || "").toLowerCase();
+  if (s === "active") return '<span class="pill pill-good">Active</span>';
+  if (s.includes("past")) return '<span class="pill pill-warn">Past Due</span>';
+  if (s.includes("final")) return '<span class="pill pill-bad">Final Notice</span>';
+  if (s === "disconnected") return '<span class="pill pill-neutral">Disconnected</span>';
+  return '<span class="pill pill-neutral">' + (val || "—") + '</span>';
 }
 
-function goRepayment(){
-  window.location.href="repayment-script.html?accountNumber="+acct();
+function selectMethod(btn, method) {
+  selectedMethod = method;
+  document.querySelectorAll(".method-btn").forEach(b => b.classList.remove("selected"));
+  btn.classList.add("selected");
+  document.getElementById("checkWarn").style.display = (method === "check" && bouncedCheck) ? "" : "none";
+  updatePayBtn();
 }
 
-async function load(){
-  const id=acct();
-  if(!id)return;
-
-  const res=await fetch(DATA_URL);
-  const data=await res.json();
-  const r=data[id];
-
-  if(!r)return;
-
-  document.getElementById("balance").textContent="$"+r.currentBalance;
-  document.getElementById("acct").textContent=r.accountNumber;
-  document.getElementById("name").textContent=r.customerName;
-
-  document.getElementById("status").textContent=r.accountStatus;
-  document.getElementById("sumBal").textContent="$"+r.currentBalance;
-
-  document.getElementById("lastDate").textContent=r.lastPaymentDate;
-  document.getElementById("lastAmt").textContent="$"+r.lastPaymentAmount;
-
-  document.getElementById("checkStatus").textContent=
-    r.bouncedCheckLast6Month==="true" ? "Unavailable" : "Available";
+function updatePayBtn() {
+  const amt = parseFloat(document.getElementById("payAmount").value);
+  const blocked = selectedMethod === "check" && bouncedCheck;
+  document.getElementById("payBtn").disabled = !(amt > 0) || blocked;
 }
 
+function processPayment() {
+  const amt = parseFloat(document.getElementById("payAmount").value).toFixed(2);
+  const methods = { card: "Credit Card", check: "Check", ach: "ACH" };
+  document.getElementById("successDetail").textContent = "$" + amt + " via " + methods[selectedMethod];
+  document.getElementById("successConf").textContent = "Confirmation: CU-" + Date.now().toString().slice(-8);
+  document.getElementById("paymentForm").style.display = "none";
+  document.getElementById("paymentSuccess").style.display = "";
+}
+
+function resetPayment() {
+  document.getElementById("payAmount").value = "";
+  document.getElementById("paymentForm").style.display = "";
+  document.getElementById("paymentSuccess").style.display = "none";
+  updatePayBtn();
+}
+
+async function load() {
+  const id = accountId();
+  if (!id) return;
+  document.getElementById("payAmount").addEventListener("input", updatePayBtn);
+
+  try {
+    const res = await fetch(DATA_URL, { cache: "no-store" });
+    const data = await res.json();
+    const r = data[id];
+    if (!r) { set("heroAcct", id); set("heroName", "Not found"); return; }
+
+    set("heroAcct", r.key || id);
+    set("heroName", r.customerName);
+    document.getElementById("heroBalance").textContent = money(r.currentBalance);
+    document.getElementById("heroBadges").innerHTML = statusPill(r.accountStatus);
+
+    set("formAcct", r.key || id);
+    set("formName", r.customerName);
+    set("formBalance", money(r.currentBalance));
+    document.getElementById("formStatus").innerHTML = statusPill(r.accountStatus);
+
+    set("lastDate", r.lastPaymentDate);
+    set("lastAmt", money(r.lastPaymentAmount));
+    set("sumBal", money(r.currentBalance));
+    set("bounced", r.bouncedCheckCountLast6Months || "0");
+
+    bouncedCheck = String(r.bouncedCheckLast6Month).toLowerCase() === "true" || parseInt(r.bouncedCheckCountLast6Months) > 0;
+    document.getElementById("checkAvail").innerHTML = bouncedCheck
+      ? '<span class="pill pill-bad">Unavailable</span>'
+      : '<span class="pill pill-good">Available</span>';
+  } catch (e) {
+    console.error(e);
+    set("heroAcct", id);
+    set("heroName", "Error loading");
+  }
+}
 load();
 </script>
-
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"f0f03d0605bf45f1a3b17cf7d5e6861f","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>
