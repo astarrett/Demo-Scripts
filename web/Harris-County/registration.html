@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>HC Tax — Registration Script</title>
+  <style>
+    :root { --hc-blue:#003087; --hc-gold:#C8A84B; --muted:#6b7280; --card:#fff; --bg:#f9fafb; }
+    body { font-family: "Segoe UI", Roboto, Arial, sans-serif; margin:0; background:var(--bg); color:#111827; }
+    .wrap { max-width:880px; margin:18px auto; padding:16px; }
+    .header { background:var(--hc-blue); color:#fff; padding:12px 14px; border-radius:8px; display:flex; gap:12px; align-items:center; }
+    .logo { width:36px; height:36px; background:var(--hc-gold); color:var(--hc-blue); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; }
+    .card { background:var(--card); border:1px solid #e5e7eb; padding:14px; border-radius:8px; margin-top:14px; }
+    .label { font-size:11px; color:#6b7280; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:6px; }
+    .value { font-size:14px; color:#111827; }
+    .btn { background:var(--hc-blue); color:#fff; border:none; padding:8px 12px; border-radius:6px; cursor:pointer; font-weight:700; }
+    .muted { color:#9ca3af; }
+    .badge { display:inline-block; padding:2px 10px; border-radius:12px; font-weight:700; font-size:12px; }
+    .green { background:#d1fae5; color:#065f46; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="header">
+      <div class="logo">HC</div>
+      <div>
+        <div style="font-weight:700">Harris County Tax Office</div>
+        <div style="font-size:12px; opacity:0.9">New resident registration</div>
+      </div>
+    </div>
+
+    <div style="margin-top:12px; display:flex; gap:8px; align-items:center;">
+      <label style="font-weight:700; color:#374151; font-size:13px">Welcome code</label>
+      <input id="accountInput" style="padding:6px;border-radius:6px;border:1px solid #d1d5db;min-width:220px" placeholder="?accountNumber=NR-100003" />
+      <button id="loadBtn" class="btn">Load</button>
+      <div style="margin-left:auto; font-size:13px; color:#374151" id="statusLabel"></div>
+    </div>
+
+    <div id="content" class="card" aria-live="polite">
+      <div style="text-align:center; color:#9ca3af; padding:18px 0">Loading registration details...</div>
+    </div>
+  </div>
+
+  <script>
+  const LOOKUP_ENDPOINT = "https://wvzqurn6spx6ocgxqesxu4ivcy0yivlt.lambda-url.us-east-1.on.aws/lookup";
+  const WRITEBACK_ENDPOINT = "https://wvzqurn6spx6ocgxqesxu4ivcy0yivlt.lambda-url.us-east-1.on.aws/writeback";
+  const SENDSMS_ENDPOINT = "https://wvzqurn6spx6ocgxqesxu4ivcy0yivlt.lambda-url.us-east-1.on.aws/sendsms";
+
+  const mockData = {
+    "NR-100003": { accountNumber:"NR-100003", name:"Priya Nair", phone:"13177030977",
+      welcomePackageCode:"NR-202601", outOfStateRegistration:"FL-REG-22019", form130uRequired:"Yes", emissionRequired:"No",
+      insuranceVerified:"Yes", smsSentTimestamp:"2026-05-01T15:02:00Z", smsReceivedTimestamp:"2026-05-01T15:02:00Z", signatureStatus:"Signed",
+      signedName:"Priya Nair", signedTimestamp:"2026-05-01T15:03:00Z", linkTemplate:"https://hctaxregistration.abacusai.app/?accountNumber=NR-100003",
+      useCase:"NR"
+    }
+  };
+
+  function qs(name) { return new URLSearchParams(location.search).get(name); }
+  function badgeHTML(status) { if (!status) return '<span class="muted">\u2014</span>'; return '<span class="badge green">' + status + '</span>'; }
+
+  function renderRegistration(data) {
+    document.getElementById("statusLabel").textContent = data.welcomePackageCode || "";
+
+    const html = [];
+    html.push('<div style="display:grid; grid-template-columns:1fr 1fr; gap:18px">');
+
+    function f(label, v, badge) { return '<div><div class="label">' + label + '</div><div class="value">' + (badge ? badgeHTML(v) : (v || '<span class="muted">\u2014</span>')) + '</div></div>'; }
+
+    html.push('<div>');
+    html.push(f("Account/Key", data.accountNumber));
+    html.push(f("Name", data.name));
+    html.push(f("Phone", data.phone));
+    html.push(f("Welcome Code", data.welcomePackageCode));
+    html.push('</div>');
+
+    html.push('<div>');
+    html.push(f("Out-of-State Reg #", data.outOfStateRegistration));
+    html.push(f("Insurance Verified", data.insuranceVerified));
+    html.push(f("Form 130-U Required", data.form130uRequired));
+    html.push(f("Emission Required", data.emissionRequired));
+    html.push('</div>');
+    html.push('</div>');
+
+    html.push('<div style="margin-top:12px"><div class="label">Authorization / Sign</div>');
+    html.push('<div style="display:flex; gap:8px; margin-top:8px">');
+    html.push('<button id="openLinkBtn" class="btn">Open Authorization Link</button>');
+    html.push('<button id="sendSmsBtn" class="btn" style="background:#92400e">Send SMS</button>');
+    html.push('<button id="writebackBtn" class="btn" style="background:#065f46">Writeback Signed</button>');
+    html.push('</div></div>');
+
+    html.push('<div style="margin-top:12px" class="card"><div class="label">Agent Talk Track</div>');
+    html.push('<div style="font-size:13px; color:#374151; line-height:1.6">');
+    html.push('<div>"Welcome to Harris County, ' + (data.name||"[Name]") + '. I have your record pulled up using code ' + (data.welcomePackageCode||'\u2014') + '."</div>');
+    html.push('<div style="margin-top:6px">"I have sent an authorization link to your phone. Once you sign and return it we will finalize your registration."</div>');
+    html.push('</div></div>');
+
+    document.getElementById("content").innerHTML = html.join('');
+
+    document.getElementById("openLinkBtn").addEventListener("click", () => {
+      if (!data.linkTemplate) return alert("No linkTemplate configured.");
+      window.open(resolveTemplate(data.linkTemplate, data), "_blank");
+    });
+
+    document.getElementById("writebackBtn").addEventListener("click", () => {
+      if (WRITEBACK_ENDPOINT.includes("REPLACE_WITH")) return alert("Set WRITEBACK_ENDPOINT.");
+      const payload = { key: data.key || data.accountNumber, signatureStatus:"Signed", signedName:data.name || "Signed User", signedTimestamp:new Date().toISOString() };
+      fetch(WRITEBACK_ENDPOINT, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(payload)})
+        .then(r => { if (r.ok) alert("Writeback sent"); else alert("Writeback failed"); })
+        .catch(e => alert("Writeback error: " + e.message));
+    });
+
+    document.getElementById("sendSmsBtn").addEventListener("click", () => {
+      if (SENDSMS_ENDPOINT.includes("REPLACE_WITH")) return alert("Set SENDSMS_ENDPOINT.");
+      const smsBody = `Please review and sign: ${data.linkTemplate || ''}`;
+      const payload = { fromAddress:"+13178549820", toAddress:"+" + (data.phone||"13177030977"), toAddressMessengerType:"sms", textBody:smsBody };
+      fetch(SENDSMS_ENDPOINT, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(payload) })
+        .then(r => { if (r.ok) alert("SMS trigger sent"); else alert("SMS failed"); })
+        .catch(e => alert("SMS error: " + e.message));
+    });
+  }
+
+  function resolveTemplate(tpl, data) {
+    return tpl.replace(/\{accountNumber\}|\{account\}|\{key\}/gi, encodeURIComponent(data.accountNumber||''))
+              .replace(/\{code\}/gi, encodeURIComponent(data.welcomePackageCode||''));
+  }
+
+  async function load(acc) {
+    const content = document.getElementById("content");
+    content.innerHTML = '<div style="text-align:center; color:#9ca3af; padding:18px 0">Loading registration details...</div>';
+    let data = null;
+    if (!acc) acc = qs("accountNumber");
+    document.getElementById("accountInput").value = acc || "";
+    if (acc && LOOKUP_ENDPOINT) {
+      try {
+        const url = LOOKUP_ENDPOINT + (LOOKUP_ENDPOINT.includes("?") ? "&" : "?") + "accountNumber=" + encodeURIComponent(acc);
+        const r = await fetch(url);
+        if (r.ok) data = await r.json();
+      } catch (e) { console.warn("lookup error", e); }
+    }
+    if (!data) data = mockData[acc] || mockData["NR-100003"];
+    renderRegistration(data);
+  }
+
+  document.getElementById("loadBtn").addEventListener("click", () => {
+    const acc = document.getElementById("accountInput").value.trim();
+    if (!acc) return alert("Enter accountNumber (e.g., NR-100003).");
+    history.replaceState({}, "", location.pathname + "?accountNumber=" + encodeURIComponent(acc));
+    load(acc);
+  });
+
+  load(qs("accountNumber") || "NR-100003");
+  </script>
+</body>
+</html>
