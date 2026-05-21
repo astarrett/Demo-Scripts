@@ -1,63 +1,279 @@
+
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Harris County — Overview</title>
-    <style>
-        :root{--navy:#172635;--panel:#fff;--muted:#6b7280;--accent:#0f4f7a;--bg:#f3f6f8}
-        body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--bg);color:#0f1720}
-        .header{background:var(--navy);color:#fff;padding:14px 20px;display:flex;align-items:center;justify-content:space-between}
-        .logo-wrap{display:flex;align-items:center;gap:12px}
-        .container{max-width:1000px;margin:20px auto;padding:0 18px}
-        .card{background:var(--panel);border-radius:10px;padding:20px;border:1px solid #e6eef4;margin-bottom:16px}
-        .k{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;margin-bottom:4px}
-        .v{font-weight:700;font-size:16px;margin-bottom:12px}
-        .btn{padding:10px 16px;border-radius:8px;border:1px solid #dbe8f0;background:#fff;cursor:pointer;font-weight:700;text-decoration:none;display:inline-block;color:var(--navy)}
-        .btn-primary{background:var(--accent);color:#fff;border:none}
-        .script-box{background:#fbfdff;border-radius:8px;padding:16px;border:1px solid #e6eef4;line-height:1.5}
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Harris County Tax Office - Account Overview</title>
+  <style>
+
+    :root {
+      --navy: #1f2f53;
+      --page: #e8eef5;
+      --card: #ffffff;
+      --line: #dbe4ef;
+      --text: #24324a;
+      --muted: #718197;
+      --green: #2b7a45;
+      --blue: #32578f;
+      --blue-bg: #eef4ff;
+      --gold: #c78a1e;
+      --shadow: 0 1px 1px rgba(16, 24, 40, .04), 0 6px 18px rgba(16, 24, 40, .06);
+      --radius: 10px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--page);
+      color: var(--text);
+    }
+    .topbar {
+      background: var(--navy);
+      color: #fff;
+      min-height: 98px;
+      display: flex;
+      align-items: center;
+      padding: 0 26px;
+      box-shadow: inset 0 -1px 0 rgba(255,255,255,.08);
+    }
+    .brand {
+      display: flex; align-items: center; gap: 16px;
+      min-width: 0;
+    }
+    .seal {
+      width: 44px; height: 44px; border-radius: 999px; flex: 0 0 auto;
+      background: radial-gradient(circle at 35% 35%, #e3f0ff 0 11%, #f7fbff 12% 19%, #2e4f8f 20% 100%);
+      border: 2px solid rgba(255,255,255,.7);
+      display: grid; place-items: center;
+      color: #fff; font-weight: 800; font-size: 12px; letter-spacing: .5px;
+      position: relative; overflow: hidden;
+    }
+    .seal::before {
+      content: "TX";
+      position: absolute; bottom: 5px; left: 0; right: 0; text-align: center;
+      font-size: 9px; letter-spacing: 1px; opacity: .9;
+    }
+    .brand h1 {
+      font-size: 22px; line-height: 1.1; margin: 0; font-weight: 700;
+    }
+    .brand .sub {
+      margin-top: 6px; font-size: 14px; color: rgba(255,255,255,.88);
+    }
+    .chips { margin-left: auto; display: flex; gap: 12px; align-items: center; }
+    .chip {
+      background: #edf4ff; color: #35598f; border-radius: 999px; padding: 10px 18px;
+      font-weight: 700; font-size: 16px; line-height: 1;
+      box-shadow: inset 0 0 0 1px rgba(53,89,143,.06);
+      white-space: nowrap;
+    }
+    .chip.muted { font-size: 15px; }
+    .page {
+      width: min(1120px, calc(100vw - 48px));
+      margin: 18px auto 0;
+      padding-bottom: 24px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      margin-bottom: 18px;
+    }
+    .card-header {
+      min-height: 62px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(#f8fafc, #f6f8fb);
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .card-body { padding: 22px 18px 20px; }
+    .icon { font-size: 20px; width: 22px; text-align: center; opacity: .95; }
+    .grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 26px 48px; }
+    .grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 48px; }
+    .field-label {
+      font-size: 13px; font-weight: 800; letter-spacing: 1px; color: #7a889b;
+      text-transform: uppercase; margin-bottom: 6px;
+    }
+    .field-value { font-size: 19px; line-height: 1.35; color: #232e40; }
+    .field-value.small { font-size: 15px; }
+    .field-value.green { color: var(--green); font-weight: 800; }
+    .field-value.link { color: #2f5c9a; text-decoration: underline; }
+    .field-group { min-height: 58px; }
+    .section-title {
+      font-size: 16px; font-weight: 700; margin: 0 0 10px; color: #29364a;
+    }
+    .subtle-rule { border-top: 1px solid #e6edf5; margin: 0 0 14px; }
+    .tracking-box {
+      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px 42px;
+    }
+    .form-grid {
+      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px 16px;
+    }
+    .control { display: flex; flex-direction: column; gap: 8px; }
+    .control label { font-size: 13px; font-weight: 700; color: #3f4f63; }
+    .input, select {
+      height: 38px; border: 1px solid #c9d4e1; border-radius: 7px; padding: 0 12px;
+      font-size: 15px; color: #1f2937; background: #fff; box-shadow: inset 0 1px 2px rgba(0,0,0,.03);
+    }
+    .btnrow { display:flex; gap: 12px; flex-wrap: wrap; margin-top: 14px; }
+    .btn {
+      appearance: none; border: 1px solid transparent; border-radius: 6px; padding: 12px 28px;
+      font-size: 16px; font-weight: 700; color: #fff; background: #36588d;
+      box-shadow: inset 0 -1px 0 rgba(0,0,0,.08);
+    }
+    .btn.green { background: #2e6f4f; }
+    .btn.ghost { background: #fff; color: #32578f; border-color: #32578f; }
+    .btn:disabled { opacity: .9; }
+    .script-box {
+      background: #fbfcfe; border: 1px solid #dfe7f1; border-radius: 8px; padding: 26px 24px;
+      line-height: 1.95; font-size: 19px; color: #2a3545;
+    }
+    .script-box p { margin: 0 0 12px; }
+    .script-box ul { margin: 10px 0 12px 22px; padding: 0; }
+    .script-box li { margin: 0 0 4px; }
+    .hl { background: #fff3a8; padding: 0 4px; border-radius: 3px; font-weight: 700; }
+    .quote { color: #32578f; font-weight: 700; }
+    .footer {
+      text-align: center; color: #8a96a7; font-size: 12px; padding: 18px 0 16px;
+    }
+    .status-good { color: var(--green); font-weight: 800; }
+    .pill-note {
+      display:inline-flex; align-items:center; justify-content:center; min-width:112px;
+      padding:6px 10px; border-radius:999px; background:#eef4ff; color:#32578f;
+      font-size:14px; font-weight:800;
+    }
+    @media (max-width: 980px) {
+      .grid3, .grid2, .tracking-box, .form-grid { grid-template-columns: 1fr; }
+      .chips { display: none; }
+      .page { width: min(1120px, calc(100vw - 24px)); }
+      .field-value { font-size: 17px; }
+    }
+
+  </style>
 </head>
 <body>
-    <header class="header">
-        <div class="logo-wrap">
-            <svg width="48" height="48" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="100" r="96" fill="#0b2540"/><circle cx="100" cy="100" r="80" fill="#fff"/><circle cx="100" cy="100" r="66" fill="#f2f4f6"/><polygon points="100,48 112,86 152,86 120,108 132,146 100,124 68,146 80,108 48,86 88,86" fill="#0b2540"/><circle cx="100" cy="100" r="36" fill="#0b2540"/></svg>
-            <div><div style="font-weight:700;font-size:18px">Harris County Tax Office</div><div style="font-size:12px;opacity:0.8">Customer Overview</div></div>
+  <header class="topbar">
+    <div class="brand">
+      <div class="seal" aria-hidden="true"></div>
+      <div>
+        <h1>Harris County Tax Office</h1>
+        <div class="sub">Account Overview</div>
+      </div>
+    </div>
+    <div class="chips">
+      <div class="chip" id="accountTypeChip">Property Tax</div>
+      <div class="chip muted" id="accountNumberChip">PT-100001</div>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="card">
+      <div class="card-header"><span class="icon">👤</span>Customer Information</div>
+      <div class="card-body">
+        <div class="grid2">
+          <div class="field-group"><div class="field-label">Full Name</div><div class="field-value" id="name">Maria Lopez</div></div>
+          <div class="field-group"><div class="field-label">Phone</div><div class="field-value" id="phone">+1 (317) 703-0977</div></div>
+          <div class="field-group"><div class="field-label">Address</div><div class="field-value" id="address">1450 Canal St, Houston, TX 77002</div></div>
         </div>
-        <div id="headerAccount" style="font-weight:700;background:rgba(255,255,255,0.1);padding:8px 14px;border-radius:8px">—</div>
-    </header>
-    <main class="container">
-        <section class="card">
-            <div style="font-weight:800;font-size:18px;margin-bottom:15px">Customer Profile</div>
-            <div class="k">Full Name</div><div id="name" class="v">—</div>
-            <div class="k">Phone</div><div id="phone" class="v">—</div>
-            <div class="k">Address</div><div id="address" class="v">—</div>
-            <div style="display:flex;gap:12px;margin-top:10px">
-                <a id="linkRepay" class="btn btn-primary" href="#">Open Repayment Plan</a>
-                <a id="linkReg" class="btn" href="#">Open Registration</a>
-            </div>
-        </section>
-        <section class="card">
-            <div class="k">Active Script Context</div>
-            <div class="script-box" id="scriptGreeting">Please load a customer record to begin.</div>
-        </section>
-    </main>
-    <script>
-        function apply(d){
-            if(!d) return;
-            const acc = d.accountNumber || d.key || '';
-            document.getElementById('headerAccount').textContent = acc;
-            document.getElementById('name').textContent = d.name || '';
-            document.getElementById('phone').textContent = d.phone || '';
-            document.getElementById('address').textContent = d.address || '';
-            document.getElementById('linkRepay').href = `./repayment.html?accountNumber=${acc}`;
-            document.getElementById('linkReg').href = `./registration.html?accountNumber=${acc}`;
-            document.getElementById('scriptGreeting').innerHTML = `<strong>Greeting:</strong><br>Hi ${ (d.name||'').split(' ')[0] }, I have your account (${acc}) pulled up. I see you're calling about ${d.delinquentBalance ? 'your property tax balance' : 'your registration'}. How can I assist?`;
-        }
-        window.addEventListener('message', e => { if(e.data && e.data.type === 'hc_data') apply(e.data.payload); });
-        /* Preview Logic */
-        const p = new URLSearchParams(location.search);
-        if(p.get('accountNumber')) apply({key:p.get('accountNumber'), name:'Maria Lopez', phone:'+1 (317) 703-0977', address:'1450 Canal St, Houston, TX 77002', delinquentBalance:'2485.17'});
-    </script>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-header"><span class="icon">💰</span>Property Tax Account</div>
+      <div class="card-body">
+        <div class="grid3">
+          <div class="field-group"><div class="field-label">Account Number</div><div class="field-value" id="accountNumber">PT-100001</div></div>
+          <div class="field-group"><div class="field-label">Delinquent Balance</div><div class="field-value" id="delinquentBalance">$2,485.17</div></div>
+          <div class="field-group"><div class="field-label">Eligibility Status</div><div class="field-value green" id="eligibilityStatus">Eligible</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-header"><span class="icon">📋</span>Repayment Plan Details</div>
+      <div class="card-body">
+        <div class="grid3">
+          <div class="field-group"><div class="field-label">Down Payment</div><div class="field-value" id="repaymentDownPayment">$250.00</div></div>
+          <div class="field-group"><div class="field-label">Repayment Months</div><div class="field-value" id="repaymentMonths">12</div></div>
+          <div class="field-group"><div class="field-label">Monthly Payment</div><div class="field-value" id="repaymentMonthlyPayment">$186.26</div></div>
+          <div class="field-group"><div class="field-label">Start Date</div><div class="field-value" id="repaymentStartDate">6/1/26</div></div>
+          <div class="field-group"><div class="field-label">Confirmation Number</div><div class="field-value" id="repaymentConfirmationNumber">HC-TX-9921</div></div>
+          <div class="field-group"><div class="field-label">Plan Status</div><div class="field-value green" id="planState">Confirmed</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-header"><span class="icon">📝</span>Conversation Guide</div>
+      <div class="card-body">
+        <div class="script-box">
+          <p class="quote">"Thank you for contacting the Harris County Tax Office. How can I help you today?"</p>
+          <p>I can review the current property tax account for <span class="hl" id="scriptName1">Maria</span>. Here is the summary:</p>
+          <ul>
+            <li>Delinquent balance: <span class="hl" id="scriptBalance">$2,485.17</span></li>
+            <li>Eligibility status: <span class="hl" id="scriptEligibility">Eligible</span></li>
+            <li>Repayment plan: <span class="hl" id="scriptMonthly">$186.26/month</span> for <span class="hl" id="scriptMonths">12 months</span>, starting <span class="hl" id="scriptStartDate">6/1/26</span></li>
+          </ul>
+          <p>Confirmation number: <span class="hl" id="scriptConfirmation">HC-TX-9921</span></p>
+          <p class="quote">"Please review the information shown above and let me know what you would like to do next."</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const read = (key, fallback) => {
+      const value = params.get(key);
+      return value && value.trim() ? value : fallback;
+    };
+    const set = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value; };
+
+    const values = {
+      accountType: read('accountType', 'Property Tax'),
+      accountNumber: read('accountNumber', 'PT-100001'),
+      name: read('name', 'Maria Lopez'),
+      phone: read('phone', '+1 (317) 703-0977'),
+      address: read('address', '1450 Canal St, Houston, TX 77002'),
+      delinquentBalance: read('delinquentBalance', '$2,485.17'),
+      eligibilityStatus: read('eligibilityStatus', 'Eligible'),
+      repaymentDownPayment: read('repaymentDownPayment', '$250.00'),
+      repaymentMonthlyPayment: read('repaymentMonthlyPayment', '$186.26'),
+      repaymentMonths: read('repaymentMonths', '12'),
+      repaymentStartDate: read('repaymentStartDate', '6/1/26'),
+      repaymentConfirmationNumber: read('repaymentConfirmationNumber', 'HC-TX-9921'),
+      planState: read('planState', 'Confirmed'),
+    };
+
+    set('accountTypeChip', values.accountType);
+    set('accountNumberChip', values.accountNumber);
+    set('accountNumber', values.accountNumber);
+    set('name', values.name);
+    set('phone', values.phone);
+    set('address', values.address);
+    set('delinquentBalance', values.delinquentBalance);
+    set('eligibilityStatus', values.eligibilityStatus);
+    set('repaymentDownPayment', values.repaymentDownPayment);
+    set('repaymentMonthlyPayment', values.repaymentMonthlyPayment);
+    set('repaymentMonths', values.repaymentMonths);
+    set('repaymentStartDate', values.repaymentStartDate);
+    set('repaymentConfirmationNumber', values.repaymentConfirmationNumber);
+    set('planState', values.planState);
+
+    const firstName = values.name.split(' ')[0] || values.name;
+    set('scriptName1', firstName);
+    set('scriptBalance', values.delinquentBalance);
+    set('scriptEligibility', values.eligibilityStatus);
+    set('scriptMonthly', values.repaymentMonthlyPayment + '/month');
+    set('scriptMonths', values.repaymentMonths + ' months');
+    set('scriptStartDate', values.repaymentStartDate);
+    set('scriptConfirmation', values.repaymentConfirmationNumber);
+  </script>
 </body>
 </html>
