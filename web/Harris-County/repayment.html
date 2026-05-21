@@ -2,98 +2,118 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Harris County - Repayment Agreement</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Harris County Tax Office — Repayment</title>
   <style>
-    :root {
-      --bg: #f6f8fb; --card: #fff; --text: #1f2937; --muted: #6b7280; --border: #dbe3ee; --accent: #0f62fe; --accent-soft: #e8f0ff; --success: #1a7f37;
-    }
-    * { box-sizing: border-box; }
-    body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: var(--bg); color: var(--text); }
-    .wrap { max-width: 980px; margin: 0 auto; padding: 24px; }
-    .hero { background: linear-gradient(135deg, #0f62fe, #2b7fff); color: #fff; border-radius: 20px; padding: 28px; }
-    .hero h1 { margin: 0 0 8px; font-size: 30px; }
-    .hero p { margin: 0; line-height: 1.5; opacity: .96; }
-    .grid { display:grid; grid-template-columns: repeat(12, 1fr); gap: 16px; margin-top: 18px; }
-    .card { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 20px; box-shadow: 0 6px 18px rgba(31,41,55,.04); }
-    .span-7 { grid-column: span 7; }
-    .span-5 { grid-column: span 5; }
-    .section-title { margin: 0 0 12px; font-size: 18px; }
-    .field { display:grid; grid-template-columns: 220px 1fr; gap: 12px; padding: 10px 0; border-top: 1px solid #eef2f7; }
-    .field:first-of-type { border-top: 0; }
-    .label { color: var(--muted); font-size: 14px; }
-    .value { font-weight: 700; word-break: break-word; }
-    .summary {
-      margin-top: 0; padding: 16px; border-radius: 14px; background: var(--accent-soft); color: #123b88; line-height: 1.6;
-    }
-    .agreement {
-      margin-top: 16px; padding: 16px; border-radius: 14px; background: #f9fbff; border: 1px dashed var(--border); line-height: 1.65;
-    }
-    .btnrow { display:flex; gap: 12px; flex-wrap: wrap; margin-top: 18px; }
-    .btn { border: 0; border-radius: 12px; padding: 12px 16px; font-weight: 700; font-size: 14px; background: var(--accent); color: #fff; }
-    .btn.secondary { background: #eef2f7; color: #111827; }
-    .badge { display:inline-flex; margin-bottom: 10px; padding: 8px 12px; border-radius: 999px; background: #eaf7ef; color: var(--success); font-weight: 700; }
-    .footer { margin-top: 16px; color: var(--muted); font-size: 13px; line-height: 1.5; }
-    @media (max-width: 900px) {
-      .span-7, .span-5 { grid-column: span 12; }
-      .field { grid-template-columns: 1fr; gap: 4px; }
-    }
+    /* reuse same visual tokens as overview (kept compact for clarity) */
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--navy:#002147;--gold:#FFD700;--red:#C62828;--green:#2E7D32;--gray-100:#F3F4F6;--white:#fff}
+    body{font-family:Segoe UI,Arial,sans-serif;background:var(--gray-100);color:#111827;font-size:13px}
+    .header{background:linear-gradient(135deg,var(--navy) 0%,#003366 100%);color:var(--white);padding:10px 16px;display:flex;align-items:center}
+    .header-text h1{font-size:15px;font-weight:700}
+    .container{padding:12px 16px}
+    .card{background:var(--white);border-radius:8px;padding:12px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
+    .card-header{font-weight:800;font-size:11px;text-transform:uppercase;margin-bottom:8px}
+    .fields{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+    .field-label{font-size:10px;color:#6B7280;font-weight:700}
+    .field-value{font-size:14px;font-weight:700}
+    .actions{display:flex;gap:8px;align-items:center;margin-top:12px}
+    .btn{padding:8px 12px;border-radius:6px;border:1px solid #d1d5db;background:#fff;cursor:pointer}
+    .btn.primary{background:var(--navy);color:#fff;border:none}
+    .muted{color:#6B7280;margin-top:8px}
+    .footer{text-align:center;color:#6B7280;margin-top:12px;font-size:11px}
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <section class="hero">
-      <h1>Repayment Agreement</h1>
-      <p>Your repayment plan is confirmed. Review the terms and complete the agreement when ready.</p>
-    </section>
+  <div class="header">
+    <div style="flex:1">
+      <h1>Repayment Plan</h1>
+      <div style="font-size:12px;opacity:.85">Property Tax — Repayment Details</div>
+    </div>
+    <div class="header-case" id="hdrCase" style="font-family:monospace;font-weight:700;color:var(--gold)">—</div>
+  </div>
 
-    <div class="grid">
-      <section class="card span-7">
-        <h2 class="section-title">Repayment Details</h2>
-        <div class="field"><div class="label">Account Number</div><div class="value" id="accountNumber">—</div></div>
-        <div class="field"><div class="label">Name</div><div class="value" id="name">—</div></div>
-        <div class="field"><div class="label">Confirmation Number</div><div class="value" id="confirmationNumber">—</div></div>
-        <div class="field"><div class="label">Down Payment</div><div class="value" id="downPayment">—</div></div>
-        <div class="field"><div class="label">Monthly Payment</div><div class="value" id="monthlyPayment">—</div></div>
-        <div class="field"><div class="label">Months</div><div class="value" id="months">—</div></div>
-        <div class="field"><div class="label">Start Date</div><div class="value" id="startDate">—</div></div>
-      </section>
-
-      <section class="card span-5">
-        <span class="badge">Ready to Review</span>
-        <h2 class="section-title">Agreement Guidance</h2>
-        <p class="summary">
-          Review the repayment terms carefully, confirm the information is correct, and complete the signature step to finalize the agreement.
-        </p>
-        <div class="agreement">
-          After opening this page, the resident should verify the plan details, complete any required fields, and submit the electronic signature.
-          This page is display-only and does not send SMS or perform any external action.
-        </div>
-        <div class="btnrow">
-          <button class="btn" type="button" aria-disabled="true">Review Agreement</button>
-          <button class="btn secondary" type="button" aria-disabled="true">Confirm Terms</button>
-        </div>
-      </section>
+  <div class="container">
+    <div class="card">
+      <div class="card-header">Account</div>
+      <div class="fields">
+        <div><div class="field-label">Account</div><div class="field-value mono" id="acct">—</div></div>
+        <div><div class="field-label">Balance Due</div><div class="field-value" id="bal">—</div></div>
+        <div><div class="field-label">Eligibility</div><div class="field-value" id="elig">—</div></div>
+      </div>
     </div>
 
-    <div class="footer">
-      The page reads values from the URL query string. No messaging logic, phone numbers, or outbound integrations are required.
+    <div class="card">
+      <div class="card-header">Repayment Plan</div>
+      <div style="margin-bottom:8px">
+        <div style="display:flex;gap:12px;">
+          <div><div class="field-label">Down Payment</div><div class="field-value" id="down">$—</div></div>
+          <div><div class="field-label">Months</div><div class="field-value" id="months">—</div></div>
+          <div><div class="field-label">Monthly</div><div class="field-value" id="monthly">$—</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="field-label">Repayment Start</div><div class="field-value" id="start">—</div>
+        <div class="field-label" style="margin-top:8px">Confirmation #</div><div class="field-value mono" id="conf">—</div>
+      </div>
+
+      <div class="actions">
+        <button class="btn primary" id="sendSms">Send Repayment Link (mock)</button>
+        <button class="btn" id="openLink">Open Link</button>
+        <button class="btn" id="copyLink">Copy Link</button>
+        <div id="status" class="muted">Status: ready</div>
+      </div>
     </div>
+
+    <div class="card">
+      <div class="card-header">Agent Script</div>
+      <div class="card-body">
+        <div style="background:#f7fafc;padding:10px;border-radius:6px">
+          “I see an outstanding balance of <strong id="scriptBalance">$—</strong>. The AVA created a repayment plan with confirmation <strong id="scriptConf">—</strong>. I’ll confirm payment arrangements and complete the setup.”
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">Harris County Demo — Repayment</div>
   </div>
 
   <script>
-    const params = new URLSearchParams(window.location.search);
-    const setText = (id, value, fallback = '—') => {
-      const el = document.getElementById(id);
-      if (el) el.textContent = value && value.trim() ? value : fallback;
-    };
-    setText('accountNumber', params.get('accountNumber'));
-    setText('name', params.get('name'));
-    setText('confirmationNumber', params.get('confirmationNumber'));
-    setText('downPayment', params.get('repaymentDownPayment'));
-    setText('monthlyPayment', params.get('repaymentMonthlyPayment'));
-    setText('months', params.get('repaymentMonths'));
-    setText('startDate', params.get('repaymentStartDate'));
+    function getParam(n){return new URLSearchParams(location.search).get(n)||''}
+    function set(id,v){const e=document.getElementById(id); if(e) e.textContent = v || '—'}
+    const APP_BASE = 'https://hctaxregistration.abacusai.app';
+    function resolveLink(d){ if(!d) return APP_BASE; if((d.useCase||'').toUpperCase()==='NR') return `${APP_BASE}/?accountNumber=${encodeURIComponent(d.accountNumber||d.key||'')}&welcomePackageCode=${encodeURIComponent(d.welcomePackageCode||'')}`; return `${APP_BASE}/?accountNumber=${encodeURIComponent(d.accountNumber||d.key||'')}&downPayment=${encodeURIComponent(d.downPaymentAmount||'')}&months=${encodeURIComponent(d.repaymentMonths||'')}&monthlyPayment=${encodeURIComponent(d.monthlyPayment||'')}&startDate=${encodeURIComponent(d.repaymentStart||'')}&confirmationNumber=${encodeURIComponent(d.confirmationNumber||'')}` }
+    function apply(d){
+      if(!d) return;
+      set('hdrCase', d.key ? '#'+d.key : '—');
+      set('acct', d.accountNumber||d.key);
+      set('bal', d.delinquentBalance ? ('$'+d.delinquentBalance) : '$0.00');
+      set('elig', d.repaymentEligibilityStatus || '—');
+      set('down', d.downPaymentAmount ? ('$'+d.downPaymentAmount) : '$—');
+      set('months', d.repaymentMonths || '—');
+      set('monthly', d.monthlyPayment ? ('$'+d.monthlyPayment) : '$—');
+      set('start', d.repaymentStart || '—');
+      set('conf', d.confirmationNumber || '—');
+      set('scriptBalance', d.delinquentBalance ? ('$'+d.delinquentBalance) : '$0.00');
+      set('scriptConf', d.confirmationNumber || '—');
+      window.__hc_link = resolveLink(d);
+      window.__hc_data = d;
+    }
+
+    // postMessage
+    window.addEventListener('message', (evt)=>{ try{ const m=evt.data; if(m && m.type==='hc_data'){ apply(m.payload) } }catch(e){} }, false);
+
+    // quick base64 payload or query key demo
+    document.addEventListener('DOMContentLoaded', ()=>{
+      const payload = (new URLSearchParams(location.search).get('payload')||''); if(payload){ try{ const d=JSON.parse(atob(payload)); apply(d); return;}catch(e){} }
+      const key = getParam('accountNumber')||getParam('key'); if(key==='PT-100001'){ apply({ key:'PT-100001', accountNumber:'PT-100001', useCase:'PT', delinquentBalance:'2485.17', repaymentEligibilityStatus:'Eligible', downPaymentAmount:'250', repaymentMonths:'12', monthlyPayment:'186.26', repaymentStart:'2026-06-01', confirmationNumber:'HC-TX-9921' }); } else { document.getElementById('status').textContent='Waiting for AVA data (postMessage)'; }
+    });
+
+    document.addEventListener('click',(e)=>{
+      const id = e.target && e.target.id; if(!id) return;
+      if(id==='sendSms'){ const now = new Date().toISOString(); document.getElementById('status').textContent = 'SMS (mock) sent '+now; }
+      if(id==='openLink'){ window.open(window.__hc_link || APP_BASE, '_blank'); }
+      if(id==='copyLink'){ navigator.clipboard && navigator.clipboard.writeText(window.__hc_link || APP_BASE).then(()=>document.getElementById('status').textContent='Link copied'); }
+    });
   </script>
 </body>
 </html>
