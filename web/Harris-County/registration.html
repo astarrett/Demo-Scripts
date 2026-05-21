@@ -1,124 +1,74 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Harris County — New Resident</title>
-<style>
-:root{--navy:#172635;--panel:#fff;--muted:#6b7280;--accent:#0f4f7a;--bg:#f3f6f8;--ok:#1f8a59}
-*{box-sizing:border-box}
-body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:#0f1720}
-.header{background:var(--navy);color:#fff;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:0;z-index:50}
-.brand{display:flex;align-items:center;gap:12px}
-.logo{width:48px;height:48px}
-.container{max-width:900px;margin:20px auto;padding:0 18px}
-.card{background:var(--panel);border-radius:10px;padding:18px;border:1px solid #e6eef4}
-.k{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;margin-bottom:6px}
-.v{font-weight:700;font-size:15px}
-.input{padding:10px;border-radius:8px;border:1px solid #e6eef4;width:100%;font-size:14px}
-.btn{padding:10px 12px;border-radius:8px;border:1px solid #dbe8f0;background:#fff;cursor:pointer;font-weight:700}
-.btn.primary{background:var(--ok);color:#fff;border:none}
-.info{color:var(--muted);font-size:13px;margin-top:8px}
-.footer{color:var(--muted);text-align:center;margin:18px 0}
-</style>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Harris County — Registration</title>
+    <style>
+        :root{--navy:#172635;--panel:#fff;--muted:#6b7280;--accent:#027a48;--bg:#f3f6f8}
+        body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--bg);color:#0f1720}
+        .header{background:var(--navy);color:#fff;padding:14px 20px;display:flex;align-items:center;justify-content:space-between}
+        .logo-wrap{display:flex;align-items:center;gap:12px}
+        .container{max-width:800px;margin:20px auto;padding:0 18px}
+        .card{background:var(--panel);border-radius:10px;padding:24px;border:1px solid #e6eef4;margin-bottom:16px}
+        label{display:block;font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;margin-bottom:6px}
+        .val{font-weight:700;font-size:16px;margin-bottom:16px}
+        .input{padding:12px;border-radius:8px;border:1px solid #e6eef4;width:100%;font-size:15px;box-sizing:border-box}
+        .btn{padding:12px 20px;border-radius:8px;border:1px solid #dbe8f0;background:#fff;cursor:pointer;font-weight:700}
+        .btn-green{background:var(--accent);color:#fff;border:none}
+    </style>
 </head>
 <body>
-  <header class="header">
-    <div class="brand">
-      <svg class="logo" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="100" r="96" fill="#0b2540"/><circle cx="100" cy="100" r="80" fill="#fff"/><circle cx="100" cy="100" r="66" fill="#f2f4f6"/><polygon points="100,48 112,86 152,86 120,108 132,146 100,124 68,146 80,108 48,86 88,86" fill="#0b2540"/><circle cx="100" cy="100" r="36" fill="#0b2540"/></svg>
-      <div><div style="font-weight:700">Harris County Tax Office</div><div style="font-size:12px;color:#cfe6f7">New Resident — Agent View</div></div>
-    </div>
-    <div style="display:flex;gap:10px;align-items:center">
-      <div id="headerAccount" style="font-weight:700;background:rgba(255,255,255,0.06);padding:8px 12px;border-radius:8px">—</div>
-      <button id="refreshBtn" class="btn">Refresh</button>
-    </div>
-  </header>
-
-  <main class="container">
-    <section class="card">
-      <div style="font-weight:800;margin-bottom:8px">Resident Info</div>
-      <div class="k">Full name</div><div id="name" class="v">—</div>
-      <div class="k" style="margin-top:10px">Address</div><div id="address" class="v">—</div>
-      <div class="k" style="margin-top:10px">Phone</div><div id="phone" class="v">—</div>
-      <div class="k" style="margin-top:10px">Welcome package code</div><div id="welcomeCode" class="v">—</div>
-    </section>
-
-    <section class="card" style="margin-top:14px">
-      <div style="font-weight:800;margin-bottom:8px">Mail code verification</div>
-      <div class="k">Enter code received in mail</div>
-      <input id="mailCode" class="input" placeholder="Enter code from welcome package" />
-      <div style="display:flex;gap:10px;margin-top:12px">
-        <button id="verifyBtn" class="btn primary">Verify code</button>
-        <button id="refreshBtn2" class="btn">Refresh Data</button>
-      </div>
-      <div id="verifyResult" class="info" aria-live="polite" style="margin-top:10px">Enter the code and click Verify.</div>
-    </section>
-
-    <section class="card" style="margin-top:14px">
-      <div style="font-weight:800;margin-bottom:8px">Agent Actions</div>
-      <div class="info">If verified, Save posts a message to parent for your Script Editor to call the update data action.</div>
-      <div style="display:flex;gap:10px;margin-top:12px">
-        <button id="saveBtn" class="btn primary">Save Verification</button>
-        <button id="openRegBtn" class="btn">Open Registration Form</button>
-      </div>
-    </section>
-
-    <div class="footer">Harris County Tax Office — Internal Agent Tool</div>
-  </main>
-
-<script>
-function setText(id,v){const e=document.getElementById(id); if(!e) return; e.textContent = (v===undefined||v===null||v==='') ? '—' : v}
-function apply(d){
-  if(!d) return;
-  setText('headerAccount', d.accountNumber || d.key || '');
-  setText('name', d.name || '');
-  setText('address', d.address || '');
-  setText('phone', d.phone || '');
-  setText('welcomeCode', d.welcomePackageCode || '');
-  // save expected code
-  document.getElementById('saveBtn').dataset.expected = d.welcomePackageCode || '';
-  document.getElementById('openRegBtn').dataset.target = d.officialUrl || '';
-  document.getElementById('saveBtn').dataset.verified = 'false';
-}
-
-window.addEventListener('message', function(ev){ try{ const m=ev.data; if(m && m.type === 'hc_data') apply(m.payload || {}); }catch(e){} }, false);
-
-(function(){ const p=new URLSearchParams(window.location.search); const k=p.get('accountNumber')||p.get('key'); if(!k) return; apply({ key:k, accountNumber:k, name:'James Carter', address:'2214 Pine Hollow Ln, Kingwood, TX 77339', phone:'+1 (317) 703-0977', welcomePackageCode:'NP-202601', officialUrl:'https://www.hctax.net' }); })();
-
-document.getElementById('refreshBtn').addEventListener('click', ()=>location.reload());
-document.getElementById('refreshBtn2').addEventListener('click', ()=>location.reload());
-
-document.getElementById('verifyBtn').addEventListener('click', function(){
-  const entered = (document.getElementById('mailCode').value || '').trim();
-  const expected = (document.getElementById('welcomeCode').textContent || '').trim();
-  const out = document.getElementById('verifyResult');
-  if(!entered){ out.textContent = 'Enter the code before verifying.'; return; }
-  if(entered === expected){
-    out.textContent = 'Code verified. Ready to save.';
-    out.style.color = '#1f8a59';
-    document.getElementById('saveBtn').dataset.verified = 'true';
-  } else {
-    out.textContent = 'Code does not match. Ask resident to re-check the welcome package.';
-    out.style.color = '#b02a37';
-    document.getElementById('saveBtn').dataset.verified = 'false';
-  }
-});
-
-document.getElementById('openRegBtn').addEventListener('click', function(){
-  const url = this.dataset.target || '';
-  if(!url) return alert('No registration URL configured on record.');
-  window.open(url,'_blank');
-});
-
-document.getElementById('saveBtn').addEventListener('click', function(){
-  const payload = {
-    key: document.getElementById('headerAccount').textContent || '',
-    welcomePackageCode: document.getElementById('welcomeCode').textContent || '',
-    welcomeVerified: this.dataset.verified === 'true' ? 'Yes' : 'No'
-  };
-  parent.postMessage({ type:'hc_save', payload }, '*');
-  alert('Verification posted (hc_save).');
-});
-</script>
+    <header class="header">
+        <div class="logo-wrap">
+            <svg width="48" height="48" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="100" r="96" fill="#0b2540"/><circle cx="100" cy="100" r="80" fill="#fff"/><circle cx="100" cy="100" r="66" fill="#f2f4f6"/><polygon points="100,48 112,86 152,86 120,108 132,146 100,124 68,146 80,108 48,86 88,86" fill="#0b2540"/><circle cx="100" cy="100" r="36" fill="#0b2540"/></svg>
+            <div><div style="font-weight:700;font-size:18px">Harris County Tax Office</div><div style="font-size:12px;opacity:0.8">New Resident Verification</div></div>
+        </div>
+        <div id="headerAccount" style="font-weight:700;background:rgba(255,255,255,0.1);padding:8px 14px;border-radius:8px">—</div>
+    </header>
+    <main class="container">
+        <section class="card">
+            <div style="font-weight:800;font-size:18px;margin-bottom:15px">Resident Details</div>
+            <label>Full Name</label><div id="name" class="val">—</div>
+            <label>Mailing Address</label><div id="address" class="val">—</div>
+            <label>Assigned Welcome Code</label><div id="wCode" class="val">—</div>
+        </section>
+        <section class="card">
+            <label>Verification Action</label>
+            <div style="margin-bottom:15px">Ask the resident for the 6-digit code found in their physical welcome packet.</div>
+            <input id="verifyIn" class="input" placeholder="Enter code for verification...">
+            <div style="margin-top:15px; display:flex; gap:10px">
+                <button class="btn btn-green" id="vBtn">Verify & Link Records</button>
+                <button class="btn" onclick="location.reload()">Reset</button>
+            </div>
+            <div id="vMsg" style="margin-top:10px; font-weight:700"></div>
+        </section>
+    </main>
+    <script>
+        function apply(d){
+            if(!d) return;
+            document.getElementById('headerAccount').textContent = d.accountNumber || d.key || '';
+            document.getElementById('name').textContent = d.name || '';
+            document.getElementById('address').textContent = d.address || '';
+            document.getElementById('wCode').textContent = d.welcomePackageCode || 'None';
+            window.targetCode = d.welcomePackageCode;
+        }
+        window.addEventListener('message', e => { if(e.data && e.data.type === 'hc_data') apply(e.data.payload); });
+        const p = new URLSearchParams(location.search);
+        if(p.get('accountNumber')) apply({key:p.get('accountNumber'), name:'James Carter', address:'2214 Pine Hollow Ln, Kingwood, TX 77339', welcomePackageCode:'NP-202601'});
+        
+        document.getElementById('vBtn').onclick = () => {
+          const val = document.getElementById('verifyIn').value.trim();
+          const target = (window.targetCode || '').trim();
+          const msg = document.getElementById('vMsg');
+          if(val === target && val !== '') {
+            msg.textContent = "✓ Code Verified Successfully";
+            msg.style.color = "#027a48";
+          } else {
+            msg.textContent = "✗ Code Mismatch - Please try again";
+            msg.style.color = "#c23c3c";
+          }
+        };
+    </script>
 </body>
 </html>
