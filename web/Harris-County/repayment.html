@@ -1,119 +1,166 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Harris County Tax Office — Repayment</title>
-  <style>
-    /* reuse same visual tokens as overview (kept compact for clarity) */
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    :root{--navy:#002147;--gold:#FFD700;--red:#C62828;--green:#2E7D32;--gray-100:#F3F4F6;--white:#fff}
-    body{font-family:Segoe UI,Arial,sans-serif;background:var(--gray-100);color:#111827;font-size:13px}
-    .header{background:linear-gradient(135deg,var(--navy) 0%,#003366 100%);color:var(--white);padding:10px 16px;display:flex;align-items:center}
-    .header-text h1{font-size:15px;font-weight:700}
-    .container{padding:12px 16px}
-    .card{background:var(--white);border-radius:8px;padding:12px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
-    .card-header{font-weight:800;font-size:11px;text-transform:uppercase;margin-bottom:8px}
-    .fields{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
-    .field-label{font-size:10px;color:#6B7280;font-weight:700}
-    .field-value{font-size:14px;font-weight:700}
-    .actions{display:flex;gap:8px;align-items:center;margin-top:12px}
-    .btn{padding:8px 12px;border-radius:6px;border:1px solid #d1d5db;background:#fff;cursor:pointer}
-    .btn.primary{background:var(--navy);color:#fff;border:none}
-    .muted{color:#6B7280;margin-top:8px}
-    .footer{text-align:center;color:#6B7280;margin-top:12px;font-size:11px}
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Harris County — Repayment</title>
+<style>
+:root{--navy:#1a2b3c;--bg:#f5f7f9;--card:#fff;--muted:#667085;--accent:#2b4970;--green:#027a48}
+body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;margin:0;background:var(--bg);color:#101828}
+.top{background:var(--navy);color:#fff;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.top .left{display:flex;align-items:center;gap:12px}
+.seal{width:44px;height:44px}
+.title{font-weight:700;font-size:18px}
+.container{max-width:980px;margin:20px auto;padding:0 16px}
+.card{background:var(--card);border-radius:8px;padding:16px;margin-bottom:16px;border:1px solid #e6e9ef}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+label{display:block;font-size:11px;color:var(--muted);font-weight:700;margin-bottom:6px;text-transform:uppercase}
+.val{font-size:15px;font-weight:600}
+.val.mono{font-family:monospace}
+.btn{padding:10px 14px;border-radius:6px;border:1px solid #dfe6ef;cursor:pointer;font-weight:700}
+.btn-save{background:var(--accent);color:#fff;border:none}
+.btn-resend{background:#2d6a3a;color:#fff;border:none}
+.btn-refresh{background:#fff;color:var(--navy);border:1px solid rgba(0,0,0,0.06)}
+@media(max-width:760px){.grid-3{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
-  <div class="header">
-    <div style="flex:1">
-      <h1>Repayment Plan</h1>
-      <div style="font-size:12px;opacity:.85">Property Tax — Repayment Details</div>
-    </div>
-    <div class="header-case" id="hdrCase" style="font-family:monospace;font-weight:700;color:var(--gold)">—</div>
+<header class="top">
+  <div class="left">
+    <svg class="seal" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="100" r="96" fill="#0b2540"/><circle cx="100" cy="100" r="80" fill="#fff"/><circle cx="100" cy="100" r="66" fill="#f2f4f6"/><polygon points="100,48 112,86 152,86 120,108 132,146 100,124 68,146 80,108 48,86 88,86" fill="#0b2540"/><circle cx="100" cy="100" r="36" fill="#0b2540"/></svg>
+    <div class="title">Harris County Tax Office</div>
   </div>
+  <div style="color:#fff">Repayment</div>
+</header>
 
-  <div class="container">
-    <div class="card">
-      <div class="card-header">Account</div>
-      <div class="fields">
-        <div><div class="field-label">Account</div><div class="field-value mono" id="acct">—</div></div>
-        <div><div class="field-label">Balance Due</div><div class="field-value" id="bal">—</div></div>
-        <div><div class="field-label">Eligibility</div><div class="field-value" id="elig">—</div></div>
-      </div>
+<main class="container">
+  <section class="card">
+    <div style="font-weight:700;margin-bottom:8px">Customer Information</div>
+    <div style="display:flex;justify-content:space-between;gap:12px">
+      <div><label>Full name</label><div id="name" class="val">—</div></div>
+      <div><label>Phone</label><div id="phone" class="val">—</div></div>
     </div>
+    <div style="margin-top:12px"><label>Address</label><div id="address" class="val">—</div></div>
+  </section>
 
-    <div class="card">
-      <div class="card-header">Repayment Plan</div>
-      <div style="margin-bottom:8px">
-        <div style="display:flex;gap:12px;">
-          <div><div class="field-label">Down Payment</div><div class="field-value" id="down">$—</div></div>
-          <div><div class="field-label">Months</div><div class="field-value" id="months">—</div></div>
-          <div><div class="field-label">Monthly</div><div class="field-value" id="monthly">$—</div></div>
+  <section class="card">
+    <div style="font-weight:700;margin-bottom:8px">Property Tax Account</div>
+    <div class="grid-3">
+      <div><label>Account number</label><div id="account" class="val mono">—</div></div>
+      <div><label>Delinquent balance</label><div id="balance" class="val">—</div></div>
+      <div><label>Eligibility</label><div id="elig" class="val">—</div></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div style="font-weight:700;margin-bottom:8px">Repayment Plan Details</div>
+    <div class="grid-3">
+      <div><label>Down payment</label><div id="down" class="val">—</div></div>
+      <div><label>Months</label><div id="months" class="val">—</div></div>
+      <div><label>Monthly payment</label><div id="monthly" class="val">—</div></div>
+      <div><label>Start date</label><div id="start" class="val">—</div></div>
+      <div><label>Confirmation #</label><div id="conf" class="val">—</div></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div style="font-weight:700;margin-bottom:8px">SMS Form Tracking</div>
+    <div class="grid-3">
+      <div><label>SMS sent</label><div id="smsSent" class="val">—</div></div>
+      <div><label>SMS received</label><div id="smsRecv" class="val">—</div></div>
+      <div><label>Signature status</label><div id="sigStatus" class="val">—</div></div>
+      <div><label>Signed name</label><div id="signedName" class="val">—</div></div>
+      <div><label>Signed timestamp</label><div id="signedTs" class="val">—</div></div>
+      <div><label>Official URL</label><div class="val"><a id="officialUrl" href="https://www.hctax.net" target="_blank" rel="noopener">https://www.hctax.net</a></div></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div style="font-weight:700;margin-bottom:8px">Agent Actions</div>
+    <div style="margin-bottom:12px">
+      <div style="margin-bottom:8px;font-weight:600">Update Repayment Plan</div>
+      <div class="grid-3" style="margin-bottom:8px">
+        <div><label>Eligibility Status</label><select id="eligInput"><option>Eligible</option><option>Ineligible</option><option>Review Required</option></select></div>
+        <div><label>Down Payment ($)</label><input id="downInput" type="text" value=""></div>
+        <div><label>Months</label><input id="monthsInput" type="text" value=""></div>
+      </div>
+      <div class="grid-3" style="margin-bottom:12px">
+        <div><label>Monthly Payment ($)</label><input id="monthlyInput" type="text" value=""></div>
+        <div><label>Start Date</label><input id="startInput" type="text" value=""></div>
+        <div><label>Confirmation #</label><input id="confInput" type="text" value=""></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:center">
+        <button id="saveBtn" class="btn btn-save">Save Repayment Changes</button>
+        <div style="flex:1"></div>
+      </div>
+      <div style="margin-top:16px">
+        <div style="font-weight:600;margin-bottom:8px">SMS Actions</div>
+        <div style="display:flex;gap:12px">
+          <button id="resendBtn" class="btn btn-resend">Resend SMS Form</button>
+          <button id="refreshBtn" class="btn btn-refresh">Refresh Data</button>
         </div>
       </div>
-      <div>
-        <div class="field-label">Repayment Start</div><div class="field-value" id="start">—</div>
-        <div class="field-label" style="margin-top:8px">Confirmation #</div><div class="field-value mono" id="conf">—</div>
-      </div>
-
-      <div class="actions">
-        <button class="btn primary" id="sendSms">Send Repayment Link (mock)</button>
-        <button class="btn" id="openLink">Open Link</button>
-        <button class="btn" id="copyLink">Copy Link</button>
-        <div id="status" class="muted">Status: ready</div>
-      </div>
     </div>
+  </section>
+</main>
 
-    <div class="card">
-      <div class="card-header">Agent Script</div>
-      <div class="card-body">
-        <div style="background:#f7fafc;padding:10px;border-radius:6px">
-          “I see an outstanding balance of <strong id="scriptBalance">$—</strong>. The AVA created a repayment plan with confirmation <strong id="scriptConf">—</strong>. I’ll confirm payment arrangements and complete the setup.”
-        </div>
-      </div>
-    </div>
+<footer style="text-align:center;padding:20px;color:#667085">Harris County Tax Office — Internal Agent Tool</footer>
 
-    <div class="footer">Harris County Demo — Repayment</div>
-  </div>
-
-  <script>
-    function getParam(n){return new URLSearchParams(location.search).get(n)||''}
-    function set(id,v){const e=document.getElementById(id); if(e) e.textContent = v || '—'}
-    const APP_BASE = 'https://hctaxregistration.abacusai.app';
-    function resolveLink(d){ if(!d) return APP_BASE; if((d.useCase||'').toUpperCase()==='NR') return `${APP_BASE}/?accountNumber=${encodeURIComponent(d.accountNumber||d.key||'')}&welcomePackageCode=${encodeURIComponent(d.welcomePackageCode||'')}`; return `${APP_BASE}/?accountNumber=${encodeURIComponent(d.accountNumber||d.key||'')}&downPayment=${encodeURIComponent(d.downPaymentAmount||'')}&months=${encodeURIComponent(d.repaymentMonths||'')}&monthlyPayment=${encodeURIComponent(d.monthlyPayment||'')}&startDate=${encodeURIComponent(d.repaymentStart||'')}&confirmationNumber=${encodeURIComponent(d.confirmationNumber||'')}` }
-    function apply(d){
-      if(!d) return;
-      set('hdrCase', d.key ? '#'+d.key : '—');
-      set('acct', d.accountNumber||d.key);
-      set('bal', d.delinquentBalance ? ('$'+d.delinquentBalance) : '$0.00');
-      set('elig', d.repaymentEligibilityStatus || '—');
-      set('down', d.downPaymentAmount ? ('$'+d.downPaymentAmount) : '$—');
-      set('months', d.repaymentMonths || '—');
-      set('monthly', d.monthlyPayment ? ('$'+d.monthlyPayment) : '$—');
-      set('start', d.repaymentStart || '—');
-      set('conf', d.confirmationNumber || '—');
-      set('scriptBalance', d.delinquentBalance ? ('$'+d.delinquentBalance) : '$0.00');
-      set('scriptConf', d.confirmationNumber || '—');
-      window.__hc_link = resolveLink(d);
-      window.__hc_data = d;
-    }
-
-    // postMessage
-    window.addEventListener('message', (evt)=>{ try{ const m=evt.data; if(m && m.type==='hc_data'){ apply(m.payload) } }catch(e){} }, false);
-
-    // quick base64 payload or query key demo
-    document.addEventListener('DOMContentLoaded', ()=>{
-      const payload = (new URLSearchParams(location.search).get('payload')||''); if(payload){ try{ const d=JSON.parse(atob(payload)); apply(d); return;}catch(e){} }
-      const key = getParam('accountNumber')||getParam('key'); if(key==='PT-100001'){ apply({ key:'PT-100001', accountNumber:'PT-100001', useCase:'PT', delinquentBalance:'2485.17', repaymentEligibilityStatus:'Eligible', downPaymentAmount:'250', repaymentMonths:'12', monthlyPayment:'186.26', repaymentStart:'2026-06-01', confirmationNumber:'HC-TX-9921' }); } else { document.getElementById('status').textContent='Waiting for AVA data (postMessage)'; }
-    });
-
-    document.addEventListener('click',(e)=>{
-      const id = e.target && e.target.id; if(!id) return;
-      if(id==='sendSms'){ const now = new Date().toISOString(); document.getElementById('status').textContent = 'SMS (mock) sent '+now; }
-      if(id==='openLink'){ window.open(window.__hc_link || APP_BASE, '_blank'); }
-      if(id==='copyLink'){ navigator.clipboard && navigator.clipboard.writeText(window.__hc_link || APP_BASE).then(()=>document.getElementById('status').textContent='Link copied'); }
-    });
-  </script>
+<script>
+function setText(id,v){const e=document.getElementById(id); if(!e) return; e.textContent = (v===undefined||v===null||v==='') ? '—' : v}
+function apply(d){
+  setText('account', d.accountNumber || d.key || '');
+  setText('name', d.name || '');
+  setText('phone', d.phone || '');
+  setText('address', d.address || '');
+  setText('balance', d.delinquentBalance ? ('$' + Number(String(d.delinquentBalance).replace(/,/g,'')).toFixed(2)) : '');
+  setText('elig', d.repaymentEligibilityStatus || '');
+  setText('down', d.downPaymentAmount ? ('$' + Number(d.downPaymentAmount).toFixed(2)) : '');
+  setText('months', d.repaymentMonths || '');
+  setText('monthly', d.repaymentMonthlyPayment ? ('$' + Number(d.repaymentMonthlyPayment).toFixed(2)) : '');
+  setText('start', d.repaymentStart || '');
+  setText('conf', d.confirmationNumber || '');
+  setText('smsSent', d.smsSentTimestamp || '');
+  setText('smsRecv', d.smsReceivedTimestamp || '');
+  setText('sigStatus', d.signatureStatus || '');
+  setText('signedName', d.signedName || '');
+  setText('signedTs', d.signedTimestamp || '');
+  if(d.linkTemplate) document.getElementById('resendBtn').dataset.template = d.linkTemplate;
+  // prefill form
+  document.getElementById('eligInput').value = d.repaymentEligibilityStatus || 'Eligible';
+  document.getElementById('downInput').value = d.downPaymentAmount || '';
+  document.getElementById('monthsInput').value = d.repaymentMonths || '';
+  document.getElementById('monthlyInput').value = d.repaymentMonthlyPayment || '';
+  document.getElementById('startInput').value = d.repaymentStart || '';
+  document.getElementById('confInput').value = d.confirmationNumber || '';
+}
+window.addEventListener('message', function(ev){ try{ const m=ev.data; if(m && m.type === 'hc_data') apply(m.payload || {}); }catch(e){} }, false);
+(function(){ const p=new URLSearchParams(window.location.search); const k=p.get('accountNumber')||p.get('key'); if(!k) return; apply({accountNumber:k, name:'Maria Lopez', phone:'+1 (317) 703-0977', address:'1450 Canal St, Houston, TX 77002', delinquentBalance:'2485.17', repaymentEligibilityStatus:'Eligible', downPaymentAmount:'250.00', repaymentMonthlyPayment:'186.26', repaymentMonths:'12', repaymentStart:'2026-06-01', confirmationNumber:'HC-TX-9921', signatureStatus:'Signed', signedName:'Maria Lopez', signedTimestamp:'2026-05-01T14:06:00Z', smsSentTimestamp:'2026-05-01T14:05:00Z', smsReceivedTimestamp:'2026-05-01T14:05:00Z', linkTemplate:'https://genesys-signature-fo-q87qwl.abacusai.app?account={accountNumber}&downPayment={downPayment}&months={months}&monthlyPayment={monthlyPayment}&startDate={startDate}&confirmationNumber={confirmationNumber}' }); })();
+document.getElementById('resendBtn').addEventListener('click', function(){
+  const t = this.dataset.template || ''; if(!t) return alert('No linkTemplate configured');
+  const sub = s => encodeURIComponent(s || '');
+  const url = t.replace('{accountNumber}', sub(document.getElementById('account').textContent))
+               .replace('{downPayment}', sub(document.getElementById('downInput').value))
+               .replace('{months}', sub(document.getElementById('monthsInput').value))
+               .replace('{monthlyPayment}', sub(document.getElementById('monthlyInput').value))
+               .replace('{startDate}', sub(document.getElementById('startInput').value))
+               .replace('{confirmationNumber}', sub(document.getElementById('confInput').value));
+  window.open(url, '_blank');
+});
+document.getElementById('refreshBtn').addEventListener('click', function(){ location.reload(); });
+document.getElementById('saveBtn').addEventListener('click', function(){
+  const payload = {
+    key: document.getElementById('account').textContent,
+    repaymentEligibilityStatus: document.getElementById('eligInput').value,
+    downPaymentAmount: document.getElementById('downInput').value,
+    repaymentMonths: document.getElementById('monthsInput').value,
+    repaymentMonthlyPayment: document.getElementById('monthlyInput').value,
+    repaymentStart: document.getElementById('startInput').value,
+    confirmationNumber: document.getElementById('confInput').value
+  };
+  parent.postMessage({ type:'hc_save', payload: payload }, '*');
+  alert('Repayment changes queued (hc_save posted).');
+});
+</script>
 </body>
 </html>
