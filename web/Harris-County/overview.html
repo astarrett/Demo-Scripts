@@ -5,77 +5,159 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Harris County — Overview</title>
 <style>
-:root{--navy:#1a2b3c;--bg:#f5f7f9;--card:#fff;--muted:#667085;--accent:#2b4970;--green:#027a48}
-body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;margin:0;background:var(--bg);color:#101828}
-.top{background:var(--navy);color:#fff;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
-.top .left{display:flex;align-items:center;gap:12px}
-.seal{width:44px;height:44px}
-.title{font-weight:700;font-size:18px}
-.container{max-width:980px;margin:20px auto;padding:0 16px}
-.card{background:var(--card);border-radius:8px;padding:16px;margin-bottom:16px;border:1px solid #e6e9ef}
-.row{display:flex;gap:16px;align-items:center}
-.actions{display:flex;gap:8px}
-.link{color:var(--accent);text-decoration:none;font-weight:700}
-.small{color:var(--muted);font-size:13px}
-@media(max-width:760px){.row{flex-direction:column;align-items:flex-start}}
+:root{--navy:#172635;--panel:#fff;--muted:#6b7280;--accent:#0f4f7a;--bg:#f3f6f8;--success:#1f8a59}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:#0f1720}
+.header{background:var(--navy);color:#fff;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:0;z-index:50}
+.header .brand{display:flex;align-items:center;gap:12px}
+.logo{width:48px;height:48px}
+.title{font-size:18px;font-weight:700}
+.container{max-width:1100px;margin:20px auto;padding:0 18px}
+.grid{display:grid;grid-template-columns:1fr 380px;gap:20px}
+@media(max-width:980px){.grid{grid-template-columns:1fr}}
+.card{background:var(--panel);border-radius:10px;padding:18px;border:1px solid #e6eef4;box-shadow:0 2px 6px rgba(11,21,32,0.03)}
+.row{display:flex;align-items:center;gap:12px}
+.kv{margin-bottom:10px}
+.k{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.03em}
+.v{font-weight:700;font-size:15px}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn{background:#fff;border:1px solid #dbe8f0;padding:9px 12px;border-radius:8px;cursor:pointer;font-weight:700;color:var(--navy)}
+.btn.primary{background:var(--accent);color:#fff;border:none}
+.script{background:#fbfdff;border-radius:8px;padding:14px;border:1px solid #e6eef4}
+.pre{white-space:pre-wrap;font-size:13px;color:#0f1720; background:#f8fafc;padding:12px;border-radius:8px;border:1px solid #eef5f8}
+.footer{color:var(--muted);text-align:center;margin:18px 0}
 </style>
 </head>
 <body>
-<header class="top">
-  <div class="left">
-    <!-- inline seal -->
-    <svg class="seal" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="100" cy="100" r="96" fill="#0b2540"/><circle cx="100" cy="100" r="80" fill="#fff"/><circle cx="100" cy="100" r="66" fill="#f2f4f6"/><polygon points="100,48 112,86 152,86 120,108 132,146 100,124 68,146 80,108 48,86 88,86" fill="#0b2540"/><circle cx="100" cy="100" r="36" fill="#0b2540"/></svg>
-    <div class="title">Harris County Tax Office</div>
-  </div>
-  <div class="small">Overview</div>
-</header>
-
-<main class="container">
-  <section class="card" id="summaryCard">
-    <div class="row" style="justify-content:space-between">
+  <header class="header" role="banner">
+    <div class="brand">
+      <!-- inline seal SVG -->
+      <svg class="logo" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="100" cy="100" r="96" fill="#0b2540"/>
+        <circle cx="100" cy="100" r="80" fill="#ffffff"/>
+        <circle cx="100" cy="100" r="66" fill="#f2f4f6"/>
+        <polygon points="100,48 112,86 152,86 120,108 132,146 100,124 68,146 80,108 48,86 88,86" fill="#0b2540"/>
+        <circle cx="100" cy="100" r="36" fill="#0b2540"/>
+      </svg>
       <div>
-        <div style="font-weight:700" id="ovName">—</div>
-        <div class="small" id="ovAddress">—</div>
-      </div>
-      <div style="text-align:right">
-        <div class="small">Account</div>
-        <div style="font-weight:700" id="ovAccount">—</div>
+        <div class="title">Harris County Tax Office</div>
+        <div style="font-size:12px;color:#cfe6f7">Agent Overview</div>
       </div>
     </div>
-  </section>
-
-  <section class="card">
-    <div style="display:flex;gap:16px;flex-wrap:wrap">
-      <a id="toRepay" class="link" href="#">Open Repayment</a>
-      <a id="toReg" class="link" href="#">Open New Resident Registration</a>
-      <div class="small">Use the buttons to open the appropriate agent page. In production, Script Editor should iframe these pages and postMessage the record JSON.</div>
+    <div style="display:flex;align-items:center;gap:14px">
+      <div id="headerAccount" style="font-weight:700;background:rgba(255,255,255,0.06);padding:8px 12px;border-radius:8px">—</div>
+      <button id="refreshBtn" class="btn">Refresh</button>
     </div>
-  </section>
+  </header>
 
-  <section class="card">
-    <div style="font-weight:700;margin-bottom:8px">Record snapshot</div>
-    <pre id="raw" style="white-space:pre-wrap;font-size:13px;color:#273142; background:#fbfdff;padding:10px;border-radius:6px;border:1px solid #edf2f7">No data yet</pre>
-  </section>
-</main>
+  <main class="container" role="main">
+    <div class="grid">
+      <div>
+        <section class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <div style="font-weight:800;font-size:16px">Customer Snapshot</div>
+          </div>
+          <div class="kv"><div class="k">Full name</div><div id="name" class="v">—</div></div>
+          <div class="kv"><div class="k">Phone</div><div id="phone" class="v">—</div></div>
+          <div class="kv"><div class="k">Address</div><div id="address" class="v">—</div></div>
+          <hr style="margin:12px 0;border:none;border-top:1px solid #eef5f8" />
+          <div class="kv"><div class="k">Delinquent balance</div><div id="balance" class="v">—</div></div>
+          <div class="kv"><div class="k">Repayment eligibility</div><div id="elig" class="v">—</div></div>
+          <div style="margin-top:14px" class="actions">
+            <a id="openRepay" class="btn primary" href="#">Open Repayment</a>
+            <a id="openReg" class="btn" href="#">Open Registration</a>
+            <button id="sendSample" class="btn">Preview Sample</button>
+          </div>
+        </section>
+
+        <section class="card" style="margin-top:16px">
+          <div style="font-weight:800;margin-bottom:8px">Agent Script</div>
+          <div class="script" id="scriptPanel">
+            <div style="font-weight:700;margin-bottom:6px" id="scriptGreeting">—</div>
+            <div style="font-size:14px;color:var(--muted)" id="scriptBody">Load record to see script lines.</div>
+          </div>
+        </section>
+      </div>
+
+      <aside>
+        <section class="card">
+          <div style="font-weight:700;margin-bottom:10px">Record JSON</div>
+          <pre id="raw" class="pre">No data</pre>
+        </section>
+
+        <section class="card" style="margin-top:12px">
+          <div style="font-weight:700;margin-bottom:8px">Quick actions</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <button id="resendBtn" class="btn">Resend SMS Form</button>
+            <button id="copyBtn" class="btn">Copy Account</button>
+          </div>
+        </section>
+      </aside>
+    </div>
+
+    <div class="footer">Harris County Tax Office — Internal Agent Tool</div>
+  </main>
 
 <script>
-function setText(id,v){document.getElementById(id).textContent = v === undefined || v === null || v === '' ? '—' : v}
+/* Helpers and postMessage wiring */
+function setText(id,v){const e=document.getElementById(id); if(!e) return; e.textContent = (v===undefined||v===null||v==='') ? '—' : v}
+function fmtMoney(x){ if(x===undefined||x==='') return '—'; const n = Number(String(x).replace(/,/g,'')) || 0; return '$' + n.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}) }
+
 function apply(d){
-  setText('ovName', d.name || d.fullName || '');
-  setText('ovAddress', d.address || '');
-  setText('ovAccount', d.accountNumber || d.key || '');
-  document.getElementById('raw').textContent = JSON.stringify(d, null, 2);
-  // build links
+  if(!d) return;
+  setText('headerAccount', d.accountNumber || d.key || '');
+  setText('name', d.name || '');
+  setText('phone', d.phone || '');
+  setText('address', d.address || '');
+  setText('balance', fmtMoney(d.delinquentBalance));
+  setText('elig', d.repaymentEligibilityStatus || '');
+  document.getElementById('raw').textContent = JSON.stringify(d,null,2);
+  // script lines
+  document.getElementById('scriptGreeting').textContent = `Hi ${ (d.name||'') .split(' ')[0] || 'there' }, I have your account here.`;
+  document.getElementById('scriptBody').textContent = `Delinquent balance ${ fmtMoney(d.delinquentBalance) }. Repayment eligibility: ${ d.repaymentEligibilityStatus || '—' }. Confirmation #: ${ d.confirmationNumber || '—' }`;
+  // link templates
+  document.getElementById('resendBtn').dataset.template = d.linkTemplate || '';
+  // open links
   const acct = encodeURIComponent(d.accountNumber || d.key || '');
-  document.getElementById('toRepay').href = './repayment.html?accountNumber=' + acct;
-  document.getElementById('toReg').href = './registration.html?accountNumber=' + acct;
+  document.getElementById('openRepay').href = './repayment.html?accountNumber=' + acct;
+  document.getElementById('openReg').href = './registration.html?accountNumber=' + acct;
 }
-// listen for Script Editor
+
 window.addEventListener('message', function(ev){
-  try{ const m = ev.data; if(m && m.type === 'hc_data') apply(m.payload || {}); }catch(e){}
+  try{
+    const m = ev.data;
+    if(!m) return;
+    if(m.type === 'hc_data') apply(m.payload || {});
+  }catch(e){console.error(e)}
 }, false);
-// preview from query param
-(function(){ const p = new URLSearchParams(window.location.search); const k = p.get('accountNumber') || p.get('key'); if(!k) return; apply({accountNumber:k, name:'Maria Lopez', address:'1450 Canal St, Houston, TX 77002', delinquentBalance:'2485.17', repaymentEligibilityStatus:'Eligible', repaymentMonthlyPayment:'186.26', repaymentMonths:'12', repaymentStart:'2026-06-01', confirmationNumber:'HC-TX-9921', signatureStatus:'Signed', signedName:'Maria Lopez', smsSentTimestamp:'2026-05-01T14:05:00Z', linkTemplate:'https://genesys-signature-fo-q87qwl.abacusai.app?account={accountNumber}&downPayment={downPayment}&months={months}&monthlyPayment={monthlyPayment}&startDate={startDate}&confirmationNumber={confirmationNumber}' }) })();
+
+// preview via query param
+(function(){
+  const p = new URLSearchParams(window.location.search);
+  const k = p.get('accountNumber') || p.get('key');
+  if(!k) return;
+  apply({
+    key:k, accountNumber:k, name:'Maria Lopez', phone:'+1 (317) 703-0977',
+    address:'1450 Canal St, Houston, TX 77002', delinquentBalance:'2485.17',
+    repaymentEligibilityStatus:'Eligible', confirmationNumber:'HC-TX-9921',
+    linkTemplate:'https://genesys-signature-fo-q87qwl.abacusai.app?account={accountNumber}&downPayment={downPayment}&months={months}&monthlyPayment={monthlyPayment}&startDate={startDate}&confirmationNumber={confirmationNumber}'
+  });
+})();
+
+document.getElementById('refreshBtn').addEventListener('click', ()=>location.reload());
+document.getElementById('sendSample').addEventListener('click', ()=>location.href = location.pathname + '?accountNumber=PT-100001');
+document.getElementById('resendBtn').addEventListener('click', function(){
+  const t = this.dataset.template || '';
+  if(!t) return alert('No linkTemplate set on record.');
+  const acc = encodeURIComponent(document.getElementById('headerAccount').textContent || '');
+  const url = t.replace('{accountNumber}', acc);
+  window.open(url,'_blank');
+});
+document.getElementById('copyBtn').addEventListener('click', function(){
+  const text = document.getElementById('headerAccount').textContent || '';
+  navigator.clipboard?.writeText(text);
+  alert('Account copied: ' + text);
+});
 </script>
 </body>
 </html>
