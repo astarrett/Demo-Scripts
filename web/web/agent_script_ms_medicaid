@@ -1,0 +1,155 @@
+{
+  "meta": {
+    "id": "ms-medicaid-renewal-001",
+    "name": "MS Medicaid — Renewal / Verification — ITS Shared Service",
+    "version": "1.0",
+    "createdBy": "andy-demo",
+    "description": "Agent script for Medicaid renewal, document uploads, escalations, and supervisor handoffs. Designed for a centralized ITS multi-tenant shared service."
+  },
+  "branding": {
+    "primary": "#0B3C5D",
+    "accent": "#F2C649",
+    "background": "#FFFFFF",
+    "neutral": "#F3F4F6",
+    "font": "Segoe UI, system-ui, -apple-system"
+  },
+  "triggers": [
+    {
+      "type": "interaction_arrival",
+      "match": {
+        "demoScenario": ["MedicaidRenewal", "UploadEscalation", "SuspensionReview"],
+        "topic": ["Renewal", "Document Upload", "Benefits Suspension"]
+      },
+      "priority": 100
+    }
+  ],
+  "prepopulatedFields": [
+    { "key": "citizenKey", "label": "Key", "source": "CRM.case.key", "editable": false },
+    { "key": "name", "label": "Full Name", "source": "CRM.case.name", "editable": false },
+    { "key": "dob", "label": "DOB", "source": "CRM.case.dob", "editable": false },
+    { "key": "phone", "label": "Phone", "source": "CRM.case.phone", "editable": false },
+    { "key": "email", "label": "Email", "source": "CRM.case.email", "editable": false },
+    { "key": "medicaidStatus", "label": "Medicaid Status", "source": "CRM.case.medicaidStatus", "editable": false },
+    { "key": "renewalDueDate", "label": "Renewal Due Date", "source": "CRM.case.renewalDueDate", "editable": false },
+    { "key": "caseWorkerName", "label": "Case Worker", "source": "CRM.case.caseWorkerName", "editable": false },
+    { "key": "missingDocuments", "label": "Missing Documents", "source": "CRM.case.missingDocuments", "editable": true },
+    { "key": "benefitsInterruptionRisk", "label": "Benefits Risk Level", "source": "CRM.case.benefitsInterruptionRisk", "editable": false },
+    { "key": "repeatContactCount", "label": "Repeat Contact Count", "source": "CRM.case.repeatContactCount", "editable": false },
+    { "key": "sentimentFlag", "label": "Sentiment", "source": "AI.sentiment", "editable": false },
+    { "key": "aiSummary", "label": "AI Summary", "source": "AI.summary", "editable": false },
+    { "key": "recommendedNextAction", "label": "Recommended Next Action", "source": "AI.recommendation", "editable": true }
+  ],
+  "uiSections": [
+    {
+      "id": "citizen_overview",
+      "title": "Citizen Overview",
+      "type": "card",
+      "fields": ["citizenKey", "name", "dob", "phone", "email", "medicaidStatus", "renewalDueDate", "caseWorkerName", "benefitsInterruptionRisk"]
+    },
+    {
+      "id": "interaction_history",
+      "title": "Interaction History",
+      "type": "card",
+      "fields": ["lastInteractionDate", "lastInteractionChannel", "lastInteractionTopic", "priorEscalationFlag", "repeatContactCount"]
+    },
+    {
+      "id": "documents_and_actions",
+      "title": "Missing Documents & Recommended Actions",
+      "type": "card",
+      "fields": ["missingDocuments", "recommendedNextAction", "aiSummary"]
+    },
+    {
+      "id": "action_buttons",
+      "title": "Quick Actions",
+      "type": "actions",
+      "layout": "inline",
+      "buttons": [
+        { "id": "send_upload_link", "label": "Send Secure Upload Link", "action": "send_upload_link", "logEvent": "SentUploadLink" },
+        { "id": "create_case_task", "label": "Create Case Task", "action": "create_task", "payloadTemplate": { "assignee":"{{caseWorkerName}}","dueDays":3 }, "logEvent": "CreatedCaseTask" },
+        { "id": "assign_case_worker", "label": "Assign Case Worker", "action": "open_assign_modal", "logEvent": "AssignedCaseWorker" },
+        { "id": "escalate_supervisor", "label": "Escalate to Supervisor", "action": "escalate", "logEvent": "EscalatedToSupervisor", "confirm": true },
+        { "id": "play_last_recording", "label": "Play Last Recording", "action": "play_recording", "logEvent": "PlayedRecording" },
+        { "id": "export_interaction", "label": "Export Transcript", "action": "export_transcript", "logEvent": "ExportedInteraction" }
+      ]
+    },
+    {
+      "id": "disposition",
+      "title": "Wrap Up / Disposition",
+      "type": "card",
+      "fields": ["dispositionCode", "notes", "actionsTaken", "nextFollowUpDate"],
+      "requiredFieldsBeforeClose": ["dispositionCode"]
+    }
+  ],
+  "dispositions": [
+    { "code": "SuccessfulResolution", "label": "Successful Resolution" },
+    { "code": "EscalatedToAgent", "label": "Escalated to Agent" },
+    { "code": "SupervisorEscalation", "label": "Supervisor Escalation" },
+    { "code": "UploadEscalation", "label": "Upload Escalation" },
+    { "code": "SuspensionReview", "label": "Suspension Review" },
+    { "code": "GeneralInquiry", "label": "General Inquiry" }
+  ],
+  "escalationRules": [
+    {
+      "id": "escalate_suspended",
+      "description": "Auto-escalate if benefits suspended or critical risk",
+      "condition": {
+        "any": [
+          { "field": "medicaidStatus", "op": "equals", "value": "Suspended" },
+          { "field": "benefitsInterruptionRisk", "op": "equals", "value": "Critical" }
+        ]
+      },
+      "action": { "type": "escalate", "priority": "high", "assignToRole": "Supervisor" },
+      "uiHint": "Show immediate escalation modal with SLA and prefilled summary"
+    },
+    {
+      "id": "escalate_repeat_failures",
+      "description": "Escalate when upload has failed multiple times or repeatContactCount >=3",
+      "condition": {
+        "any": [
+          { "field": "repeatContactCount", "op": "gte", "value": 3 },
+          { "field": "missingDocuments", "op": "contains", "value": "Upload failed" }
+        ]
+      },
+      "action": { "type": "suggest_escalation", "assignToRole": "Supervisor" },
+      "uiHint": "Show 'Escalate to Supervisor' suggested action and prefill handoff note"
+    }
+  ],
+  "copilotPrompts": [
+    {
+      "id": "copilot_summary",
+      "label": "Summarize case",
+      "prompt": "Summarize the citizen's renewal status, missing documents, and last three interactions in two sentences."
+    },
+    {
+      "id": "copilot_reassure",
+      "label": "Reassurance message",
+      "prompt": "Draft a calm, reassuring message for a citizen who is concerned about losing benefits while documents are pending. Keep under 2 sentences."
+    },
+    {
+      "id": "copilot_handoff",
+      "label": "Supervisor handoff note",
+      "prompt": "Create a supervisor handoff note that includes last 3 interactions, missing documents, repeatContactCount, and recommended next steps (max 5 bullet points)."
+    }
+  ],
+  "audit": {
+    "logEvents": ["SentUploadLink","CreatedCaseTask","AssignedCaseWorker","EscalatedToSupervisor","PlayedRecording","ExportedInteraction","DispositionSet"],
+    "logFields": ["actorId","actorRole","timestamp","event","payloadSummary"],
+    "retentionDays": 365
+  },
+  "reportingTags": ["MedicaidRenewal","DocumentUpload","Escalation","SupervisorReview"],
+  "sampleData": {
+    "citizenKey": "MSC100245",
+    "name": "Angela Carter",
+    "dob": "1988-04-12",
+    "phone": "6015550188",
+    "email": "angela.carter@emaildemo.ms",
+    "medicaidStatus": "Pending Renewal",
+    "renewalDueDate": "2026-06-15",
+    "caseWorkerName": "Lisa Jordan",
+    "missingDocuments": "Child Residency Verification",
+    "benefitsInterruptionRisk": "Medium",
+    "repeatContactCount": 2,
+    "aiSummary": "Citizen uploaded income documents; child residency verification still required.",
+    "recommendedNextAction": "Send secure upload link and assign to caseworker for verification"
+  }
+}
