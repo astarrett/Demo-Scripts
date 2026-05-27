@@ -1,123 +1,177 @@
-{
-  "meta": {
-    "id": "ms-its-medicaid-2026",
-    "name": "MS ITS Centralized Medicaid Script",
-    "version": "2.0",
-    "description": "Statewide Shared Service Script - Focused on Governance, Multi-tenancy, and Operational Supportability.",
-    "agency": "Mississippi ITS / Medicaid",
-    "branding": {
-      "primary_navy": "#0B3C5D",
-      "accent_gold": "#F2C649",
-      "ui_background": "#F3F4F6"
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MS ITS — Agent Preview (Static Demo)</title>
+  <style>
+    :root { --navy:#0B3C5D; --gold:#F2C649; --bg:#F3F4F6; --muted:#64748b; }
+    body { font-family: "Segoe UI", Roboto, Arial; margin:0; background:var(--bg); color:#0f172a; }
+    .header { background:var(--navy); color:#fff; padding:14px 20px; display:flex; align-items:center; justify-content:space-between; border-bottom:4px solid var(--gold); }
+    .header h1 { margin:0; font-size:16px; }
+    .container { max-width:1100px; margin:20px auto; padding:0 16px; display:grid; grid-template-columns: 2fr 360px; gap:16px; }
+    .card { background:#fff; border-radius:10px; padding:14px; box-shadow:0 6px 18px rgba(8,15,25,0.04); }
+    .label { font-size:12px; color:var(--muted); font-weight:700; text-transform:uppercase; margin-bottom:6px; }
+    .value { font-size:16px; font-weight:700; color:var(--navy); margin-bottom:10px; }
+    .status-pill { display:inline-block; padding:6px 10px; border-radius:8px; font-weight:800; }
+    .status-missing { background:#fffbeb; color:#92400e; border:1px solid #fde68a; }
+    .btn { background:var(--navy); color:#fff; padding:10px 14px; border-radius:8px; border:none; cursor:pointer; font-weight:700; }
+    .btn.secondary { background:#eef2ff; color:var(--navy); font-weight:700; }
+    .script-box { background:#f9fafb; border-left:4px solid var(--gold); padding:12px; border-radius:6px; font-style:italic; }
+    .sms-panel { border:1px dashed #cbd5e1; padding:10px; border-radius:8px; margin-top:10px; background:#fff; }
+    small.note { color:var(--muted); display:block; margin-top:8px; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Mississippi ITS — Agent Workspace (Demo)</h1>
+    <div style="font-weight:800; background:#fff; color:var(--navy); padding:6px 12px; border-radius:18px;">Mississippi Medicaid</div>
+  </div>
+
+  <div class="container">
+    <!-- Left: Agent View -->
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <div class="label">Citizen</div>
+          <div class="value" id="name">Angela Carter</div>
+          <div><span class="label">Case ID</span> <span style="font-family:monospace;color:#374151">MSC100245</span></div>
+        </div>
+        <div style="text-align:right;">
+          <div class="label">Medicaid Status</div>
+          <div id="medStatus" class="status-pill status-missing">Missing Documents</div>
+        </div>
+      </div>
+
+      <hr style="margin:14px 0;border:none;border-top:1px solid #eef2f6" />
+
+      <div>
+        <div class="label">Missing items</div>
+        <div class="value">Child Residency Verification</div>
+
+        <div style="margin-top:14px" class="label">Suggested Opening</div>
+        <div class="script-box" id="agentScript">Hello Angela — I see your renewal is pending. We're missing child residency verification. I can send a secure upload link to your phone right now, and you can snap a photo of the document.</div>
+
+        <div style="margin-top:16px;">
+          <button class="btn" id="sendLinkBtn">Send Secure Upload Link (Text)</button>
+          <button class="btn secondary" id="escalateBtn" style="margin-left:8px">Escalate to Supervisor</button>
+        </div>
+
+        <div id="smsPanel" class="sms-panel" style="display:none;">
+          <div style="font-weight:800; margin-bottom:6px;">Simulated SMS sent to 555-555-1234</div>
+          <div id="smsText" style="margin-bottom:8px;white-space:pre-wrap;"></div>
+          <div style="display:flex;gap:8px">
+            <button class="btn secondary" id="openUploadBtn">Simulate recipient clicking link</button>
+            <button class="btn" id="copyLinkBtn">Copy Link</button>
+          </div>
+          <small class="note">This is a demo-only simulation of a secure upload link. No documents will be transferred.</small>
+        </div>
+
+        <div style="margin-top:18px;">
+          <div class="label">Document status</div>
+          <div id="docStatus">No documents received</div>
+          <small class="note">The demo simulates the recipient opening the link and performing an upload. The agent page will update automatically when the simulated upload completes.</small>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Right: Operational Context -->
+    <div>
+      <div class="card" style="margin-bottom:12px">
+        <div class="label">Operational Context</div>
+        <div><div class="label">Last Interaction Channel</div><div class="value">Chat</div></div>
+        <div><div class="label">Repeat Contact Count</div><div class="value">2</div></div>
+        <div><div class="label">Case Worker</div><div class="value">Lisa Jordan</div></div>
+      </div>
+
+      <div class="card">
+        <div class="label">Audit Events (simulated)</div>
+        <div id="auditLog" style="font-family:monospace; font-size:13px; color:#334155; line-height:1.6;">
+          [—] Interaction started<br/>
+          [—] Caller identified: Angela Carter<br/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // Hard-coded demo sample (Angela)
+  const demo = {
+    citizenKey: 'MSC100245',
+    name: 'Angela Carter',
+    phone: '555-555-1234',
+    missing: 'Child Residency Verification',
+    uploadFlagKey: 'ms_uploaded_MSC100245' // localStorage key used by mock upload app
+  };
+
+  // UI elements
+  const sendLinkBtn = document.getElementById('sendLinkBtn');
+  const smsPanel = document.getElementById('smsPanel');
+  const smsText = document.getElementById('smsText');
+  const openUploadBtn = document.getElementById('openUploadBtn');
+  const copyLinkBtn = document.getElementById('copyLinkBtn');
+  const docStatus = document.getElementById('docStatus');
+  const auditLog = document.getElementById('auditLog');
+
+  // Build a demo link pointing to the mock upload page in same folder
+  const demoLink = location.origin + location.pathname.replace(/[^\/]*$/, '') + 'mock_upload_app.html?citizenKey=' + encodeURIComponent(demo.citizenKey) + '&name=' + encodeURIComponent(demo.name);
+
+  sendLinkBtn.addEventListener('click', () => {
+    // append audit event
+    auditLog.innerHTML += '[+] SERVICE_ACTION: UPLOAD_LINK_SENT -> ' + new Date().toLocaleTimeString() + '<br/>';
+    // show SMS panel
+    smsPanel.style.display = 'block';
+    smsText.innerText = `MS ITS: Hello ${demo.name}. We are missing your ${demo.missing}. Please tap the secure link to upload a photo of the document:\n\n${demoLink}\n\nThis link will expire in 24 hours.`;
+    // update doc status while waiting
+    docStatus.innerText = 'Awaiting upload...';
+    // start polling for simulated upload completion
+    startPollingForUpload();
+  });
+
+  copyLinkBtn.addEventListener('click', () => {
+    navigator.clipboard?.writeText(demoLink).then(() => {
+      copyLinkBtn.innerText = 'Copied';
+      setTimeout(() => copyLinkBtn.innerText = 'Copy Link', 1200);
+    }).catch(()=> { alert('Copy unavailable in this browser'); });
+  });
+
+  openUploadBtn.addEventListener('click', () => {
+    // open mock upload page in new tab (simulated recipient)
+    window.open(demoLink, '_blank');
+  });
+
+  // Poll localStorage for the simulated upload flag (set by mock_upload_app.html)
+  let pollInterval = null;
+  function startPollingForUpload(){
+    if (pollInterval) return;
+    pollInterval = setInterval(() => {
+      try {
+        const flag = localStorage.getItem(demo.uploadFlagKey);
+        if (flag === 'received') {
+          clearInterval(pollInterval);
+          pollInterval = null;
+          docStatus.innerHTML = '<span style="color:green;font-weight:800">Documents received</span>';
+          auditLog.innerHTML += '[+] EVENT: DOCUMENT_RECEIVED -> ' + new Date().toLocaleTimeString() + '<br/>';
+          // clear the flag so repeated recordings work cleanly
+          setTimeout(()=> localStorage.removeItem(demo.uploadFlagKey), 1000);
+        }
+      } catch(e) {
+        console.error('poll err', e);
+      }
+    }, 900);
+  }
+
+  // for recording: allow manual "Check Documents" by clicking doc status
+  docStatus.addEventListener('click', () => {
+    // manual check
+    if (localStorage.getItem(demo.uploadFlagKey) === 'received') {
+      docStatus.innerHTML = '<span style="color:green;font-weight:800">Documents received</span>';
+    } else {
+      alert('No documents yet (simulated). Click "Simulate recipient clicking link" to continue demo.');
     }
-  },
-  "tenant_configuration": {
-    "supported_tenants": [
-      "Central Mississippi",
-      "Gulf Coast",
-      "North Mississippi",
-      "Northeast Mississippi"
-    ],
-    "governance_mode": "Strict RBAC - Tenant Isolated",
-    "audit_level": "Forensic / All Interactions"
-  },
-  "ui_layout": {
-    "header": {
-      "display_fields": ["citizenKey", "tenant_id", "benefitsInterruptionRisk"],
-      "style": "sticky-top",
-      "alert_triggers": {
-        "benefitsInterruptionRisk": "High",
-        "medicaidStatus": "Suspended"
-      }
-    },
-    "panes": [
-      {
-        "id": "citizen_master",
-        "title": "Citizen Master View",
-        "grid_columns": 3,
-        "fields": [
-          "name", "dob", "phone", "email", 
-          "medicaidStatus", "renewalDueDate", 
-          "householdSize", "caseWorkerName", 
-          "medicaidCaseId", "regionalOffice"
-        ]
-      },
-      {
-        "id": "verification_engine",
-        "title": "Document Verification Status",
-        "grid_columns": 2,
-        "fields": [
-          "incomeVerificationStatus", 
-          "residencyVerificationStatus", 
-          "childVerificationStatus", 
-          "missingDocuments"
-        ],
-        "highlight": "missingDocuments"
-      },
-      {
-        "id": "operational_context",
-        "title": "ITS Operational Intelligence",
-        "fields": [
-          "lastInteractionChannel", 
-          "repeatContactCount", 
-          "priorEscalationFlag", 
-          "aiSummary"
-        ]
-      },
-      {
-        "id": "agent_guidance",
-        "title": "Recommended Next Steps (AI-Driven)",
-        "type": "script-box",
-        "content_source": "recommendedNextAction",
-        "actions": [
-          {
-            "label": "Send Secure Upload Link",
-            "trigger": "api.ms_its.notification.send_link",
-            "log_event": "SERVICE_ACTION: UPLOAD_LINK_SENT"
-          },
-          {
-            "label": "Escalate to Supervisor",
-            "trigger": "workflow.escalate",
-            "require_reason": true,
-            "log_event": "GOVERNANCE: AGENT_ESCALATION"
-          }
-        ]
-      }
-    ]
-  },
-  "agent_script_prompts": {
-    "greeting": "Thank you for contacting Mississippi Medicaid Support. This is a secure line. I have your case up for the {{regionalOffice}} region. Am I speaking with {{name}}?",
-    "reassurance_active": "I see your renewal is pending, but your benefits remain ACTIVE during this review period. We just need to clear up your {{missingDocuments}}.",
-    "reassurance_suspended": "I see your benefits are currently suspended. As this is a critical priority, I am initiating an immediate Supervisor Review to expedite reinstatement.",
-    "closing": "Is there anything else I can assist you with regarding your {{regionalOffice}} account today?"
-  },
-  "governance_logic": {
-    "auto_dispositions": [
-      {
-        "condition": "medicaidStatus == 'Suspended'",
-        "suggested_code": "SuspensionReview"
-      },
-      {
-        "condition": "repeatContactCount > 2",
-        "suggested_code": "UploadEscalation"
-      }
-    ],
-    "billing_tags": [
-      "tenant_id",
-      "interaction_duration",
-      "channel_type"
-    ]
-  },
-  "demo_data_mapping": [
-    {
-      "scenario": "Angela Carter",
-      "target_script_flow": "RenewalGuidance",
-      "expected_outcome": "Resolution via Document Link"
-    },
-    {
-      "scenario": "James Turner",
-      "target_script_flow": "SuspensionReview",
-      "expected_outcome": "Supervisor Escalation"
-    }
-  ]
-}
+  });
+
+</script>
+</body>
+</html>
