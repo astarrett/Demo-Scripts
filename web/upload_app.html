@@ -3,94 +3,224 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Simulated Secure Upload — MS ITS (Demo)</title>
+  <title>Secure Document Upload - Mississippi Medicaid</title>
   <style>
-    :root { --navy:#0B3C5D; --gold:#F2C649; --bg:#f8fafc; }
-    body{ font-family: "Segoe UI", Arial; margin:0; background:var(--bg); color:#0f172a; }
-    .wrap{max-width:640px;margin:40px auto;padding:20px;}
-    .card{background:#fff;border-radius:10px;padding:18px;box-shadow:0 6px 18px rgba(8,15,25,0.04);}
-    h1{margin:0;color:var(--navy);font-size:20px}
-    p{color:#475569}
-    .btn{background:var(--navy);color:#fff;padding:10px 14px;border-radius:8px;border:none;cursor:pointer;font-weight:700;margin-right:8px}
-    .muted{color:#64748b;font-size:13px}
-    .upload-box{border:2px dashed #e2e8f0;padding:18px;border-radius:8px;margin-top:14px;text-align:center}
-    .progress{height:12px;background:#e6eef9;border-radius:8px;margin-top:12px;overflow:hidden}
-    .progress-bar{height:100%;width:0%;background:linear-gradient(90deg,#60a5fa,#0ea5a9);transition:width 200ms}
+    :root {
+      --navy: #0B3C5D;
+      --gold: #F2C649;
+      --bg: #f8fafc;
+      --muted: #64748b;
+      --teal: #0ea5a9;
+      --green: #15803d;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      margin: 0;
+      background: var(--bg);
+      color: #0f172a;
+    }
+
+    .wrap {
+      max-width: 680px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 6px 18px rgba(8, 15, 25, 0.04);
+      border-top: 4px solid var(--gold);
+    }
+
+    h1 {
+      margin: 0 0 10px 0;
+      color: var(--navy);
+      font-size: 24px;
+    }
+
+    p {
+      color: #475569;
+      line-height: 1.5;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .upload-box {
+      border: 2px dashed #e2e8f0;
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 18px;
+      text-align: center;
+      background: #fcfdff;
+    }
+
+    .btn-row {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .btn {
+      background: var(--navy);
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .btn.alt {
+      background: var(--teal);
+    }
+
+    .btn:disabled {
+      opacity: 0.65;
+      cursor: default;
+    }
+
+    .file-area {
+      margin-top: 16px;
+      display: none;
+      text-align: left;
+      max-width: 420px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .file-label {
+      font-size: 14px;
+      color: #334155;
+      margin-bottom: 8px;
+    }
+
+    .progress {
+      height: 12px;
+      background: #e6eef9;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #60a5fa, #0ea5a9);
+      transition: width 200ms ease;
+    }
+
+    .done {
+      margin-top: 16px;
+      display: none;
+      text-align: center;
+    }
+
+    .done-title {
+      font-weight: 800;
+      color: var(--green);
+      font-size: 18px;
+    }
+
+    .done-subtitle {
+      color: #475569;
+      margin-top: 8px;
+    }
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="card">
-      <h1>Secure Upload — Mississippi ITS (Demo)</h1>
-      <p class="muted" id="welcomeTxt">Preparing secure session…</p>
+      <h1>Secure Document Upload</h1>
+      <p id="welcomeTxt">Preparing secure session...</p>
 
       <div class="upload-box">
-        <div id="instructions">Please take a picture of the document or choose a file to upload.</div>
-        <div style="margin-top:12px;">
-          <button class="btn" id="takePhoto">Take Photo (simulate)</button>
-          <button class="btn" id="chooseFile" style="background:#0ea5a9">Choose File</button>
+        <div id="instructions">Please take a photo of the requested document or upload a file from your device.</div>
+
+        <div class="btn-row">
+          <button class="btn" id="takePhoto">Take Photo</button>
+          <button class="btn alt" id="chooseFile">Upload from Device</button>
         </div>
 
-        <div id="fileArea" style="margin-top:12px; display:none;">
-          <div class="muted">File: <span id="fileName">document.jpg</span></div>
-          <div class="progress"><div id="bar" class="progress-bar"></div></div>
-          <div style="margin-top:10px;">
+        <div id="fileArea" class="file-area">
+          <div class="file-label">Selected file: <span id="fileName">residency_card.jpg</span></div>
+          <div class="progress">
+            <div id="bar" class="progress-bar"></div>
+          </div>
+          <div style="margin-top: 12px; text-align:center;">
             <button class="btn" id="uploadBtn">Upload</button>
           </div>
         </div>
 
-        <div id="done" style="margin-top:12px;display:none;">
-          <div style="font-weight:800;color:green">Upload complete — Thank you.</div>
-          <div class="muted" style="margin-top:8px">You may now close this window and the agent will see the document in their workspace.</div>
+        <div id="done" class="done">
+          <div class="done-title">Upload complete</div>
+          <div class="done-subtitle">Your document has been received and attached to your case.</div>
         </div>
-
-        <div style="margin-top:14px;"><small class="muted">Demo note: this is a visual-only demo. No files are transmitted to a server.</small></div>
       </div>
     </div>
   </div>
 
-<script>
-  // read query params for display
-  const params = new URLSearchParams(window.location.search);
-  const citizen = params.get('name') || params.get('citizenName') || params.get('citizenKey') || 'Resident';
-  const citizenKey = params.get('citizenKey') || 'MSC100245';
-  const flagKey = 'ms_uploaded_' + citizenKey; // same key agent preview polls
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const citizen = params.get("name") || "Resident";
+    const citizenKey = params.get("citizenKey") || "MSC100245";
+    const uploadFlagKey = "ms_uploaded_" + citizenKey;
 
-  document.getElementById('welcomeTxt').innerText = 'Hello ' + citizen + '. Secure upload session created for case ' + citizenKey + '.';
+    const welcomeTxt = document.getElementById("welcomeTxt");
+    const takePhoto = document.getElementById("takePhoto");
+    const chooseFile = document.getElementById("chooseFile");
+    const fileArea = document.getElementById("fileArea");
+    const fileName = document.getElementById("fileName");
+    const uploadBtn = document.getElementById("uploadBtn");
+    const bar = document.getElementById("bar");
+    const done = document.getElementById("done");
 
-  const takePhoto = document.getElementById('takePhoto');
-  const chooseFile = document.getElementById('chooseFile');
-  const fileArea = document.getElementById('fileArea');
-  const uploadBtn = document.getElementById('uploadBtn');
-  const bar = document.getElementById('bar');
-  const done = document.getElementById('done');
+    welcomeTxt.innerText = "Hello " + citizen + ". A secure upload session has been created for case " + citizenKey + ".";
 
-  takePhoto.addEventListener('click', () => {
-    // simulate taking a photo (show file area)
-    document.getElementById('fileName').innerText = 'residency_card.jpg';
-    fileArea.style.display = 'block';
-  });
-  chooseFile.addEventListener('click', () => {
-    document.getElementById('fileName').innerText = 'scanned_residency.pdf';
-    fileArea.style.display = 'block';
-  });
+    takePhoto.addEventListener("click", () => {
+      fileName.textContent = "residency_card.jpg";
+      fileArea.style.display = "block";
+      done.style.display = "none";
+      bar.style.width = "0%";
+    });
 
-  uploadBtn.addEventListener('click', () => {
-    uploadBtn.disabled = true;
-    // simulate progress
-    let p = 0;
-    const t = setInterval(() => {
-      p += Math.random() * 18 + 10;
-      if (p >= 100) p = 100;
-      bar.style.width = p + '%';
-      if (p >= 100) {
-        clearInterval(t);
-        done.style.display = 'block';
-        // set localStorage flag so agent view can detect it (simulated webhook)
-        try { localStorage.setItem(flagKey, 'received'); } catch(e) { console.error(e); }
-      }
-    }, 350);
-  });
-</script>
+    chooseFile.addEventListener("click", () => {
+      fileName.textContent = "residency_verification.pdf";
+      fileArea.style.display = "block";
+      done.style.display = "none";
+      bar.style.width = "0%";
+    });
+
+    uploadBtn.addEventListener("click", () => {
+      uploadBtn.disabled = true;
+      takePhoto.disabled = true;
+      chooseFile.disabled = true;
+
+      let progress = 0;
+
+      const timer = setInterval(() => {
+        progress += Math.random() * 18 + 10;
+        if (progress >= 100) progress = 100;
+        bar.style.width = progress + "%";
+
+        if (progress >= 100) {
+          clearInterval(timer);
+          done.style.display = "block";
+          localStorage.setItem(uploadFlagKey, "received");
+        }
+      }, 350);
+    });
+  </script>
 </body>
 </html>
