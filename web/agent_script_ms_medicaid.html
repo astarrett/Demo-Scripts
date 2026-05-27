@@ -3,39 +3,226 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>MS ITS — Agent Preview (Static Demo)</title>
+  <title>Mississippi ITS - Agent Workspace</title>
   <style>
-    :root { --navy:#0B3C5D; --gold:#F2C649; --bg:#F3F4F6; --muted:#64748b; }
-    body { font-family: "Segoe UI", Roboto, Arial; margin:0; background:var(--bg); color:#0f172a; }
-    .header { background:var(--navy); color:#fff; padding:14px 20px; display:flex; align-items:center; justify-content:space-between; border-bottom:4px solid var(--gold); }
-    .header h1 { margin:0; font-size:16px; }
-    .container { max-width:1100px; margin:20px auto; padding:0 16px; display:grid; grid-template-columns: 2fr 360px; gap:16px; }
-    .card { background:#fff; border-radius:10px; padding:14px; box-shadow:0 6px 18px rgba(8,15,25,0.04); }
-    .label { font-size:12px; color:var(--muted); font-weight:700; text-transform:uppercase; margin-bottom:6px; }
-    .value { font-size:16px; font-weight:700; color:var(--navy); margin-bottom:10px; }
-    .status-pill { display:inline-block; padding:6px 10px; border-radius:8px; font-weight:800; }
-    .status-missing { background:#fffbeb; color:#92400e; border:1px solid #fde68a; }
-    .btn { background:var(--navy); color:#fff; padding:10px 14px; border-radius:8px; border:none; cursor:pointer; font-weight:700; }
-    .btn.secondary { background:#eef2ff; color:var(--navy); font-weight:700; }
-    .script-box { background:#f9fafb; border-left:4px solid var(--gold); padding:12px; border-radius:6px; font-style:italic; }
-    .sms-panel { border:1px dashed #cbd5e1; padding:10px; border-radius:8px; margin-top:10px; background:#fff; }
-    small.note { color:var(--muted); display:block; margin-top:8px; }
+    :root {
+      --navy: #0B3C5D;
+      --gold: #F2C649;
+      --bg: #F3F4F6;
+      --muted: #64748b;
+      --green: #15803d;
+      --green-bg: #ecfdf5;
+      --green-border: #86efac;
+      --amber: #92400e;
+      --amber-bg: #fffbeb;
+      --amber-border: #fde68a;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Segoe UI", Roboto, Arial, sans-serif;
+      margin: 0;
+      background: var(--bg);
+      color: #0f172a;
+    }
+
+    .header {
+      background: var(--navy);
+      color: #fff;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 4px solid var(--gold);
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .tenant-pill {
+      font-weight: 800;
+      background: #fff;
+      color: var(--navy);
+      padding: 6px 12px;
+      border-radius: 18px;
+      font-size: 13px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 20px auto;
+      padding: 0 16px;
+      display: grid;
+      grid-template-columns: 2fr 360px;
+      gap: 16px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 14px;
+      box-shadow: 0 6px 18px rgba(8, 15, 25, 0.04);
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .label {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      letter-spacing: 0.03em;
+    }
+
+    .value {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 10px;
+    }
+
+    .subvalue {
+      font-size: 13px;
+      color: #475569;
+    }
+
+    .status-pill {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    .status-missing {
+      background: var(--amber-bg);
+      color: var(--amber);
+      border: 1px solid var(--amber-border);
+    }
+
+    .status-received {
+      background: var(--green-bg);
+      color: var(--green);
+      border: 1px solid var(--green-border);
+    }
+
+    .script-box {
+      background: #f8fafc;
+      border-left: 4px solid var(--gold);
+      padding: 12px;
+      border-radius: 6px;
+      line-height: 1.5;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    .btn {
+      background: var(--navy);
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .btn.secondary {
+      background: #eef2ff;
+      color: var(--navy);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+
+    .panel {
+      border: 1px solid #e2e8f0;
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 12px;
+      background: #fff;
+    }
+
+    .sms-header {
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .sms-body {
+      white-space: pre-wrap;
+      line-height: 1.5;
+      color: #1e293b;
+      margin-bottom: 10px;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .status-line {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1e293b;
+    }
+
+    .status-line.success {
+      color: var(--green);
+    }
+
+    .activity-log {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+      color: #334155;
+      line-height: 1.7;
+    }
+
+    hr {
+      margin: 14px 0;
+      border: none;
+      border-top: 1px solid #eef2f6;
+    }
+
+    @media (max-width: 900px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="header">
-    <h1>Mississippi ITS — Agent Workspace (Demo)</h1>
-    <div style="font-weight:800; background:#fff; color:var(--navy); padding:6px 12px; border-radius:18px;">Mississippi Medicaid</div>
+    <h1>Mississippi ITS - Agent Workspace</h1>
+    <div class="tenant-pill">Mississippi Medicaid</div>
   </div>
 
   <div class="container">
-    <!-- Left: Agent View -->
     <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center;">
+      <div class="row">
         <div>
           <div class="label">Citizen</div>
-          <div class="value" id="name">Angela Carter</div>
-          <div><span class="label">Case ID</span> <span style="font-family:monospace;color:#374151">MSC100245</span></div>
+          <div class="value">Angela Carter</div>
+          <div class="subvalue">Case ID <span style="font-family: ui-monospace, monospace;">MSC100245</span></div>
         </div>
         <div style="text-align:right;">
           <div class="label">Medicaid Status</div>
@@ -43,135 +230,147 @@
         </div>
       </div>
 
-      <hr style="margin:14px 0;border:none;border-top:1px solid #eef2f6" />
+      <hr />
 
-      <div>
-        <div class="label">Missing items</div>
-        <div class="value">Child Residency Verification</div>
+      <div class="label">Missing Items</div>
+      <div class="value">Child Residency Verification</div>
 
-        <div style="margin-top:14px" class="label">Suggested Opening</div>
-        <div class="script-box" id="agentScript">Hello Angela — I see your renewal is pending. We're missing child residency verification. I can send a secure upload link to your phone right now, and you can snap a photo of the document.</div>
+      <div class="label" style="margin-top: 14px;">Suggested Opening</div>
+      <div class="script-box" id="agentScript">
+        Hello Angela, I see your renewal is pending and we still need child residency verification. I can send a secure upload link to your phone right now so you can take a photo or upload the document.
+      </div>
 
-        <div style="margin-top:16px;">
-          <button class="btn" id="sendLinkBtn">Send Secure Upload Link (Text)</button>
-          <button class="btn secondary" id="escalateBtn" style="margin-left:8px">Escalate to Supervisor</button>
-        </div>
+      <div class="btn-row">
+        <button class="btn" id="sendLinkBtn">Send Secure Upload Link</button>
+        <button class="btn secondary" id="openUploadBtn" style="display:none;">Open Secure Link</button>
+        <button class="btn secondary" id="copyLinkBtn" style="display:none;">Copy Link</button>
+        <button class="btn secondary" id="escalateBtn">Escalate to Supervisor</button>
+      </div>
 
-        <div id="smsPanel" class="sms-panel" style="display:none;">
-          <div style="font-weight:800; margin-bottom:6px;">Simulated SMS sent to 555-555-1234</div>
-          <div id="smsText" style="margin-bottom:8px;white-space:pre-wrap;"></div>
-          <div style="display:flex;gap:8px">
-            <button class="btn secondary" id="openUploadBtn">Simulate recipient clicking link</button>
-            <button class="btn" id="copyLinkBtn">Copy Link</button>
-          </div>
-          <small class="note">This is a demo-only simulation of a secure upload link. No documents will be transferred.</small>
-        </div>
+      <div id="smsPanel" class="panel" style="display:none;">
+        <div class="sms-header">Secure message sent to 555-555-1234</div>
+        <div id="smsText" class="sms-body"></div>
+      </div>
 
-        <div style="margin-top:18px;">
-          <div class="label">Document status</div>
-          <div id="docStatus">No documents received</div>
-          <small class="note">The demo simulates the recipient opening the link and performing an upload. The agent page will update automatically when the simulated upload completes.</small>
-        </div>
-
+      <div style="margin-top: 18px;">
+        <div class="label">Document Status</div>
+        <div id="docStatus" class="status-line">Awaiting document</div>
+        <div class="muted" style="margin-top: 6px;">The case will update automatically when documents are received.</div>
       </div>
     </div>
 
-    <!-- Right: Operational Context -->
     <div>
-      <div class="card" style="margin-bottom:12px">
+      <div class="card" style="margin-bottom: 12px;">
         <div class="label">Operational Context</div>
-        <div><div class="label">Last Interaction Channel</div><div class="value">Chat</div></div>
-        <div><div class="label">Repeat Contact Count</div><div class="value">2</div></div>
-        <div><div class="label">Case Worker</div><div class="value">Lisa Jordan</div></div>
+
+        <div class="label" style="margin-top: 10px;">Last Interaction Channel</div>
+        <div class="value">Chat</div>
+
+        <div class="label">Repeat Contact Count</div>
+        <div class="value">2</div>
+
+        <div class="label">Case Worker</div>
+        <div class="value">Lisa Jordan</div>
       </div>
 
       <div class="card">
-        <div class="label">Audit Events (simulated)</div>
-        <div id="auditLog" style="font-family:monospace; font-size:13px; color:#334155; line-height:1.6;">
-          [—] Interaction started<br/>
-          [—] Caller identified: Angela Carter<br/>
+        <div class="label">Activity Log</div>
+        <div id="auditLog" class="activity-log">
+          [08:41:12] Interaction started<br/>
+          [08:41:15] Caller identified: Angela Carter<br/>
+          [08:41:18] Renewal review opened<br/>
         </div>
       </div>
     </div>
   </div>
 
-<script>
-  // Hard-coded demo sample (Angela)
-  const demo = {
-    citizenKey: 'MSC100245',
-    name: 'Angela Carter',
-    phone: '555-555-1234',
-    missing: 'Child Residency Verification',
-    uploadFlagKey: 'ms_uploaded_MSC100245' // localStorage key used by mock upload app
-  };
+  <script>
+    const caseData = {
+      citizenKey: "MSC100245",
+      name: "Angela Carter",
+      phone: "555-555-1234",
+      missing: "Child Residency Verification",
+      uploadFlagKey: "ms_uploaded_MSC100245"
+    };
 
-  // UI elements
-  const sendLinkBtn = document.getElementById('sendLinkBtn');
-  const smsPanel = document.getElementById('smsPanel');
-  const smsText = document.getElementById('smsText');
-  const openUploadBtn = document.getElementById('openUploadBtn');
-  const copyLinkBtn = document.getElementById('copyLinkBtn');
-  const docStatus = document.getElementById('docStatus');
-  const auditLog = document.getElementById('auditLog');
+    const currentPath = window.location.pathname;
+    const basePath = currentPath.substring(0, currentPath.lastIndexOf("/") + 1);
+    const uploadLink = window.location.origin + basePath + "upload_app.html?citizenKey=" + encodeURIComponent(caseData.citizenKey) + "&name=" + encodeURIComponent(caseData.name);
 
-  // Build a demo link pointing to the mock upload page in same folder
-  const demoLink = location.origin + location.pathname.replace(/[^\/]*$/, '') + 'mock_upload_app.html?citizenKey=' + encodeURIComponent(demo.citizenKey) + '&name=' + encodeURIComponent(demo.name);
+    const sendLinkBtn = document.getElementById("sendLinkBtn");
+    const openUploadBtn = document.getElementById("openUploadBtn");
+    const copyLinkBtn = document.getElementById("copyLinkBtn");
+    const smsPanel = document.getElementById("smsPanel");
+    const smsText = document.getElementById("smsText");
+    const docStatus = document.getElementById("docStatus");
+    const medStatus = document.getElementById("medStatus");
+    const auditLog = document.getElementById("auditLog");
 
-  sendLinkBtn.addEventListener('click', () => {
-    // append audit event
-    auditLog.innerHTML += '[+] SERVICE_ACTION: UPLOAD_LINK_SENT -> ' + new Date().toLocaleTimeString() + '<br/>';
-    // show SMS panel
-    smsPanel.style.display = 'block';
-    smsText.innerText = `MS ITS: Hello ${demo.name}. We are missing your ${demo.missing}. Please tap the secure link to upload a photo of the document:\n\n${demoLink}\n\nThis link will expire in 24 hours.`;
-    // update doc status while waiting
-    docStatus.innerText = 'Awaiting upload...';
-    // start polling for simulated upload completion
-    startPollingForUpload();
-  });
-
-  copyLinkBtn.addEventListener('click', () => {
-    navigator.clipboard?.writeText(demoLink).then(() => {
-      copyLinkBtn.innerText = 'Copied';
-      setTimeout(() => copyLinkBtn.innerText = 'Copy Link', 1200);
-    }).catch(()=> { alert('Copy unavailable in this browser'); });
-  });
-
-  openUploadBtn.addEventListener('click', () => {
-    // open mock upload page in new tab (simulated recipient)
-    window.open(demoLink, '_blank');
-  });
-
-  // Poll localStorage for the simulated upload flag (set by mock_upload_app.html)
-  let pollInterval = null;
-  function startPollingForUpload(){
-    if (pollInterval) return;
-    pollInterval = setInterval(() => {
-      try {
-        const flag = localStorage.getItem(demo.uploadFlagKey);
-        if (flag === 'received') {
-          clearInterval(pollInterval);
-          pollInterval = null;
-          docStatus.innerHTML = '<span style="color:green;font-weight:800">Documents received</span>';
-          auditLog.innerHTML += '[+] EVENT: DOCUMENT_RECEIVED -> ' + new Date().toLocaleTimeString() + '<br/>';
-          // clear the flag so repeated recordings work cleanly
-          setTimeout(()=> localStorage.removeItem(demo.uploadFlagKey), 1000);
-        }
-      } catch(e) {
-        console.error('poll err', e);
-      }
-    }, 900);
-  }
-
-  // for recording: allow manual "Check Documents" by clicking doc status
-  docStatus.addEventListener('click', () => {
-    // manual check
-    if (localStorage.getItem(demo.uploadFlagKey) === 'received') {
-      docStatus.innerHTML = '<span style="color:green;font-weight:800">Documents received</span>';
-    } else {
-      alert('No documents yet (simulated). Click "Simulate recipient clicking link" to continue demo.');
+    function addLog(message) {
+      const time = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+      auditLog.innerHTML += `[${time}] ${message}<br/>`;
     }
-  });
 
-</script>
+    function markReceived() {
+      docStatus.textContent = "Documents received";
+      docStatus.classList.add("success");
+      medStatus.textContent = "Documents Received";
+      medStatus.classList.remove("status-missing");
+      medStatus.classList.add("status-received");
+      addLog("Document received: Child Residency Verification");
+      addLog("Case ready for continued review");
+    }
+
+    sendLinkBtn.addEventListener("click", () => {
+      smsPanel.style.display = "block";
+      openUploadBtn.style.display = "inline-block";
+      copyLinkBtn.style.display = "inline-block";
+      sendLinkBtn.disabled = true;
+
+      smsText.innerText =
+        `Mississippi Medicaid: Hello ${caseData.name}. We still need your ${caseData.missing}. Please use the secure link below to upload a photo or file for your case.\n\n${uploadLink}\n\nThis link will expire in 24 hours.`;
+
+      docStatus.textContent = "Secure link sent";
+      addLog("Secure upload link sent to resident");
+    });
+
+    openUploadBtn.addEventListener("click", () => {
+      window.open(uploadLink, "_blank");
+      addLog("Secure upload session opened");
+    });
+
+    copyLinkBtn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(uploadLink);
+        copyLinkBtn.textContent = "Copied";
+        setTimeout(() => {
+          copyLinkBtn.textContent = "Copy Link";
+        }, 1200);
+      } catch (e) {
+        copyLinkBtn.textContent = "Copy Unavailable";
+        setTimeout(() => {
+          copyLinkBtn.textContent = "Copy Link";
+        }, 1600);
+      }
+    });
+
+    let pollHandle = null;
+
+    function startPolling() {
+      if (pollHandle) return;
+
+      pollHandle = setInterval(() => {
+        const flag = localStorage.getItem(caseData.uploadFlagKey);
+        if (flag === "received") {
+          clearInterval(pollHandle);
+          pollHandle = null;
+          localStorage.removeItem(caseData.uploadFlagKey);
+          markReceived();
+        }
+      }, 800);
+    }
+
+    startPolling();
+  </script>
 </body>
 </html>
