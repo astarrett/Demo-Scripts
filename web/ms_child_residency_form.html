@@ -1,0 +1,515 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Mississippi Child Residency Verification</title>
+  <style>
+    :root {
+      --navy: #0B3C5D;
+      --navy-light: #1a5276;
+      --gold: #F2C649;
+      --bg: #eef2f7;
+      --surface: #ffffff;
+      --border: #e2e8f0;
+      --muted: #64748b;
+      --green: #15803d;
+      --green-bg: #ecfdf5;
+      --radius: 10px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: #0f172a;
+      min-height: 100vh;
+      padding-bottom: 40px;
+    }
+
+    .banner {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+      border-bottom: 4px solid var(--gold);
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      height: 72px;
+      box-shadow: 0 4px 16px rgba(11,60,93,0.18);
+    }
+
+    .seal {
+      width: 46px;
+      height: 46px;
+      background: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .banner-title h1 {
+      color: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .banner-title p {
+      color: rgba(255,255,255,0.7);
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    .container {
+      max-width: 680px;
+      margin: 28px auto;
+      padding: 0 16px;
+    }
+
+    .notice {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-left: 4px solid var(--gold);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      font-size: 13px;
+      color: #78350f;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: 0 2px 12px rgba(11,60,93,0.07);
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .card-header {
+      background: linear-gradient(90deg, var(--navy), var(--navy-light));
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-header h2 {
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .card-body {
+      padding: 18px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    input[type="text"],
+    input[type="tel"],
+    input[type="date"],
+    select {
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 9px 12px;
+      font-size: 14px;
+      color: #1e293b;
+      background: #f8fafc;
+      width: 100%;
+      transition: border-color 0.15s;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--navy);
+      background: #fff;
+    }
+
+    .checkbox-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+
+    .checkbox-item:hover {
+      background: #f1f5f9;
+    }
+
+    .checkbox-item input[type="checkbox"] {
+      width: 17px;
+      height: 17px;
+      accent-color: var(--navy);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .checkbox-item span {
+      font-size: 14px;
+      font-weight: 600;
+      color: #334155;
+    }
+
+    .upload-zone {
+      border: 2px dashed #cbd5e1;
+      border-radius: 8px;
+      padding: 24px;
+      text-align: center;
+      background: #f8fafc;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .upload-zone:hover {
+      border-color: var(--navy);
+      background: #f0f7ff;
+    }
+
+    .upload-zone.has-file {
+      border-color: var(--green);
+      background: var(--green-bg);
+    }
+
+    .upload-icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    .upload-text {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+
+    .upload-sub {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .upload-filename {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--green);
+      margin-top: 8px;
+      display: none;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    .sig-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .disclaimer {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--navy), var(--navy-light));
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(11,60,93,0.25);
+      transition: all 0.15s;
+      margin-top: 4px;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(11,60,93,0.3);
+    }
+
+    /* SUCCESS SCREEN */
+    .success-screen {
+      display: none;
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .success-icon {
+      font-size: 64px;
+      margin-bottom: 16px;
+    }
+
+    .success-title {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--green);
+      margin-bottom: 10px;
+    }
+
+    .success-sub {
+      font-size: 15px;
+      color: #475569;
+      line-height: 1.6;
+      max-width: 420px;
+      margin: 0 auto 20px;
+    }
+
+    .success-ref {
+      background: var(--green-bg);
+      border: 1px solid #86efac;
+      border-radius: 8px;
+      padding: 12px 20px;
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--green);
+    }
+
+    @media (max-width: 540px) {
+      .form-grid, .sig-row { grid-template-columns: 1fr; }
+      .form-group.full { grid-column: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BANNER -->
+  <div class="banner">
+    <div class="seal">🏛️</div>
+    <div class="banner-title">
+      <h1>Mississippi Division of Medicaid</h1>
+      <p>Child Residency Verification · Secure Submission Portal</p>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <div class="notice">
+      ⚠️ Your Medicaid renewal is pending. Please complete and submit this form to avoid a delay in coverage. Your information is transmitted securely.
+    </div>
+
+    <!-- FORM -->
+    <form id="residencyForm">
+
+      <!-- Child Information -->
+      <div class="card">
+        <div class="card-header">
+          <span>👦</span>
+          <h2>Child Information</h2>
+        </div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-group full">
+              <label>Student Name</label>
+              <input type="text" value="Olivia Carter" />
+            </div>
+            <div class="form-group">
+              <label>Date of Birth</label>
+              <input type="text" value="03/22/2015" />
+            </div>
+            <div class="form-group">
+              <label>School District</label>
+              <input type="text" value="Madison County Schools" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Parent / Guardian -->
+      <div class="card">
+        <div class="card-header">
+          <span>👤</span>
+          <h2>Parent / Guardian</h2>
+        </div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-group full">
+              <label>Parent / Guardian Name</label>
+              <input type="text" value="Angela Carter" />
+            </div>
+            <div class="form-group full">
+              <label>Residence Address</label>
+              <input type="text" value="214 Magnolia Ridge Drive" />
+            </div>
+            <div class="form-group">
+              <label>City / ZIP</label>
+              <input type="text" value="Madison, MS 39110" />
+            </div>
+            <div class="form-group">
+              <label>County</label>
+              <input type="text" value="Madison County" />
+            </div>
+            <div class="form-group">
+              <label>Residency Since</label>
+              <input type="text" value="August 2022" />
+            </div>
+            <div class="form-group">
+              <label>Contact Number</label>
+              <input type="tel" value="(601) 555-0184" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Supporting Documentation -->
+      <div class="card">
+        <div class="card-header">
+          <span>📄</span>
+          <h2>Supporting Documentation</h2>
+        </div>
+        <div class="card-body">
+          <p style="font-size:13px;color:var(--muted);margin-bottom:14px;">Select all documents you are submitting as proof of residency.</p>
+          <div class="checkbox-group">
+            <label class="checkbox-item">
+              <input type="checkbox" checked />
+              <span>Utility Statement</span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" checked />
+              <span>Lease Agreement</span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" checked />
+              <span>Bank Statement</span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" checked />
+              <span>State ID</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Upload -->
+      <div class="card">
+        <div class="card-header">
+          <span>📤</span>
+          <h2>Upload Document</h2>
+        </div>
+        <div class="card-body">
+          <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+            <div class="upload-icon">📎</div>
+            <div class="upload-text">Tap to upload or take a photo</div>
+            <div class="upload-sub">JPG, PNG, or PDF · Max 10MB</div>
+            <div class="upload-filename" id="uploadFilename"></div>
+          </div>
+          <input type="file" id="fileInput" accept=".jpg,.jpeg,.png,.pdf" />
+        </div>
+      </div>
+
+      <!-- Signature -->
+      <div class="card">
+        <div class="card-header">
+          <span>✍️</span>
+          <h2>Guardian Signature</h2>
+        </div>
+        <div class="card-body">
+          <div class="sig-row">
+            <div class="form-group">
+              <label>Guardian Signature</label>
+              <input type="text" value="Angela Carter" />
+            </div>
+            <div class="form-group">
+              <label>Submission Date</label>
+              <input type="text" id="submissionDate" />
+            </div>
+          </div>
+          <div class="disclaimer">
+            By submitting this form, I certify that the information provided is accurate and complete to the best of my knowledge. This is an unofficial training document for workflow demonstration purposes only.
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-submit">✅ Submit Verification Form</button>
+
+    </form>
+
+    <!-- SUCCESS -->
+    <div class="success-screen" id="successScreen">
+      <div class="success-icon">✅</div>
+      <div class="success-title">Form Submitted Successfully</div>
+      <div class="success-sub">Thank you, Angela. Your Child Residency Verification has been received. A Mississippi Medicaid representative will review your submission and update your case status within 1-2 business days.</div>
+      <div class="success-ref">Reference: MSC100245 · Submitted 05/28/2026</div>
+    </div>
+
+  </div>
+
+  <script>
+    // Set today's date
+    const today = new Date();
+    document.getElementById("submissionDate").value =
+      (today.getMonth()+1).toString().padStart(2,"0") + "/" +
+      today.getDate().toString().padStart(2,"0") + "/" +
+      today.getFullYear();
+
+    // File upload
+    document.getElementById("fileInput").addEventListener("change", function() {
+      if (this.files && this.files[0]) {
+        const zone = document.getElementById("uploadZone");
+        const fname = document.getElementById("uploadFilename");
+        zone.classList.add("has-file");
+        fname.style.display = "block";
+        fname.textContent = "✓ " + this.files[0].name;
+      }
+    });
+
+    // Form submit
+    document.getElementById("residencyForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      // Signal agent screen if open in same browser
+      localStorage.setItem("ms_uploaded_MSC100245", "received");
+      this.style.display = "none";
+      document.getElementById("successScreen").style.display = "block";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  </script>
+
+</body>
+</html>
