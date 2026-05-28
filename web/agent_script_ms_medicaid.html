@@ -7,280 +7,703 @@
   <style>
     :root {
       --navy: #0B3C5D;
+      --navy-light: #1a5276;
       --gold: #F2C649;
-      --bg: #F3F4F6;
+      --gold-dark: #d4a017;
+      --bg: #eef2f7;
+      --surface: #ffffff;
       --muted: #64748b;
+      --border: #e2e8f0;
       --green: #15803d;
       --green-bg: #ecfdf5;
       --green-border: #86efac;
       --amber: #92400e;
       --amber-bg: #fffbeb;
       --amber-border: #fde68a;
+      --red: #991b1b;
+      --red-bg: #fef2f2;
+      --red-border: #fca5a5;
+      --radius: 10px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: "Segoe UI", Roboto, Arial, sans-serif;
-      margin: 0;
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
       background: var(--bg);
       color: #0f172a;
+      min-height: 100vh;
     }
 
-    .header {
-      background: var(--navy);
-      color: #fff;
-      padding: 14px 20px;
+    /* ── BANNER ── */
+    .banner {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+      border-bottom: 4px solid var(--gold);
+      padding: 0 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 4px solid var(--gold);
+      height: 72px;
+      box-shadow: 0 4px 16px rgba(11,60,93,0.18);
     }
 
-    .header h1 {
-      margin: 0;
-      font-size: 16px;
-      font-weight: 700;
-    }
-
-    .tenant-pill {
-      font-weight: 800;
-      background: #fff;
-      color: var(--navy);
-      padding: 6px 12px;
-      border-radius: 18px;
-      font-size: 13px;
-    }
-
-    .container {
-      max-width: 1100px;
-      margin: 20px auto;
-      padding: 0 16px;
-      display: grid;
-      grid-template-columns: 2fr 360px;
-      gap: 16px;
-    }
-
-    .card {
-      background: #fff;
-      border-radius: 10px;
-      padding: 14px;
-      box-shadow: 0 6px 18px rgba(8, 15, 25, 0.04);
-    }
-
-    .row {
+    .banner-left {
       display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .seal {
+      width: 48px;
+      height: 48px;
+      background: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      flex-shrink: 0;
+    }
+
+    .banner-title {
+      color: #fff;
+    }
+
+    .banner-title h1 {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      line-height: 1.2;
+    }
+
+    .banner-title p {
+      font-size: 12px;
+      color: rgba(255,255,255,0.7);
+      margin-top: 2px;
+    }
+
+    .banner-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .agent-badge {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      background: #22c55e;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 6px;
+      box-shadow: 0 0 0 3px rgba(34,197,94,0.25);
+    }
+
+    /* ── ALERT BAR ── */
+    .alert-bar {
+      background: linear-gradient(90deg, #fef3c7, #fffbeb);
+      border-bottom: 2px solid var(--gold);
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #78350f;
+    }
+
+    .alert-icon {
+      font-size: 16px;
+    }
+
+    /* ── LAYOUT ── */
+    .workspace {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: 1fr 320px;
       gap: 16px;
     }
 
-    .label {
-      font-size: 12px;
-      color: var(--muted);
-      font-weight: 700;
-      text-transform: uppercase;
-      margin-bottom: 6px;
-      letter-spacing: 0.03em;
+    /* ── CARDS ── */
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: 0 2px 12px rgba(11,60,93,0.06);
+      overflow: hidden;
+      margin-bottom: 14px;
     }
 
-    .value {
+    .card-header {
+      background: linear-gradient(90deg, #f8fafc, #f1f5f9);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-header-icon {
       font-size: 16px;
+    }
+
+    .card-header h2 {
+      font-size: 13px;
       font-weight: 700;
       color: var(--navy);
-      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
 
-    .subvalue {
-      font-size: 13px;
-      color: #475569;
+    .card-body {
+      padding: 16px;
     }
 
-    .status-pill {
-      display: inline-block;
-      padding: 6px 10px;
-      border-radius: 8px;
+    /* ── CITIZEN PROFILE ── */
+    .citizen-profile {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .avatar {
+      width: 52px;
+      height: 52px;
+      background: linear-gradient(135deg, var(--navy), var(--navy-light));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 20px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .citizen-name {
+      font-size: 20px;
       font-weight: 800;
-      font-size: 13px;
+      color: var(--navy);
+      line-height: 1.2;
     }
 
-    .status-missing {
+    .citizen-meta {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    /* ── DATA GRID ── */
+    .data-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .data-cell {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+
+    .data-cell .cell-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 4px;
+    }
+
+    .data-cell .cell-value {
+      font-size: 14px;
+      font-weight: 700;
+      color: #1e293b;
+    }
+
+    /* ── STATUS PILLS ── */
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .pill-amber {
       background: var(--amber-bg);
       color: var(--amber);
       border: 1px solid var(--amber-border);
     }
 
-    .status-received {
+    .pill-green {
       background: var(--green-bg);
       color: var(--green);
       border: 1px solid var(--green-border);
     }
 
-    .script-box {
-      background: #f8fafc;
-      border-left: 4px solid var(--gold);
-      padding: 12px;
-      border-radius: 6px;
-      line-height: 1.5;
+    .pill-red {
+      background: var(--red-bg);
+      color: var(--red);
+      border: 1px solid var(--red-border);
     }
 
+    /* ── MISSING DOCS HIGHLIGHT ── */
+    .missing-doc-box {
+      background: var(--amber-bg);
+      border: 1px solid var(--amber-border);
+      border-left: 4px solid #f59e0b;
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .missing-doc-box .doc-icon {
+      font-size: 22px;
+    }
+
+    .missing-doc-box .doc-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .missing-doc-box .doc-name {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--amber);
+    }
+
+    /* ── SCRIPT BOX ── */
+    .script-section {
+      margin-bottom: 16px;
+    }
+
+    .script-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .script-box {
+      background: linear-gradient(135deg, #f0f7ff, #e8f4fd);
+      border: 1px solid #bfdbfe;
+      border-left: 4px solid var(--navy);
+      border-radius: 8px;
+      padding: 14px;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #1e293b;
+    }
+
+    /* ── BUTTONS ── */
     .btn-row {
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
-      margin-top: 16px;
+      margin-bottom: 14px;
     }
 
     .btn {
-      background: var(--navy);
-      color: #fff;
-      padding: 10px 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 16px;
       border-radius: 8px;
       border: none;
       cursor: pointer;
       font-weight: 700;
-      font-size: 14px;
+      font-size: 13px;
+      transition: all 0.15s ease;
     }
 
-    .btn.secondary {
-      background: #eef2ff;
+    .btn-primary {
+      background: linear-gradient(135deg, var(--navy), var(--navy-light));
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(11,60,93,0.25);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(11,60,93,0.3);
+    }
+
+    .btn-secondary {
+      background: #f1f5f9;
       color: var(--navy);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      background: #e2e8f0;
+    }
+
+    .btn-gold {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: var(--navy);
+      box-shadow: 0 2px 8px rgba(242,198,73,0.3);
     }
 
     .btn:disabled {
-      opacity: 0.6;
+      opacity: 0.55;
       cursor: default;
+      transform: none;
     }
 
-    .panel {
-      border: 1px solid #e2e8f0;
-      padding: 12px;
+    /* ── SMS PANEL ── */
+    .sms-panel {
+      background: #f8fafc;
+      border: 1px solid var(--border);
       border-radius: 8px;
-      margin-top: 12px;
+      padding: 14px;
+      margin-bottom: 14px;
+      display: none;
+    }
+
+    .sms-panel-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+
+    .sms-bubble {
       background: #fff;
-    }
-
-    .sms-header {
-      font-weight: 800;
-      margin-bottom: 8px;
-    }
-
-    .sms-body {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      border-bottom-left-radius: 4px;
+      padding: 12px 14px;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #334155;
       white-space: pre-wrap;
-      line-height: 1.5;
-      color: #1e293b;
       margin-bottom: 10px;
     }
 
-    .muted {
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.5;
+    /* ── DOC STATUS ── */
+    .doc-status-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 8px;
     }
 
-    .status-line {
-      font-size: 15px;
+    .doc-status-icon {
+      font-size: 20px;
+    }
+
+    .doc-status-text {
+      font-size: 14px;
+      font-weight: 700;
+      color: #475569;
+    }
+
+    .doc-status-text.success {
+      color: var(--green);
+    }
+
+    .doc-status-sub {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar-section {
+      margin-bottom: 14px;
+    }
+
+    .context-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 13px;
+    }
+
+    .context-row:last-child {
+      border-bottom: none;
+    }
+
+    .context-key {
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .context-val {
       font-weight: 700;
       color: #1e293b;
     }
 
-    .status-line.success {
-      color: var(--green);
+    /* ── ACTIVITY LOG ── */
+    .log-entry {
+      display: flex;
+      gap: 8px;
+      padding: 6px 0;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 12px;
     }
 
-    .activity-log {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 13px;
+    .log-entry:last-child {
+      border-bottom: none;
+    }
+
+    .log-time {
+      color: var(--muted);
+      font-family: ui-monospace, monospace;
+      flex-shrink: 0;
+      width: 68px;
+    }
+
+    .log-msg {
       color: #334155;
-      line-height: 1.7;
+      line-height: 1.4;
     }
 
-    hr {
-      margin: 14px 0;
-      border: none;
-      border-top: 1px solid #eef2f6;
+    .log-msg.highlight {
+      color: var(--navy);
+      font-weight: 700;
     }
 
-    @media (max-width: 900px) {
-      .container {
-        grid-template-columns: 1fr;
-      }
+    /* ── AI COPILOT ── */
+    .copilot-box {
+      background: linear-gradient(135deg, #f5f3ff, #ede9fe);
+      border: 1px solid #c4b5fd;
+      border-left: 4px solid #7c3aed;
+      border-radius: 8px;
+      padding: 12px 14px;
+    }
+
+    .copilot-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #6d28d9;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .copilot-text {
+      font-size: 13px;
+      color: #3730a3;
+      line-height: 1.5;
     }
   </style>
 </head>
 <body>
-  <div class="header">
-    <h1>Mississippi ITS - Agent Workspace</h1>
-    <div class="tenant-pill">Mississippi Medicaid</div>
+
+  <!-- BANNER -->
+  <div class="banner">
+    <div class="banner-left">
+      <div class="seal">🏛️</div>
+      <div class="banner-title">
+        <h1>Mississippi ITS — Agent Workspace</h1>
+        <p>Shared Services Platform · Mississippi Medicaid</p>
+      </div>
+    </div>
+    <div class="banner-right">
+      <div class="agent-badge"><span class="status-dot"></span>Lisa Jordan · Active</div>
+    </div>
   </div>
 
-  <div class="container">
-    <div class="card">
-      <div class="row">
-        <div>
-          <div class="label">Citizen</div>
-          <div class="value">Angela Carter</div>
-          <div class="subvalue">Case ID <span style="font-family: ui-monospace, monospace;">MSC100245</span></div>
+  <!-- ALERT BAR -->
+  <div class="alert-bar">
+    <span class="alert-icon">⚠️</span>
+    Action Required: Missing documentation may delay renewal. Resolve during this interaction.
+  </div>
+
+  <!-- WORKSPACE -->
+  <div class="workspace">
+
+    <!-- LEFT COLUMN -->
+    <div>
+
+      <!-- Citizen Profile -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-header-icon">👤</span>
+          <h2>Citizen Profile</h2>
         </div>
-        <div style="text-align:right;">
-          <div class="label">Medicaid Status</div>
-          <div id="medStatus" class="status-pill status-missing">Missing Documents</div>
+        <div class="card-body">
+          <div class="citizen-profile">
+            <div class="avatar">AC</div>
+            <div>
+              <div class="citizen-name">Angela Carter</div>
+              <div class="citizen-meta">Case ID: MSC100245 &nbsp;·&nbsp; DOB: 03/14/1985 &nbsp;·&nbsp; 555-555-1234</div>
+            </div>
+            <div style="margin-left:auto;">
+              <span id="medStatusPill" class="pill pill-amber">⚠ Missing Documents</span>
+            </div>
+          </div>
+
+          <div class="data-grid">
+            <div class="data-cell">
+              <div class="cell-label">Renewal Due</div>
+              <div class="cell-value">06/30/2026</div>
+            </div>
+            <div class="data-cell">
+              <div class="cell-label">Household Size</div>
+              <div class="cell-value">3</div>
+            </div>
+            <div class="data-cell">
+              <div class="cell-label">Case Worker</div>
+              <div class="cell-value">Lisa Jordan</div>
+            </div>
+            <div class="data-cell">
+              <div class="cell-label">Income Verification</div>
+              <div class="cell-value" style="color:var(--green)">✓ Complete</div>
+            </div>
+            <div class="data-cell">
+              <div class="cell-label">Residency Verification</div>
+              <div class="cell-value" style="color:var(--amber)">⚠ Pending</div>
+            </div>
+            <div class="data-cell">
+              <div class="cell-label">Repeat Contacts</div>
+              <div class="cell-value">2</div>
+            </div>
+          </div>
+
+          <!-- Missing Doc Highlight -->
+          <div class="missing-doc-box">
+            <span class="doc-icon">📄</span>
+            <div>
+              <div class="doc-label">Missing Required Document</div>
+              <div class="doc-name">Child Residency Verification</div>
+            </div>
+          </div>
+
+          <!-- Suggested Script -->
+          <div class="script-section">
+            <div class="script-label">💬 Suggested Opening</div>
+            <div class="script-box">
+              Hello Angela, I see your renewal is pending and we still need child residency verification. I can send a secure upload link to your phone right now so you can take a photo or upload the document.
+            </div>
+          </div>
+
+          <!-- AI Copilot -->
+          <div class="copilot-box" style="margin-bottom:16px;">
+            <div class="copilot-label">✦ AI Copilot Recommendation</div>
+            <div class="copilot-text">Renewal deadline is 33 days away. Resolving the missing document today eliminates benefit interruption risk. Recommend sending secure upload link and confirming receipt before closing interaction.</div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="btn-row">
+            <button class="btn btn-primary" id="sendLinkBtn">📤 Send Secure Upload Link</button>
+            <button class="btn btn-gold" id="openUploadBtn" style="display:none;">📱 Open Secure Link</button>
+            <button class="btn btn-secondary" id="copyLinkBtn" style="display:none;">🔗 Copy Link</button>
+            <button class="btn btn-secondary" id="escalateBtn">↑ Escalate to Supervisor</button>
+          </div>
+
+          <!-- SMS Panel -->
+          <div id="smsPanel" class="sms-panel">
+            <div class="sms-panel-header">📱 Secure message sent to 555-555-1234</div>
+            <div id="smsText" class="sms-bubble"></div>
+          </div>
+
+          <!-- Document Status -->
+          <div class="doc-status-row">
+            <span class="doc-status-icon" id="docIcon">🕐</span>
+            <div>
+              <div class="doc-status-text" id="docStatus">Awaiting document</div>
+              <div class="doc-status-sub">The case will update automatically when documents are received.</div>
+            </div>
+          </div>
+
         </div>
-      </div>
-
-      <hr />
-
-      <div class="label">Missing Items</div>
-      <div class="value">Child Residency Verification</div>
-
-      <div class="label" style="margin-top: 14px;">Suggested Opening</div>
-      <div class="script-box" id="agentScript">
-        Hello Angela, I see your renewal is pending and we still need child residency verification. I can send a secure upload link to your phone right now so you can take a photo or upload the document.
-      </div>
-
-      <div class="btn-row">
-        <button class="btn" id="sendLinkBtn">Send Secure Upload Link</button>
-        <button class="btn secondary" id="openUploadBtn" style="display:none;">Open Secure Link</button>
-        <button class="btn secondary" id="copyLinkBtn" style="display:none;">Copy Link</button>
-        <button class="btn secondary" id="escalateBtn">Escalate to Supervisor</button>
-      </div>
-
-      <div id="smsPanel" class="panel" style="display:none;">
-        <div class="sms-header">Secure message sent to 555-555-1234</div>
-        <div id="smsText" class="sms-body"></div>
-      </div>
-
-      <div style="margin-top: 18px;">
-        <div class="label">Document Status</div>
-        <div id="docStatus" class="status-line">Awaiting document</div>
-        <div class="muted" style="margin-top: 6px;">The case will update automatically when documents are received.</div>
       </div>
     </div>
 
+    <!-- RIGHT COLUMN -->
     <div>
-      <div class="card" style="margin-bottom: 12px;">
-        <div class="label">Operational Context</div>
 
-        <div class="label" style="margin-top: 10px;">Last Interaction Channel</div>
-        <div class="value">Chat</div>
-
-        <div class="label">Repeat Contact Count</div>
-        <div class="value">2</div>
-
-        <div class="label">Case Worker</div>
-        <div class="value">Lisa Jordan</div>
-      </div>
-
-      <div class="card">
-        <div class="label">Activity Log</div>
-        <div id="auditLog" class="activity-log">
-          [08:41:12] Interaction started<br/>
-          [08:41:15] Caller identified: Angela Carter<br/>
-          [08:41:18] Renewal review opened<br/>
+      <!-- Operational Context -->
+      <div class="card sidebar-section">
+        <div class="card-header">
+          <span class="card-header-icon">📊</span>
+          <h2>Operational Context</h2>
+        </div>
+        <div class="card-body">
+          <div class="context-row">
+            <span class="context-key">Channel</span>
+            <span class="context-val">Chat</span>
+          </div>
+          <div class="context-row">
+            <span class="context-key">Queue</span>
+            <span class="context-val">Medicaid Renewals</span>
+          </div>
+          <div class="context-row">
+            <span class="context-key">Region</span>
+            <span class="context-val">Central Mississippi</span>
+          </div>
+          <div class="context-row">
+            <span class="context-key">Tenant</span>
+            <span class="context-val">MS Medicaid</span>
+          </div>
+          <div class="context-row">
+            <span class="context-key">Interruption Risk</span>
+            <span class="context-val"><span class="pill pill-amber">High</span></span>
+          </div>
         </div>
       </div>
+
+      <!-- Activity Log -->
+      <div class="card sidebar-section">
+        <div class="card-header">
+          <span class="card-header-icon">📋</span>
+          <h2>Activity Log</h2>
+        </div>
+        <div class="card-body" id="auditLog">
+          <div class="log-entry">
+            <span class="log-time">08:41:12</span>
+            <span class="log-msg">Interaction started</span>
+          </div>
+          <div class="log-entry">
+            <span class="log-time">08:41:15</span>
+            <span class="log-msg">Caller identified: Angela Carter</span>
+          </div>
+          <div class="log-entry">
+            <span class="log-time">08:41:18</span>
+            <span class="log-msg highlight">Renewal review opened · Missing docs flagged</span>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -303,35 +726,36 @@
     const smsPanel = document.getElementById("smsPanel");
     const smsText = document.getElementById("smsText");
     const docStatus = document.getElementById("docStatus");
-    const medStatus = document.getElementById("medStatus");
+    const docIcon = document.getElementById("docIcon");
+    const medStatusPill = document.getElementById("medStatusPill");
     const auditLog = document.getElementById("auditLog");
 
-    function addLog(message) {
+    function addLog(message, highlight = false) {
       const time = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
-      auditLog.innerHTML += `[${time}] ${message}<br/>`;
+      const entry = document.createElement("div");
+      entry.className = "log-entry";
+      entry.innerHTML = `<span class="log-time">${time}</span><span class="log-msg${highlight ? " highlight" : ""}">${message}</span>`;
+      auditLog.appendChild(entry);
     }
 
     function markReceived() {
       docStatus.textContent = "Documents received";
       docStatus.classList.add("success");
-      medStatus.textContent = "Documents Received";
-      medStatus.classList.remove("status-missing");
-      medStatus.classList.add("status-received");
-      addLog("Document received: Child Residency Verification");
-      addLog("Case ready for continued review");
+      docIcon.textContent = "✅";
+      medStatusPill.textContent = "✓ Documents Received";
+      medStatusPill.className = "pill pill-green";
+      addLog("Document received: Child Residency Verification", true);
+      addLog("Case ready for continued review", true);
     }
 
     sendLinkBtn.addEventListener("click", () => {
       smsPanel.style.display = "block";
-      openUploadBtn.style.display = "inline-block";
-      copyLinkBtn.style.display = "inline-block";
+      openUploadBtn.style.display = "inline-flex";
+      copyLinkBtn.style.display = "inline-flex";
       sendLinkBtn.disabled = true;
-
-      smsText.innerText =
-        `Mississippi Medicaid: Hello ${caseData.name}. We still need your ${caseData.missing}. Please use the secure link below to upload a photo or file for your case.\n\n${uploadLink}\n\nThis link will expire in 24 hours.`;
-
-      docStatus.textContent = "Secure link sent";
-      addLog("Secure upload link sent to resident");
+      smsText.innerText = `Mississippi Medicaid: Hello ${caseData.name}. We still need your ${caseData.missing}. Please use the secure link below to upload a photo or file for your case.\n\n${uploadLink}\n\nThis link will expire in 24 hours.`;
+      docStatus.textContent = "Secure link sent — awaiting upload";
+      addLog("Secure upload link sent to resident", true);
     });
 
     openUploadBtn.addEventListener("click", () => {
@@ -342,23 +766,17 @@
     copyLinkBtn.addEventListener("click", async () => {
       try {
         await navigator.clipboard.writeText(uploadLink);
-        copyLinkBtn.textContent = "Copied";
-        setTimeout(() => {
-          copyLinkBtn.textContent = "Copy Link";
-        }, 1200);
+        copyLinkBtn.textContent = "✓ Copied";
+        setTimeout(() => { copyLinkBtn.innerHTML = "🔗 Copy Link"; }, 1200);
       } catch (e) {
         copyLinkBtn.textContent = "Copy Unavailable";
-        setTimeout(() => {
-          copyLinkBtn.textContent = "Copy Link";
-        }, 1600);
+        setTimeout(() => { copyLinkBtn.innerHTML = "🔗 Copy Link"; }, 1600);
       }
     });
 
     let pollHandle = null;
-
     function startPolling() {
       if (pollHandle) return;
-
       pollHandle = setInterval(() => {
         const flag = localStorage.getItem(caseData.uploadFlagKey);
         if (flag === "received") {
