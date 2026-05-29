@@ -11,10 +11,8 @@
       --text:#1f2a37;
       --muted:#5f6b7a;
       --line:#d8e0ea;
-      --navy:#0f3d78;
-      --navy2:#143f74;
+      --navy:#103c74;
       --gold:#d6b56d;
-      --gold2:#f1e3bf;
       --blueSoft:#eef5ff;
       --greenSoft:#eef8ef;
       --green:#2e7d32;
@@ -229,7 +227,7 @@
       padding:18px 16px;
       border-right:1px solid var(--line);
       border-bottom:1px solid var(--line);
-      min-height:86px;
+      min-height:94px;
     }
 
     .overview-k{
@@ -244,6 +242,7 @@
       font-size:17px;
       font-weight:800;
       color:var(--text);
+      word-break:break-word;
     }
 
     .badge{
@@ -260,12 +259,6 @@
       background:var(--redSoft);
       color:var(--red);
       border:1px solid #f4c4c1;
-    }
-
-    .badge-orange{
-      background:var(--orangeSoft);
-      color:var(--orange);
-      border:1px solid #f3d7a5;
     }
 
     .badge-green{
@@ -368,12 +361,14 @@
       font-size:12px;
       color:var(--muted);
       margin-bottom:5px;
+      text-transform:capitalize;
     }
 
     .meta-v{
       font-size:15px;
       font-weight:800;
       color:var(--text);
+      word-break:break-word;
     }
 
     .next-wrap{
@@ -443,45 +438,24 @@
       margin-top:10px;
     }
 
-    .split{
-      display:grid;
-      grid-template-columns:1fr;
-      gap:18px;
+    .hint{
+      display:block;
+      font-size:12px;
+      color:var(--muted);
+      font-weight:600;
+      margin-top:4px;
     }
 
     @media (max-width: 900px){
-      .banner{
-        flex-wrap:wrap;
-      }
-      .banner-divider{
-        display:none;
-      }
-      .doc-title h1{
-        font-size:28px;
-      }
-      .doc-title .subtitle{
-        font-size:20px;
-      }
-      .top-grid,
-      .overview-grid,
-      .meta-grid{
-        grid-template-columns:1fr;
-      }
-      .top-item{
-        border-right:none;
-        border-bottom:1px solid var(--line);
-      }
-      .top-item:last-child{
-        border-bottom:none;
-      }
-      .overview-item{
-        border-right:none;
-      }
-      .meta-item:nth-child(odd),
-      .meta-item:nth-child(even){
-        padding-left:0;
-        padding-right:0;
-      }
+      .banner{flex-wrap:wrap;}
+      .banner-divider{display:none;}
+      .doc-title h1{font-size:28px;}
+      .doc-title .subtitle{font-size:20px;}
+      .top-grid,.overview-grid,.meta-grid{grid-template-columns:1fr;}
+      .top-item{border-right:none;border-bottom:1px solid var(--line);}
+      .top-item:last-child{border-bottom:none;}
+      .overview-item{border-right:none;}
+      .meta-item:nth-child(odd),.meta-item:nth-child(even){padding-left:0;padding-right:0;}
     }
   </style>
 </head>
@@ -530,18 +504,18 @@
             <div class="top-grid">
               <div class="top-item">
                 <div class="top-label">Citizen</div>
-                <div class="top-value">Marcus Hill</div>
-                <div class="top-sub">MSC100250</div>
+                <div class="top-value" data-field="name">—</div>
+                <div class="top-sub">Claim Number: <span data-field="key">—</span></div>
               </div>
               <div class="top-item">
-                <div class="top-label">Location</div>
-                <div class="top-value">Gulfport, MS</div>
-                <div class="top-sub">Harrison County</div>
+                <div class="top-label">Primary Queue</div>
+                <div class="top-value" data-field="advisorQueue">—</div>
+                <div class="top-sub">Assigned from bot handoff</div>
               </div>
               <div class="top-item">
-                <div class="top-label">Case / Claim ID</div>
-                <div class="top-value">UIC553210</div>
-                <div class="top-sub">Unemployment Assistance</div>
+                <div class="top-label">Last Updated</div>
+                <div class="top-value" data-field="lastUpdated">—</div>
+                <div class="top-sub">Most recent record timestamp</div>
               </div>
             </div>
           </div>
@@ -549,58 +523,17 @@
 
         <div class="card">
           <div class="card-inner">
-            <div class="section-title">Case Overview</div>
+            <div class="section-title">Claim Details</div>
             <div class="overview-grid">
-              <div class="overview-item">
-                <span class="overview-k">Claim Status</span>
-                <div class="overview-v">Pending Claim</div>
-              </div>
-              <div class="overview-item">
-                <span class="overview-k">Filing Deadline</span>
-                <div class="overview-v">May 30, 2026</div>
-              </div>
-              <div class="overview-item">
-                <span class="overview-k">Urgency / Risk</span>
-                <div class="overview-v">High</div>
-                <div class="badge badge-red">High</div>
-              </div>
-              <div class="overview-item">
-                <span class="overview-k">Wage Verification</span>
-                <div class="overview-v">Pending</div>
-              </div>
-              <div class="overview-item">
-                <span class="overview-k">Current Stage</span>
-                <div class="overview-v">Pending Review</div>
-              </div>
-              <div class="overview-item">
-                <span class="overview-k">Financial Hardship Risk</span>
-                <div class="overview-v">High</div>
-                <div class="badge badge-red">High</div>
-              </div>
-              <div class="overview-item">
-                <span class="overview-k">Last Interaction</span>
-                <div class="overview-v">Chat</div>
-              </div>
-              <div class="overview-item">
-                <span class="overview-k">Repeat Contact Count</span>
-                <div class="overview-v">3</div>
-              </div>
-              <div class="overview-item">
-                <span class="overview-k">Sentiment</span>
-                <div class="overview-v">Anxious</div>
-              </div>
-              <div class="overview-item">
-                <span class="overview-k">Case Worker</span>
-                <div class="overview-v">Angela Brooks</div>
-              </div>
-              <div class="overview-item">
-                <span class="overview-k">Regional Office</span>
-                <div class="overview-v">Gulf Coast</div>
-              </div>
-              <div class="overview-item">
-                <span class="overview-k">Scenario</span>
-                <div class="overview-v">WorkforceAssistance</div>
-              </div>
+              <div class="overview-item"><span class="overview-k">Claim Status</span><div class="overview-v" data-field="claimStatus">—</div></div>
+              <div class="overview-item"><span class="overview-k">Payment Status</span><div class="overview-v" data-field="paymentStatus">—</div></div>
+              <div class="overview-item"><span class="overview-k">Payment Date</span><div class="overview-v" data-field="paymentDate">—</div></div>
+              <div class="overview-item"><span class="overview-k">Verification Status</span><div class="overview-v" data-field="verificationStatus">—</div></div>
+              <div class="overview-item"><span class="overview-k">Document Required</span><div class="overview-v" data-field="documentRequired">—</div></div>
+              <div class="overview-item"><span class="overview-k">Document Type</span><div class="overview-v" data-field="documentType">—</div></div>
+              <div class="overview-item"><span class="overview-k">Escalation Required</span><div class="overview-v" data-field="escalationRequired">—</div></div>
+              <div class="overview-item"><span class="overview-k">Escalation Reason</span><div class="overview-v" data-field="escalationReason">—</div></div>
+              <div class="overview-item"><span class="overview-k">Sentiment Flag</span><div class="overview-v" data-field="sentimentFlag">—</div></div>
             </div>
           </div>
         </div>
@@ -616,11 +549,14 @@
                   <path d="M8.5 12h7M8.5 15h7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
                 </svg>
                 <div>
-                  <div class="missing-title">Wage Verification</div>
-                  <div class="missing-desc">The claim is waiting on wage verification before review can continue.</div>
+                  <div class="missing-title" data-field="documentType">—</div>
+                  <div class="missing-desc">
+                    Document required: <span data-field="documentRequired">—</span>
+                    <span class="hint">This section stays visible even when the value is not needed.</span>
+                  </div>
                 </div>
               </div>
-              <div class="pill">High Priority</div>
+              <div class="pill" data-field="sentimentFlag">—</div>
             </div>
           </div>
         </div>
@@ -638,30 +574,18 @@
             </div>
 
             <div class="meta-grid">
-              <div class="meta-item">
-                <div class="meta-k">Last Interaction Channel</div>
-                <div class="meta-v">Chat</div>
-              </div>
-              <div class="meta-item">
-                <div class="meta-k">Assistance Type</div>
-                <div class="meta-v">Unemployment Assistance</div>
-              </div>
-              <div class="meta-item">
-                <div class="meta-k">Citizen Intent</div>
-                <div class="meta-v">Unemployment Assistance</div>
-              </div>
-              <div class="meta-item">
-                <div class="meta-k">Escalation Trigger</div>
-                <div class="meta-v">Financial hardship expressed / urgency detected</div>
-              </div>
-              <div class="meta-item">
-                <div class="meta-k">Benefits Interruption Risk</div>
-                <div class="meta-v">High</div>
-              </div>
-              <div class="meta-item">
-                <div class="meta-k">AI Flag</div>
-                <div class="meta-v">true</div>
-              </div>
+              <div class="meta-item"><div class="meta-k">Key</div><div class="meta-v" data-field="key">—</div></div>
+              <div class="meta-item"><div class="meta-k">Name</div><div class="meta-v" data-field="name">—</div></div>
+              <div class="meta-item"><div class="meta-k">Claim Status</div><div class="meta-v" data-field="claimStatus">—</div></div>
+              <div class="meta-item"><div class="meta-k">Payment Status</div><div class="meta-v" data-field="paymentStatus">—</div></div>
+              <div class="meta-item"><div class="meta-k">Payment Date</div><div class="meta-v" data-field="paymentDate">—</div></div>
+              <div class="meta-item"><div class="meta-k">Verification Status</div><div class="meta-v" data-field="verificationStatus">—</div></div>
+              <div class="meta-item"><div class="meta-k">Document Required</div><div class="meta-v" data-field="documentRequired">—</div></div>
+              <div class="meta-item"><div class="meta-k">Document Type</div><div class="meta-v" data-field="documentType">—</div></div>
+              <div class="meta-item"><div class="meta-k">Escalation Required</div><div class="meta-v" data-field="escalationRequired">—</div></div>
+              <div class="meta-item"><div class="meta-k">Escalation Reason</div><div class="meta-v" data-field="escalationReason">—</div></div>
+              <div class="meta-item"><div class="meta-k">Advisor Queue</div><div class="meta-v" data-field="advisorQueue">—</div></div>
+              <div class="meta-item"><div class="meta-k">Sentiment Flag</div><div class="meta-v" data-field="sentimentFlag">—</div></div>
             </div>
           </div>
         </div>
@@ -670,8 +594,13 @@
           <div class="card-inner">
             <div class="section-title">Recommended Next Action</div>
             <div class="next-wrap">
-              <div class="next-title">Verify wage documentation and prioritize claim review.</div>
-              <div class="next-desc">Provide citizen with required documentation guidance and set expectations.</div>
+              <div class="next-title">
+                <span data-field="claimStatus">—</span> claim with
+                <span data-field="verificationStatus">—</span> verification status.
+              </div>
+              <div class="next-desc">
+                Use the returned claim data to guide the citizen, then escalate if the record shows review, delay, or identity issues.
+              </div>
             </div>
 
             <div class="buttons">
@@ -681,11 +610,63 @@
               <a class="btn ghost" href="javascript:void(0)">Escalate to Specialist</a>
             </div>
 
-            <div class="footer-note">Next steps sent to Marcus Hill.</div>
+            <div class="footer-note">
+              Next steps are driven by data table values passed from the bot.
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+
+  <script>
+    (function () {
+      const params = new URLSearchParams(window.location.search);
+      const fields = [
+        "key","name","claimStatus","paymentStatus","paymentDate","verificationStatus",
+        "documentRequired","documentType","escalationRequired","escalationReason",
+        "advisorQueue","sentimentFlag","lastUpdated"
+      ];
+
+      function clean(value) {
+        if (value === null || value === undefined) return "";
+        const text = String(value).trim();
+        if (!text || text === "null" || text === "undefined") return "";
+        return text;
+      }
+
+      function setBadgeClasses(el, value) {
+        if (!el) return;
+        el.classList.remove("badge-red", "badge-green");
+        const v = clean(value).toLowerCase();
+        if (["yes", "urgent", "failed", "delayed", "held", "needs_review", "pending"].includes(v)) {
+          el.classList.add("badge-red");
+        } else if (["no", "verified", "issued", "approved"].includes(v)) {
+          el.classList.add("badge-green");
+        }
+      }
+
+      fields.forEach((field) => {
+        const value = clean(params.get(field));
+        document.querySelectorAll(`[data-field="${field}"]`).forEach((el) => {
+          el.textContent = value || "—";
+          if (el.classList.contains("pill")) setBadgeClasses(el, value);
+        });
+      });
+
+      const claimNumber = clean(params.get("claimNumber"));
+      if (claimNumber) {
+        document.querySelectorAll('[data-field="key"]').forEach((el) => {
+          if (el.textContent === "—") el.textContent = claimNumber;
+        });
+      }
+
+      document.querySelectorAll('[data-field="escalationRequired"], [data-field="documentRequired"]').forEach((el) => {
+        const v = clean(el.textContent).toLowerCase();
+        if (v === "yes") el.classList.add("badge", "badge-red");
+        if (v === "no") el.classList.add("badge", "badge-green");
+      });
+    })();
+  </script>
 </body>
 </html>
