@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mississippi Department of Employment Security - Unemployment Insurance Document Upload</title>
+  <style>
+    :root{
+      --navy:#0d3f7a;
+      --blue:#164d93;
+      --light:#f5f7fb;
+      --line:#d7dee8;
+      --text:#1f2a37;
+      --muted:#5d6b7d;
+      --card:#ffffff;
+      --accent:#f2c24f;
+      --shadow:0 1px 3px rgba(18, 31, 54, 0.08), 0 6px 20px rgba(18, 31, 54, 0.06);
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: Arial, Helvetica, sans-serif;
+      color:var(--text);
+      background:linear-gradient(180deg, #ffffff 0%, #f3f7fc 100%);
+    }
+
+    .page{
+      max-width:1180px;
+      margin:0 auto;
+      background:#fff;
+      min-height:100vh;
+    }
+
+    .topbar{
+      background:var(--navy);
+      color:#fff;
+      text-align:center;
+      padding:11px 16px;
+      font-size:14px;
+      letter-spacing:.02em;
+      font-weight:700;
+    }
+
+    .header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+      padding:22px 28px 10px;
+      background:#fff;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:18px;
+      min-width:0;
+    }
+
+    .seal{
+      width:112px;
+      height:112px;
+      flex:0 0 auto;
+    }
+
+    .brand-text{
+      min-width:0;
+    }
+
+    .brand-text .org{
+      font-size:17px;
+      font-weight:700;
+      color:#111827;
+      letter-spacing:.01em;
+      margin-bottom:2px;
+    }
+
+    .brand-text .dept{
+      font-size:13px;
+      color:#3b4a5d;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+    }
+
+    .utility{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      align-items:flex-end;
+      min-width:0;
+    }
+
+    .lang{
+      font-size:13px;
+      color:#374151;
+      display:flex;
+      align-items:center;
+      gap:4px;
+      white-space:nowrap;
+    }
+
+    .searchbar{
+      display:flex;
+      align-items:center;
+      gap:0;
+      width:min(560px, 100%);
+    }
+
+    .searchbar input{
+      width:100%;
+      height:46px;
+      border:1px solid #e5e7eb;
+      border-right:none;
+      border-radius:999px 0 0 999px;
+      padding:0 22px;
+      font-size:16px;
+      color:#6b7280;
+      background:#f7f7f7;
+      outline:none;
+    }
+
+    .searchbar button{
+      height:46px;
+      border:none;
+      border-radius:0 999px 999px 0;
+      padding:0 24px;
+      background:var(--accent);
+      color:#203354;
+      font-weight:800;
+      font-size:14px;
+      letter-spacing:.02em;
+      cursor:pointer;
+    }
+
+    .nav{
+      display:flex;
+      gap:24px;
+      padding:10px 28px 14px;
+      border-top:1px solid #edf1f6;
+      border-bottom:1px solid #edf1f6;
+      color:#214b84;
+      font-size:14px;
+      font-weight:700;
+      flex-wrap:wrap;
+    }
+
+    .nav span{
+      position:relative;
+      padding-left:20px;
+    }
+
+    .nav span::before{
+      content:"•";
+      position:absolute;
+      left:0;
+      top:-1px;
+      color:#214b84;
+      font-size:18px;
+      line-height:1;
+    }
+
+    .content{
+      padding:30px 28px 36px;
+    }
+
+    .hero{
+      text-align:center;
+      margin:10px auto 22px;
+      max-width:900px;
+    }
+
+    .hero h1{
+      margin:0;
+      font-size:54px;
+      line-height:1.05;
+      font-weight:300;
+      color:#262626;
+      letter-spacing:-.02em;
+    }
+
+    .hero p{
+      margin:18px auto 0;
+      font-size:16px;
+      line-height:1.8;
+      color:#4b5563;
+      max-width:900px;
+    }
+
+    .section{
+      display:flex;
+      gap:16px;
+      align-items:flex-start;
+      padding:26px 0;
+      border-top:1px solid var(--line);
+    }
+
+    .section:first-of-type{
+      border-top:none;
+    }
+
+    .icon{
+      width:58px;
+      height:58px;
+      flex:0 0 auto;
+      border-radius:50%;
+      background:#18498d;
+      display:grid;
+      place-items:center;
+      color:#fff;
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);
+    }
+
+    .icon svg{
+      width:28px;
+      height:28px;
+      fill:none;
+      stroke:#fff;
+      stroke-width:2;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+    }
+
+    .section-body{
+      flex:1;
+      min-width:0;
+    }
+
+    .section-title{
+      margin:0;
+      font-size:22px;
+      line-height:1.2;
+      color:#163c73;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.01em;
+    }
+
+    .section-subtitle{
+      margin:6px 0 18px;
+      font-size:16px;
+      color:#5e6a78;
+    }
+
+    .upload-card{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:10px;
+      padding:18px 20px;
+      box-shadow:var(--shadow);
+      min-height:92px;
+    }
+
+    .doc-wrap{
+      display:flex;
+      align-items:flex-start;
+      gap:16px;
+      min-width:0;
+    }
+
+    .doc-icon{
+      width:42px;
+      height:42px;
+      flex:0 0 auto;
+      color:#18498d;
+      margin-top:3px;
+    }
+
+    .doc-text{
+      min-width:0;
+    }
+
+    .doc-label{
+      font-weight:700;
+      font-size:16px;
+      margin-bottom:5px;
+      color:#1f2937;
+    }
+
+    .doc-list{
+      font-size:15px;
+      color:#4b5563;
+      line-height:1.45;
+    }
+
+    .scan-btn{
+      flex:0 0 auto;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      height:44px;
+      padding:0 18px;
+      border-radius:10px;
+      border:1px solid #2a5197;
+      color:#1d427c;
+      background:#fff;
+      font-weight:800;
+      letter-spacing:.01em;
+      box-shadow:0 1px 0 rgba(0,0,0,.02);
+      white-space:nowrap;
+    }
+
+    .scan-btn .camera{
+      width:18px;
+      height:18px;
+      border:2px solid #1d427c;
+      border-radius:4px;
+      position:relative;
+    }
+
+    .scan-btn .camera::before{
+      content:"";
+      position:absolute;
+      width:7px;
+      height:7px;
+      border:2px solid #1d427c;
+      border-radius:50%;
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+    }
+
+    .callout{
+      margin-top:8px;
+      border:1px solid #cfdff5;
+      background:#f3f8ff;
+      border-radius:10px;
+      padding:16px 18px;
+      display:flex;
+      align-items:center;
+      gap:16px;
+    }
+
+    .callout .shield{
+      width:48px;
+      height:48px;
+      border-radius:50%;
+      background:#dce9fb;
+      display:grid;
+      place-items:center;
+      color:#18498d;
+      flex:0 0 auto;
+    }
+
+    .callout .shield svg{
+      width:24px;
+      height:24px;
+      stroke:#18498d;
+      stroke-width:2;
+      fill:none;
+    }
+
+    .callout-title{
+      font-size:16px;
+      font-weight:800;
+      color:#163c73;
+      margin-bottom:4px;
+    }
+
+    .callout-sub{
+      font-size:14px;
+      color:#4b5563;
+      line-height:1.45;
+    }
+
+    .footer-btn{
+      margin-top:18px;
+      width:100%;
+      height:56px;
+      border:none;
+      border-radius:8px;
+      color:#fff;
+      background:linear-gradient(180deg, #164f98 0%, #0f3d78 100%);
+      font-size:18px;
+      font-weight:800;
+      letter-spacing:.02em;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+      box-shadow:var(--shadow);
+      cursor:pointer;
+    }
+
+    .footer-btn svg{
+      width:22px;
+      height:22px;
+      stroke:#fff;
+      fill:none;
+      stroke-width:2.2;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+    }
+
+    @media (max-width: 900px){
+      .header{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+      .utility{
+        width:100%;
+        align-items:flex-start;
+      }
+      .searchbar{
+        width:100%;
+      }
+      .hero h1{
+        font-size:40px;
+      }
+      .section{
+        flex-direction:column;
+      }
+      .upload-card{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+      .scan-btn{
+        width:100%;
+        justify-content:center;
+      }
+    }
+
+    @media (max-width: 640px){
+      .content, .header, .nav{
+        padding-left:16px;
+        padding-right:16px;
+      }
+      .hero h1{
+        font-size:34px;
+      }
+      .hero p{
+        font-size:15px;
+      }
+      .section-title{
+        font-size:19px;
+      }
+      .upload-card{
+        padding:16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="topbar">INDIVIDUALS: UNEMPLOYMENT INSURANCE SERVICES &gt;</div>
+
+    <header class="header">
+      <div class="brand">
+        <div class="seal" aria-label="Mississippi state seal">
+          <svg viewBox="0 0 120 120" role="img" aria-hidden="true">
+            <circle cx="60" cy="60" r="57" fill="#f9fafb" stroke="#123e73" stroke-width="3"/>
+            <circle cx="60" cy="60" r="50" fill="#fff" stroke="#123e73" stroke-width="2"/>
+            <circle cx="60" cy="60" r="38" fill="#f5f8fd" stroke="#123e73" stroke-width="2"/>
+            <path d="M60 34c8 0 15 6 15 14 0 4-1 7-3 10 6 2 11 7 11 14 0 13-10 21-23 21s-23-8-23-21c0-7 5-12 11-14-2-3-3-6-3-10 0-8 7-14 15-14z" fill="#d8a85b" opacity=".35"/>
+            <path d="M45 56l15-18 15 18v18H45z" fill="#d9e7f7" stroke="#123e73" stroke-width="2"/>
+            <path d="M44 74h32" stroke="#123e73" stroke-width="2" />
+            <path d="M53 53h14M53 60h14M53 67h14" stroke="#123e73" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <div class="org">MISSISSIPPI DEPARTMENT OF</div>
+          <div class="dept">Employment Security</div>
+        </div>
+      </div>
+
+      <div class="utility">
+        <div class="lang">Select Language ▼</div>
+        <div class="searchbar">
+          <input type="text" value="Need Help? Ask a Question Here." aria-label="Search help" />
+          <button type="button">SEARCH</button>
+        </div>
+      </div>
+    </header>
+
+    <nav class="nav" aria-label="Primary navigation">
+      <span>I Need A Job</span>
+      <span>Employers</span>
+      <span>Unemployment Claims</span>
+      <span>Information Center</span>
+    </nav>
+
+    <main class="content">
+      <section class="hero">
+        <h1>Unemployment Claims Document Upload</h1>
+        <p>
+          To process your claim, we may need you to submit one or more documents.
+          You can upload photos or scans of your documents using this secure portal.
+        </p>
+      </section>
+
+      <section class="section">
+        <div class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="8" r="3"></circle>
+            <path d="M6 20c0-3.3 2.7-6 6-6s6 2.7 6 6"></path>
+          </svg>
+        </div>
+        <div class="section-body">
+          <h2 class="section-title">1. Identity Verification</h2>
+          <div class="section-subtitle">Upload one document that proves your identity.</div>
+          <div class="upload-card">
+            <div class="doc-wrap">
+              <div class="doc-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                  <path d="M7 8h10M7 12h6"></path>
+                  <circle cx="8" cy="7" r="1.2" fill="currentColor" stroke="none"></circle>
+                </svg>
+              </div>
+              <div class="doc-text">
+                <div class="doc-label">Acceptable documents:</div>
+                <div class="doc-list">Driver's License, State ID, or Passport</div>
+              </div>
+            </div>
+            <div class="scan-btn" role="button" aria-label="Scan or upload identity document">
+              <span class="camera" aria-hidden="true"></span>
+              SCAN / UPLOAD
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M4 20h16"></path>
+            <path d="M6 20V8l6-4 6 4v12"></path>
+            <path d="M9 20v-7h6v7"></path>
+          </svg>
+        </div>
+        <div class="section-body">
+          <h2 class="section-title">2. Proof of Address</h2>
+          <div class="section-subtitle">Upload a document that shows your current address.</div>
+          <div class="upload-card">
+            <div class="doc-wrap">
+              <div class="doc-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 3h10l6 6v12H4z"></path>
+                  <path d="M14 3v6h6"></path>
+                  <path d="M7 13h10M7 17h10"></path>
+                </svg>
+              </div>
+              <div class="doc-text">
+                <div class="doc-label">Acceptable documents:</div>
+                <div class="doc-list">Utility Bill, Lease Agreement, Bank Statement, or Government Mail</div>
+              </div>
+            </div>
+            <div class="scan-btn" role="button" aria-label="Scan or upload proof of address">
+              <span class="camera" aria-hidden="true"></span>
+              SCAN / UPLOAD
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <rect x="4" y="6" width="16" height="12" rx="2"></rect>
+            <path d="M8 6V4h8v2"></path>
+            <path d="M8 12h8"></path>
+          </svg>
+        </div>
+        <div class="section-body">
+          <h2 class="section-title">3. Employment Information</h2>
+          <div class="section-subtitle">Upload documents related to your last employment.</div>
+          <div class="upload-card">
+            <div class="doc-wrap">
+              <div class="doc-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 3h10l6 6v12H4z"></path>
+                  <path d="M14 3v6h6"></path>
+                  <path d="M7 13h10M7 17h10"></path>
+                </svg>
+              </div>
+              <div class="doc-text">
+                <div class="doc-label">Acceptable documents:</div>
+                <div class="doc-list">Separation Notice, Layoff Notice, or Letter from Employer</div>
+              </div>
+            </div>
+            <div class="scan-btn" role="button" aria-label="Scan or upload employment information">
+              <span class="camera" aria-hidden="true"></span>
+              SCAN / UPLOAD
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 4v16"></path>
+            <path d="M8 8h5a3 3 0 0 1 0 6H8h6a3 3 0 0 1 0 6H8"></path>
+          </svg>
+        </div>
+        <div class="section-body">
+          <h2 class="section-title">4. Wage Verification (If Applicable)</h2>
+          <div class="section-subtitle">Upload documents that show your recent earnings.</div>
+          <div class="upload-card">
+            <div class="doc-wrap">
+              <div class="doc-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 3h10l6 6v12H4z"></path>
+                  <path d="M14 3v6h6"></path>
+                  <path d="M7 13h10M7 17h10"></path>
+                </svg>
+              </div>
+              <div class="doc-text">
+                <div class="doc-label">Acceptable documents:</div>
+                <div class="doc-list">Pay Stubs, W-2, or 1099</div>
+              </div>
+            </div>
+            <div class="scan-btn" role="button" aria-label="Scan or upload wage verification">
+              <span class="camera" aria-hidden="true"></span>
+              SCAN / UPLOAD
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 3l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V7z"></path>
+            <path d="M9 12l2 2 4-4"></path>
+          </svg>
+        </div>
+        <div class="section-body">
+          <h2 class="section-title">5. Additional Documents (If Applicable)</h2>
+          <div class="section-subtitle">Upload any other documents requested for your claim.</div>
+          <div class="upload-card">
+            <div class="doc-wrap">
+              <div class="doc-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 3h10l6 6v12H4z"></path>
+                  <path d="M14 3v6h6"></path>
+                  <path d="M7 13h10M7 17h10"></path>
+                </svg>
+              </div>
+              <div class="doc-text">
+                <div class="doc-label">Examples:</div>
+                <div class="doc-list">Training records, separation details, or other claim-related documents</div>
+              </div>
+            </div>
+            <div class="scan-btn" role="button" aria-label="Scan or upload additional documents">
+              <span class="camera" aria-hidden="true"></span>
+              SCAN / UPLOAD
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="callout">
+        <div class="shield" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 3l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V7z"></path>
+          </svg>
+        </div>
+        <div>
+          <div class="callout-title">Secure &amp; Private</div>
+          <div class="callout-sub">Your documents are encrypted and used only for unemployment insurance purposes.</div>
+        </div>
+      </section>
+
+      <button class="footer-btn" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 3v12"></path>
+          <path d="M8 7l4-4 4 4"></path>
+          <path d="M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"></path>
+        </svg>
+        SUBMIT DOCUMENTS
+      </button>
+    </main>
+  </div>
+</body>
+</html>
