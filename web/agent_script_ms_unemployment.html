@@ -13,11 +13,11 @@
       --line:#d8e0ea;
       --navy:#103c74;
       --gold:#d6b56d;
-      --blueSoft:#eef5ff;
       --greenSoft:#eef8ef;
       --green:#2e7d32;
       --redSoft:#fff1f1;
       --red:#d93025;
+      --blueSoft:#eef5ff;
       --orangeSoft:#fff7e6;
       --orange:#a05a00;
     }
@@ -27,16 +27,11 @@
       margin:0;
       background:var(--bg);
       color:var(--text);
-      font-family: Arial, Helvetica, sans-serif;
+      font-family:Arial, Helvetica, sans-serif;
       line-height:1.35;
     }
 
-    .wrap{
-      max-width:1120px;
-      margin:0 auto;
-      padding:20px;
-    }
-
+    .wrap{max-width:1120px;margin:0 auto;padding:20px}
     .shell{
       background:var(--card);
       border:1px solid var(--line);
@@ -68,98 +63,28 @@
       filter:blur(2px);
     }
 
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:18px;
-      min-width:0;
-      z-index:1;
-    }
-
-    .ms-mark{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      min-width:0;
-    }
-
+    .brand,.ms-mark,.ms-title,.doc-title,.seal{z-index:1}
+    .brand,.ms-mark{display:flex;align-items:center;gap:18px;min-width:0}
     .ms-shape{
-      width:62px;
-      height:62px;
-      flex:0 0 auto;
-      border-radius:10px;
+      width:62px;height:62px;flex:0 0 auto;border-radius:10px;
       background:rgba(255,255,255,.07);
-      display:grid;
-      place-items:center;
+      display:grid;place-items:center;
       box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);
     }
-
-    .ms-title{
-      display:flex;
-      flex-direction:column;
-      min-width:0;
-    }
-
-    .ms-title .state{
-      font-size:30px;
-      font-weight:800;
-      letter-spacing:.02em;
-      line-height:1;
-      margin:0;
-    }
-
-    .ms-title .sub{
-      font-size:13px;
-      opacity:.92;
-      margin-top:4px;
-      letter-spacing:.02em;
-    }
-
-    .banner-divider{
-      width:1px;
-      height:74px;
-      background:rgba(255,255,255,.22);
-      flex:0 0 auto;
-      z-index:1;
-    }
-
-    .doc-title{
-      z-index:1;
-      min-width:0;
-    }
-
-    .doc-title h1{
-      margin:0;
-      font-size:34px;
-      line-height:1.05;
-      letter-spacing:-0.03em;
-      font-weight:800;
-    }
-
-    .doc-title .subtitle{
-      margin-top:7px;
-      color:#f4c96d;
-      font-size:24px;
-      font-weight:700;
-      letter-spacing:-0.01em;
-    }
-
+    .ms-title{display:flex;flex-direction:column;min-width:0}
+    .ms-title .state{font-size:30px;font-weight:800;letter-spacing:.02em;line-height:1}
+    .ms-title .sub{font-size:13px;opacity:.92;margin-top:4px;letter-spacing:.02em}
+    .banner-divider{width:1px;height:74px;background:rgba(255,255,255,.22);flex:0 0 auto}
+    .doc-title h1{margin:0;font-size:34px;line-height:1.05;letter-spacing:-0.03em;font-weight:800}
+    .doc-title .subtitle{margin-top:7px;color:#f4c96d;font-size:24px;font-weight:700;letter-spacing:-0.01em}
     .seal{
-      width:92px;
-      height:92px;
-      flex:0 0 auto;
-      z-index:1;
-      border-radius:50%;
-      display:grid;
-      place-items:center;
+      width:92px;height:92px;flex:0 0 auto;border-radius:50%;
+      display:grid;place-items:center;
       background:rgba(255,255,255,.08);
       box-shadow:inset 0 0 0 1px rgba(255,255,255,.18);
     }
 
-    .content{
-      padding:20px;
-    }
-
+    .content{padding:20px}
     .card{
       border:1px solid var(--line);
       border-radius:12px;
@@ -167,295 +92,109 @@
       overflow:hidden;
       margin-bottom:20px;
     }
-
-    .card-inner{
-      padding:18px 20px;
-    }
-
-    .top-grid{
-      display:grid;
-      grid-template-columns:1fr 1fr 1fr;
-      gap:0;
-    }
-
-    .top-item{
-      padding:10px 14px;
-      border-right:1px solid var(--line);
-    }
-
-    .top-item:last-child{border-right:none}
-
-    .top-label{
-      font-size:12px;
-      text-transform:uppercase;
-      letter-spacing:.08em;
-      color:var(--muted);
-      font-weight:700;
-      margin-bottom:6px;
-    }
-
-    .top-value{
-      font-size:18px;
-      font-weight:800;
-      color:var(--text);
-      margin-bottom:4px;
-    }
-
-    .top-sub{
-      font-size:14px;
-      color:var(--muted);
-    }
-
+    .card-inner{padding:18px 20px}
     .section-title{
-      font-size:18px;
-      font-weight:800;
-      letter-spacing:.07em;
-      color:#103c74;
-      text-transform:uppercase;
-      margin:0 0 14px 0;
+      font-size:18px;font-weight:800;letter-spacing:.07em;color:#103c74;
+      text-transform:uppercase;margin:0 0 14px 0;
     }
+
+    .top-grid,.overview-grid,.meta-grid{display:grid}
+    .top-grid{grid-template-columns:1fr 1fr 1fr}
+    .top-item{padding:10px 14px;border-right:1px solid var(--line)}
+    .top-item:last-child{border-right:none}
+    .top-label{
+      font-size:12px;text-transform:uppercase;letter-spacing:.08em;
+      color:var(--muted);font-weight:700;margin-bottom:6px
+    }
+    .top-value{font-size:18px;font-weight:800;color:var(--text);margin-bottom:4px}
+    .top-sub{font-size:14px;color:var(--muted)}
 
     .overview-grid{
-      display:grid;
       grid-template-columns:repeat(3, minmax(0, 1fr));
-      gap:0;
       border-top:1px solid var(--line);
       border-left:1px solid var(--line);
     }
-
     .overview-item{
-      padding:18px 16px;
-      border-right:1px solid var(--line);
-      border-bottom:1px solid var(--line);
+      padding:18px 16px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);
       min-height:94px;
     }
-
     .overview-k{
-      font-size:12px;
-      color:var(--muted);
-      text-transform:capitalize;
-      margin-bottom:6px;
-      display:block;
+      font-size:12px;color:var(--muted);text-transform:capitalize;margin-bottom:6px;display:block
     }
-
-    .overview-v{
-      font-size:17px;
-      font-weight:800;
-      color:var(--text);
-      word-break:break-word;
-    }
+    .overview-v{font-size:17px;font-weight:800;color:var(--text);word-break:break-word}
 
     .badge{
-      display:inline-block;
-      margin-top:8px;
-      padding:6px 11px;
-      border-radius:999px;
-      font-size:13px;
-      font-weight:800;
-      line-height:1;
+      display:inline-block;margin-top:8px;padding:6px 11px;border-radius:999px;
+      font-size:13px;font-weight:800;line-height:1;
     }
+    .badge-red{background:var(--redSoft);color:var(--red);border:1px solid #f4c4c1}
+    .badge-green{background:var(--greenSoft);color:var(--green);border:1px solid #c4e4c7}
+    .badge-orange{background:var(--orangeSoft);color:var(--orange);border:1px solid #f3d7a5}
 
-    .badge-red{
-      background:var(--redSoft);
-      color:var(--red);
-      border:1px solid #f4c4c1;
+    .info-callout{
+      border:1px solid #bbd3f2;background:#f3f8ff;border-radius:10px;padding:14px 16px;
+      display:flex;gap:12px;align-items:flex-start;color:#1e4d8d;margin-bottom:18px;
     }
+    .info-icon{width:22px;height:22px;flex:0 0 auto;margin-top:1px}
 
-    .badge-green{
-      background:var(--greenSoft);
-      color:var(--green);
-      border:1px solid #c4e4c7;
+    .meta-grid{
+      grid-template-columns:repeat(2, minmax(0, 1fr));
+      gap:0;margin-top:12px;
     }
+    .meta-item{
+      padding:12px 0 14px;border-bottom:1px solid #e7edf4;
+    }
+    .meta-item:nth-child(odd){padding-right:18px}
+    .meta-item:nth-child(even){padding-left:18px}
+    .meta-k{
+      font-size:12px;color:var(--muted);margin-bottom:5px;text-transform:capitalize
+    }
+    .meta-v{font-size:15px;font-weight:800;color:var(--text);word-break:break-word}
 
     .missing-wrap{
       background:linear-gradient(180deg, #fffdf5 0%, #fff8e6 100%);
-      border:1px solid #f0d89a;
-      border-radius:10px;
-      padding:18px 18px 16px;
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:18px;
+      border:1px solid #f0d89a;border-radius:10px;padding:18px 18px 16px;
+      display:flex;align-items:flex-start;justify-content:space-between;gap:18px;
     }
-
-    .missing-left{
-      display:flex;
-      gap:14px;
-      align-items:flex-start;
-      min-width:0;
-    }
-
-    .doc-ico{
-      width:34px;
-      height:34px;
-      flex:0 0 auto;
-      color:#a56a00;
-      margin-top:2px;
-    }
-
-    .missing-title{
-      font-size:18px;
-      font-weight:800;
-      margin:0 0 5px 0;
-      color:var(--text);
-    }
-
-    .missing-desc{
-      font-size:14px;
-      color:var(--muted);
-    }
-
+    .missing-left{display:flex;gap:14px;align-items:flex-start;min-width:0}
+    .doc-ico{width:34px;height:34px;flex:0 0 auto;color:#a56a00;margin-top:2px}
+    .missing-title{font-size:18px;font-weight:800;margin:0 0 5px 0;color:var(--text)}
+    .missing-desc{font-size:14px;color:var(--muted)}
     .pill{
-      flex:0 0 auto;
-      border-radius:999px;
-      padding:7px 12px;
-      font-size:13px;
-      font-weight:800;
-      color:#8a4f00;
-      background:#fff3d9;
-      border:1px solid #f0d89a;
-      white-space:nowrap;
-      margin-top:2px;
-    }
-
-    .info-callout{
-      border:1px solid #bbd3f2;
-      background:#f3f8ff;
-      border-radius:10px;
-      padding:14px 16px;
-      display:flex;
-      gap:12px;
-      align-items:flex-start;
-      color:#1e4d8d;
-      margin-bottom:18px;
-    }
-
-    .info-icon{
-      width:22px;
-      height:22px;
-      flex:0 0 auto;
-      margin-top:1px;
-    }
-
-    .meta-grid{
-      display:grid;
-      grid-template-columns:repeat(2, minmax(0, 1fr));
-      gap:0;
-      margin-top:12px;
-    }
-
-    .meta-item{
-      padding:12px 0 14px;
-      border-bottom:1px solid #e7edf4;
-    }
-
-    .meta-item:nth-child(odd){
-      padding-right:18px;
-    }
-
-    .meta-item:nth-child(even){
-      padding-left:18px;
-    }
-
-    .meta-k{
-      font-size:12px;
-      color:var(--muted);
-      margin-bottom:5px;
-      text-transform:capitalize;
-    }
-
-    .meta-v{
-      font-size:15px;
-      font-weight:800;
-      color:var(--text);
-      word-break:break-word;
+      flex:0 0 auto;border-radius:999px;padding:7px 12px;font-size:13px;font-weight:800;
+      color:#8a4f00;background:#fff3d9;border:1px solid #f0d89a;white-space:nowrap;margin-top:2px;
     }
 
     .next-wrap{
-      border:1px solid #cde1c6;
-      background:var(--greenSoft);
-      border-radius:10px;
-      padding:14px 16px;
+      border:1px solid #cde1c6;background:var(--greenSoft);border-radius:10px;padding:14px 16px;
     }
+    .next-title{font-size:16px;font-weight:800;margin:0 0 6px 0}
+    .next-desc{font-size:14px;color:var(--muted)}
 
-    .next-title{
-      font-size:16px;
-      font-weight:800;
-      margin:0 0 6px 0;
-    }
-
-    .next-desc{
-      font-size:14px;
-      color:var(--muted);
-    }
-
-    .buttons{
-      display:flex;
-      flex-wrap:wrap;
-      gap:12px;
-      margin-top:16px;
-    }
-
+    .buttons{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px}
     .btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-height:44px;
-      padding:0 18px;
-      border-radius:8px;
-      border:1px solid #c9d3df;
-      background:#fff;
-      color:#173e78;
-      font-weight:800;
-      font-size:14px;
-      text-decoration:none;
-      box-shadow:0 1px 0 rgba(0,0,0,.02);
+      display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 18px;
+      border-radius:8px;border:1px solid #c9d3df;background:#fff;color:#173e78;font-weight:800;
+      font-size:14px;text-decoration:none;box-shadow:0 1px 0 rgba(0,0,0,.02);
     }
-
-    .btn.primary{
-      background:#184a8b;
-      color:#fff;
-      border-color:#184a8b;
-    }
-
-    .btn.secondary{
-      background:#fff;
-      color:#183d72;
-    }
-
-    .btn.ghost{
-      background:#fff;
-      color:#c1292e;
-      border-color:#efb0b0;
-    }
-
+    .btn.primary{background:#184a8b;color:#fff;border-color:#184a8b}
+    .btn.ghost{background:#fff;color:#c1292e;border-color:#efb0b0}
     .btn:hover{filter:brightness(.98)}
     .btn.primary:hover{filter:brightness(1.04)}
 
-    .footer-note{
-      font-size:12px;
-      color:var(--muted);
-      margin-top:10px;
-    }
-
-    .hint{
-      display:block;
-      font-size:12px;
-      color:var(--muted);
-      font-weight:600;
-      margin-top:4px;
-    }
+    .footer-note{font-size:12px;color:var(--muted);margin-top:10px}
+    .hint{display:block;font-size:12px;color:var(--muted);font-weight:600;margin-top:4px}
 
     @media (max-width: 900px){
-      .banner{flex-wrap:wrap;}
-      .banner-divider{display:none;}
-      .doc-title h1{font-size:28px;}
-      .doc-title .subtitle{font-size:20px;}
-      .top-grid,.overview-grid,.meta-grid{grid-template-columns:1fr;}
-      .top-item{border-right:none;border-bottom:1px solid var(--line);}
-      .top-item:last-child{border-bottom:none;}
-      .overview-item{border-right:none;}
-      .meta-item:nth-child(odd),.meta-item:nth-child(even){padding-left:0;padding-right:0;}
+      .banner{flex-wrap:wrap}
+      .banner-divider{display:none}
+      .doc-title h1{font-size:28px}
+      .doc-title .subtitle{font-size:20px}
+      .top-grid,.overview-grid,.meta-grid{grid-template-columns:1fr}
+      .top-item{border-right:none;border-bottom:1px solid var(--line)}
+      .top-item:last-child{border-bottom:none}
+      .overview-item{border-right:none}
+      .meta-item:nth-child(odd),.meta-item:nth-child(even){padding-left:0;padding-right:0}
     }
   </style>
 </head>
@@ -528,12 +267,12 @@
               <div class="overview-item"><span class="overview-k">Claim Status</span><div class="overview-v" data-field="claimStatus">—</div></div>
               <div class="overview-item"><span class="overview-k">Payment Status</span><div class="overview-v" data-field="paymentStatus">—</div></div>
               <div class="overview-item"><span class="overview-k">Payment Date</span><div class="overview-v" data-field="paymentDate">—</div></div>
-              <div class="overview-item"><span class="overview-k">Verification Status</span><div class="overview-v" data-field="verificationStatus">—</div></div>
-              <div class="overview-item"><span class="overview-k">Document Required</span><div class="overview-v" data-field="documentRequired">—</div></div>
-              <div class="overview-item"><span class="overview-k">Document Type</span><div class="overview-v" data-field="documentType">—</div></div>
-              <div class="overview-item"><span class="overview-k">Escalation Required</span><div class="overview-v" data-field="escalationRequired">—</div></div>
-              <div class="overview-item"><span class="overview-k">Escalation Reason</span><div class="overview-v" data-field="escalationReason">—</div></div>
-              <div class="overview-item"><span class="overview-k">Sentiment Flag</span><div class="overview-v" data-field="sentimentFlag">—</div></div>
+              <div class="overview-item"><span class="overview-k">Weekly Benefit Amount</span><div class="overview-v" data-field="weeklyBenefitAmount">—</div></div>
+              <div class="overview-item"><span class="overview-k">Payment Amount</span><div class="overview-v" data-field="paymentAmount">—</div></div>
+              <div class="overview-item"><span class="overview-k">Claim Balance</span><div class="overview-v" data-field="claimBalance">—</div></div>
+              <div class="overview-item"><span class="overview-k">Certification Status</span><div class="overview-v" data-field="certificationStatus">—</div></div>
+              <div class="overview-item"><span class="overview-k">Last Certification Date</span><div class="overview-v" data-field="lastCertificationDate">—</div></div>
+              <div class="overview-item"><span class="overview-k">Next Certification Date</span><div class="overview-v" data-field="nextCertificationDate">—</div></div>
             </div>
           </div>
         </div>
@@ -552,7 +291,7 @@
                   <div class="missing-title" data-field="documentType">—</div>
                   <div class="missing-desc">
                     Document required: <span data-field="documentRequired">—</span>
-                    <span class="hint">This section stays visible even when the value is not needed.</span>
+                    <span class="hint">This field supports claim-specific guidance before transfer.</span>
                   </div>
                 </div>
               </div>
@@ -576,15 +315,15 @@
             <div class="meta-grid">
               <div class="meta-item"><div class="meta-k">Key</div><div class="meta-v" data-field="key">—</div></div>
               <div class="meta-item"><div class="meta-k">Name</div><div class="meta-v" data-field="name">—</div></div>
-              <div class="meta-item"><div class="meta-k">Claim Status</div><div class="meta-v" data-field="claimStatus">—</div></div>
-              <div class="meta-item"><div class="meta-k">Payment Status</div><div class="meta-v" data-field="paymentStatus">—</div></div>
-              <div class="meta-item"><div class="meta-k">Payment Date</div><div class="meta-v" data-field="paymentDate">—</div></div>
-              <div class="meta-item"><div class="meta-k">Verification Status</div><div class="meta-v" data-field="verificationStatus">—</div></div>
-              <div class="meta-item"><div class="meta-k">Document Required</div><div class="meta-v" data-field="documentRequired">—</div></div>
-              <div class="meta-item"><div class="meta-k">Document Type</div><div class="meta-v" data-field="documentType">—</div></div>
+              <div class="meta-item"><div class="meta-k">Claim Type</div><div class="meta-v" data-field="claimType">—</div></div>
+              <div class="meta-item"><div class="meta-k">Issue Flag</div><div class="meta-v" data-field="issueFlag">—</div></div>
+              <div class="meta-item"><div class="meta-k">Issue Description</div><div class="meta-v" data-field="issueDescription">—</div></div>
               <div class="meta-item"><div class="meta-k">Escalation Required</div><div class="meta-v" data-field="escalationRequired">—</div></div>
               <div class="meta-item"><div class="meta-k">Escalation Reason</div><div class="meta-v" data-field="escalationReason">—</div></div>
               <div class="meta-item"><div class="meta-k">Advisor Queue</div><div class="meta-v" data-field="advisorQueue">—</div></div>
+              <div class="meta-item"><div class="meta-k">Verification Status</div><div class="meta-v" data-field="verificationStatus">—</div></div>
+              <div class="meta-item"><div class="meta-k">Document Required</div><div class="meta-v" data-field="documentRequired">—</div></div>
+              <div class="meta-item"><div class="meta-k">Document Type</div><div class="meta-v" data-field="documentType">—</div></div>
               <div class="meta-item"><div class="meta-k">Sentiment Flag</div><div class="meta-v" data-field="sentimentFlag">—</div></div>
             </div>
           </div>
@@ -623,9 +362,30 @@
     (function () {
       const params = new URLSearchParams(window.location.search);
       const fields = [
-        "key","name","claimStatus","paymentStatus","paymentDate","verificationStatus",
-        "documentRequired","documentType","escalationRequired","escalationReason",
-        "advisorQueue","sentimentFlag","lastUpdated"
+        "key",
+        "name",
+        "claimStatus",
+        "paymentStatus",
+        "paymentDate",
+        "verificationStatus",
+        "documentRequired",
+        "documentType",
+        "escalationRequired",
+        "escalationReason",
+        "advisorQueue",
+        "sentimentFlag",
+        "lastUpdated",
+        "weeklyBenefitAmount",
+        "paymentAmount",
+        "claimBalance",
+        "lastPaymentDate",
+        "nextPaymentDate",
+        "certificationStatus",
+        "lastCertificationDate",
+        "nextCertificationDate",
+        "issueFlag",
+        "issueDescription",
+        "claimType"
       ];
 
       function clean(value) {
@@ -637,11 +397,13 @@
 
       function setBadgeClasses(el, value) {
         if (!el) return;
-        el.classList.remove("badge-red", "badge-green");
+        el.classList.remove("badge-red", "badge-green", "badge-orange");
         const v = clean(value).toLowerCase();
-        if (["yes", "urgent", "failed", "delayed", "held", "needs_review", "pending"].includes(v)) {
+        if (["yes", "urgent", "failed", "delayed", "held", "needs_review", "pending", "suspended"].includes(v)) {
           el.classList.add("badge-red");
-        } else if (["no", "verified", "issued", "approved"].includes(v)) {
+        } else if (["review", "manual", "partial", "identity review", "payment delay", "wage review"].includes(v)) {
+          el.classList.add("badge-orange");
+        } else if (["no", "verified", "issued", "approved", "completed", "none"].includes(v)) {
           el.classList.add("badge-green");
         }
       }
@@ -661,10 +423,12 @@
         });
       }
 
-      document.querySelectorAll('[data-field="escalationRequired"], [data-field="documentRequired"]').forEach((el) => {
-        const v = clean(el.textContent).toLowerCase();
-        if (v === "yes") el.classList.add("badge", "badge-red");
-        if (v === "no") el.classList.add("badge", "badge-green");
+      ["escalationRequired", "documentRequired"].forEach((field) => {
+        document.querySelectorAll(`[data-field="${field}"]`).forEach((el) => {
+          const v = clean(el.textContent).toLowerCase();
+          if (v === "yes") el.classList.add("badge", "badge-red");
+          if (v === "no") el.classList.add("badge", "badge-green");
+        });
       });
     })();
   </script>
