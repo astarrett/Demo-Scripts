@@ -3,157 +3,54 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Harris County Tax Office - Repayment Agreement</title>
+  <title>Harris County Tax Office - Repayment Plan</title>
   <style>
-
     :root {
-      --navy: #1f2f53;
-      --page: #e8eef5;
-      --card: #ffffff;
-      --line: #dbe4ef;
-      --text: #24324a;
-      --muted: #718197;
-      --green: #2b7a45;
-      --blue: #32578f;
-      --blue-bg: #eef4ff;
-      --gold: #c78a1e;
+      --navy: #1f2f53; --page: #e8eef5; --card: #ffffff; --line: #dbe4ef;
+      --text: #24324a; --muted: #718197; --green: #2b7a45; --blue: #32578f;
+      --blue-bg: #eef4ff; --gold: #c78a1e;
       --shadow: 0 1px 1px rgba(16, 24, 40, .04), 0 6px 18px rgba(16, 24, 40, .06);
       --radius: 10px;
     }
     * { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background: var(--page);
-      color: var(--text);
-    }
-    .topbar {
-      background: var(--navy);
-      color: #fff;
-      min-height: 98px;
-      display: flex;
-      align-items: center;
-      padding: 0 26px;
-      box-shadow: inset 0 -1px 0 rgba(255,255,255,.08);
-    }
-    .brand {
-      display: flex; align-items: center; gap: 16px;
-      min-width: 0;
-    }
-    .seal {
-      width: 44px; height: 44px; border-radius: 999px; flex: 0 0 auto;
-      background: radial-gradient(circle at 35% 35%, #e3f0ff 0 11%, #f7fbff 12% 19%, #2e4f8f 20% 100%);
-      border: 2px solid rgba(255,255,255,.7);
-      display: grid; place-items: center;
-      color: #fff; font-weight: 800; font-size: 12px; letter-spacing: .5px;
-      position: relative; overflow: hidden;
-    }
-    .seal::before {
-      content: "TX";
-      position: absolute; bottom: 5px; left: 0; right: 0; text-align: center;
-      font-size: 9px; letter-spacing: 1px; opacity: .9;
-    }
-    .brand h1 {
-      font-size: 22px; line-height: 1.1; margin: 0; font-weight: 700;
-    }
-    .brand .sub {
-      margin-top: 6px; font-size: 14px; color: rgba(255,255,255,.88);
-    }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--page); color: var(--text); }
+    .topbar { background: var(--navy); color: #fff; min-height: 98px; display: flex; align-items: center; padding: 0 26px; box-shadow: inset 0 -1px 0 rgba(255,255,255,.08); }
+    .brand { display: flex; align-items: center; gap: 16px; min-width: 0; }
+    .seal { width: 44px; height: 44px; border-radius: 999px; flex: 0 0 auto; background: radial-gradient(circle at 35% 35%, #e3f0ff 0 11%, #f7fbff 12% 19%, #2e4f8f 20% 100%); border: 2px solid rgba(255,255,255,.7); display: grid; place-items: center; color: #fff; font-weight: 800; font-size: 12px; letter-spacing: .5px; position: relative; overflow: hidden; }
+    .seal::before { content: "TX"; position: absolute; bottom: 5px; left: 0; right: 0; text-align: center; font-size: 9px; letter-spacing: 1px; opacity: .9; }
+    .brand h1 { font-size: 22px; line-height: 1.1; margin: 0; font-weight: 700; }
+    .brand .sub { margin-top: 6px; font-size: 14px; color: rgba(255,255,255,.88); }
     .chips { margin-left: auto; display: flex; gap: 12px; align-items: center; }
-    .chip {
-      background: #edf4ff; color: #35598f; border-radius: 999px; padding: 10px 18px;
-      font-weight: 700; font-size: 16px; line-height: 1;
-      box-shadow: inset 0 0 0 1px rgba(53,89,143,.06);
-      white-space: nowrap;
-    }
+    .chip { background: #edf4ff; color: #35598f; border-radius: 999px; padding: 10px 18px; font-weight: 700; font-size: 16px; line-height: 1; box-shadow: inset 0 0 0 1px rgba(53,89,143,.06); white-space: nowrap; }
     .chip.muted { font-size: 15px; }
-    .page {
-      width: min(1120px, calc(100vw - 48px));
-      margin: 18px auto 0;
-      padding-bottom: 24px;
-    }
-    .card {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      margin-bottom: 18px;
-    }
-    .card-header {
-      min-height: 62px;
-      padding: 14px 18px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      border-bottom: 1px solid var(--line);
-      background: linear-gradient(#f8fafc, #f6f8fb);
-      font-size: 18px;
-      font-weight: 700;
-    }
+    .page { width: min(1120px, calc(100vw - 48px)); margin: 18px auto 0; padding-bottom: 24px; }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; margin-bottom: 18px; }
+    .card-header { min-height: 62px; padding: 14px 18px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--line); background: linear-gradient(#f8fafc, #f6f8fb); font-size: 18px; font-weight: 700; }
     .card-body { padding: 22px 18px 20px; }
     .icon { font-size: 20px; width: 22px; text-align: center; opacity: .95; }
     .grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 26px 48px; }
     .grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 48px; }
-    .field-label {
-      font-size: 13px; font-weight: 800; letter-spacing: 1px; color: #7a889b;
-      text-transform: uppercase; margin-bottom: 6px;
-    }
+    .field-label { font-size: 13px; font-weight: 800; letter-spacing: 1px; color: #7a889b; text-transform: uppercase; margin-bottom: 6px; }
     .field-value { font-size: 19px; line-height: 1.35; color: #232e40; }
     .field-value.small { font-size: 15px; }
     .field-value.green { color: var(--green); font-weight: 800; }
-    .field-value.link { color: #2f5c9a; text-decoration: underline; }
+    .field-value.gold { color: var(--gold); font-weight: 800; }
+    .field-value.link { color: #2f5c9a; text-decoration: underline; word-break: break-all; }
     .field-group { min-height: 58px; }
-    .section-title {
-      font-size: 16px; font-weight: 700; margin: 0 0 10px; color: #29364a;
-    }
     .subtle-rule { border-top: 1px solid #e6edf5; margin: 0 0 14px; }
-    .tracking-box {
-      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px 42px;
-    }
-    .form-grid {
-      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px 16px;
-    }
+    .form-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px 16px; }
     .control { display: flex; flex-direction: column; gap: 8px; }
     .control label { font-size: 13px; font-weight: 700; color: #3f4f63; }
-    .input, select {
-      height: 38px; border: 1px solid #c9d4e1; border-radius: 7px; padding: 0 12px;
-      font-size: 15px; color: #1f2937; background: #fff; box-shadow: inset 0 1px 2px rgba(0,0,0,.03);
-    }
+    .input, select { height: 38px; border: 1px solid #c9d4e1; border-radius: 7px; padding: 0 12px; font-size: 15px; color: #1f2937; background: #fff; box-shadow: inset 0 1px 2px rgba(0,0,0,.03); }
+    .section-title { font-size: 16px; font-weight: 700; margin: 0 0 10px; color: #29364a; }
     .btnrow { display:flex; gap: 12px; flex-wrap: wrap; margin-top: 14px; }
-    .btn {
-      appearance: none; border: 1px solid transparent; border-radius: 6px; padding: 12px 28px;
-      font-size: 16px; font-weight: 700; color: #fff; background: #36588d;
-      box-shadow: inset 0 -1px 0 rgba(0,0,0,.08);
-    }
+    .btn { appearance: none; border: 1px solid transparent; border-radius: 6px; padding: 12px 28px; font-size: 16px; font-weight: 700; color: #fff; background: #36588d; cursor: pointer; box-shadow: inset 0 -1px 0 rgba(0,0,0,.08); }
     .btn.green { background: #2e6f4f; }
     .btn.ghost { background: #fff; color: #32578f; border-color: #32578f; }
-    .btn:disabled { opacity: .9; }
-    .script-box {
-      background: #fbfcfe; border: 1px solid #dfe7f1; border-radius: 8px; padding: 26px 24px;
-      line-height: 1.95; font-size: 19px; color: #2a3545;
-    }
-    .script-box p { margin: 0 0 12px; }
-    .script-box ul { margin: 10px 0 12px 22px; padding: 0; }
-    .script-box li { margin: 0 0 4px; }
-    .hl { background: #fff3a8; padding: 0 4px; border-radius: 3px; font-weight: 700; }
-    .quote { color: #32578f; font-weight: 700; }
-    .footer {
-      text-align: center; color: #8a96a7; font-size: 12px; padding: 18px 0 16px;
-    }
-    .status-good { color: var(--green); font-weight: 800; }
-    .pill-note {
-      display:inline-flex; align-items:center; justify-content:center; min-width:112px;
-      padding:6px 10px; border-radius:999px; background:#eef4ff; color:#32578f;
-      font-size:14px; font-weight:800;
-    }
-    @media (max-width: 980px) {
-      .grid3, .grid2, .tracking-box, .form-grid { grid-template-columns: 1fr; }
-      .chips { display: none; }
-      .page { width: min(1120px, calc(100vw - 24px)); }
-      .field-value { font-size: 17px; }
-    }
-
+    .toast { display:none; margin-top:14px; padding:10px 14px; border-radius:8px; background:#e6f4ec; color:#1f6b41; font-weight:700; font-size:14px; }
+    .footer { text-align: center; color: #8a96a7; font-size: 12px; padding: 18px 0 16px; }
+    @media (max-width: 980px) { .grid3, .grid2, .form-grid { grid-template-columns: 1fr; } .chips { display: none; } .page { width: min(1120px, calc(100vw - 24px)); } .field-value { font-size: 17px; } }
   </style>
 </head>
 <body>
@@ -162,7 +59,7 @@
       <div class="seal" aria-hidden="true"></div>
       <div>
         <h1>Harris County Tax Office</h1>
-        <div class="sub">Repayment Agreement</div>
+        <div class="sub">Repayment Plan</div>
       </div>
     </div>
     <div class="chips">
@@ -173,9 +70,9 @@
 
   <main class="page">
     <section class="card">
-      <div class="card-header"><span class="icon">👤</span>Customer Information</div>
+      <div class="card-header"><span class="icon">&#128100;</span>Customer Information</div>
       <div class="card-body">
-        <div class="grid2">
+        <div class="grid3">
           <div class="field-group"><div class="field-label">Full Name</div><div class="field-value" id="name">Maria Lopez</div></div>
           <div class="field-group"><div class="field-label">Phone</div><div class="field-value" id="phone">+1 (317) 703-0977</div></div>
           <div class="field-group"><div class="field-label">Address</div><div class="field-value" id="address">1450 Canal St, Houston, TX 77002</div></div>
@@ -184,7 +81,7 @@
     </section>
 
     <section class="card">
-      <div class="card-header"><span class="icon">💰</span>Property Tax Account</div>
+      <div class="card-header"><span class="icon">&#128176;</span>Property Tax Account</div>
       <div class="card-body">
         <div class="grid3">
           <div class="field-group"><div class="field-label">Account Number</div><div class="field-value" id="accountNumber">PT-100001</div></div>
@@ -195,139 +92,122 @@
     </section>
 
     <section class="card">
-      <div class="card-header"><span class="icon">📋</span>Repayment Plan Details</div>
+      <div class="card-header"><span class="icon">&#128203;</span>Repayment Plan Details</div>
       <div class="card-body">
         <div class="grid3">
-          <div class="field-group"><div class="field-label">Down Payment</div><div class="field-value" id="repaymentDownPayment">$250.00</div></div>
-          <div class="field-group"><div class="field-label">Repayment Months</div><div class="field-value" id="repaymentMonths">12</div></div>
-          <div class="field-group"><div class="field-label">Monthly Payment</div><div class="field-value" id="repaymentMonthlyPayment">$186.26</div></div>
-          <div class="field-group"><div class="field-label">Start Date</div><div class="field-value" id="repaymentStartDate">6/1/26</div></div>
-          <div class="field-group"><div class="field-label">Confirmation Number</div><div class="field-value" id="repaymentConfirmationNumber">HC-TX-9921</div></div>
-          <div class="field-group"><div class="field-label">Plan Status</div><div class="field-value green" id="planState">Confirmed</div></div>
+          <div class="field-group"><div class="field-label">Down Payment</div><div class="field-value" id="downPayment">$250.00</div></div>
+          <div class="field-group"><div class="field-label">Months</div><div class="field-value" id="repaymentMonths">12</div></div>
+          <div class="field-group"><div class="field-label">Monthly Payment</div><div class="field-value" id="monthlyPayment">$186.26</div></div>
+          <div class="field-group"><div class="field-label">Start Date</div><div class="field-value" id="repaymentStart">6/1/26</div></div>
+          <div class="field-group"><div class="field-label">Confirmation #</div><div class="field-value" id="confirmationNumber">HC-TX-9921</div></div>
         </div>
       </div>
     </section>
 
     <section class="card">
-      <div class="card-header"><span class="icon">🖊️</span>Signature Tracking</div>
+      <div class="card-header"><span class="icon">&#128241;</span>SMS Form Tracking</div>
       <div class="card-body">
         <div class="grid3">
-          <div class="field-group"><div class="field-label">Sent Time</div><div class="field-value small" id="smsSent">5/1/26 14:05</div></div>
-          <div class="field-group"><div class="field-label">Received Time</div><div class="field-value small" id="smsReceived">5/1/26 14:05</div></div>
+          <div class="field-group"><div class="field-label">SMS Sent</div><div class="field-value small" id="smsSent">5/1/26 14:05</div></div>
+          <div class="field-group"><div class="field-label">SMS Received</div><div class="field-value small" id="smsReceived">5/1/26 14:05</div></div>
           <div class="field-group"><div class="field-label">Signature Status</div><div class="field-value green" id="signatureStatus">Signed</div></div>
           <div class="field-group"><div class="field-label">Signed Name</div><div class="field-value small" id="signedName">Maria Lopez</div></div>
           <div class="field-group"><div class="field-label">Signed Timestamp</div><div class="field-value small" id="signedTimestamp">5/1/26 14:06</div></div>
-          <div class="field-group"><div class="field-label">Secure Link</div><div class="field-value small link" id="officialUrl">https://www.hctax.net</div></div>
+          <div class="field-group"><div class="field-label">Official URL</div><div class="field-value small link"><a id="officialUrl" href="https://www.hctax.net" target="_blank" rel="noopener">https://www.hctax.net</a></div></div>
         </div>
       </div>
     </section>
 
     <section class="card">
-      <div class="card-header"><span class="icon">⚡</span>Account Actions</div>
+      <div class="card-header"><span class="icon">&#9889;</span>Agent Actions</div>
       <div class="card-body">
-        <div class="pill-note">Display Only</div>
-        <div class="subtle-rule" style="margin-top:10px;"></div>
+        <div class="section-title">Update Repayment Plan</div>
         <div class="form-grid">
           <div class="control"><label>Eligibility Status</label><select id="actionEligibility"><option>Eligible</option><option>Pending Review</option><option>Ineligible</option></select></div>
-          <div class="control"><label>Down Payment ($)</label><input class="input" id="actionDownPayment" value="250" /></div>
+          <div class="control"><label>Down Payment ($)</label><input class="input" id="actionDownPayment" value="250.00" /></div>
           <div class="control"><label>Months</label><input class="input" id="actionMonths" value="12" /></div>
           <div class="control"><label>Monthly Payment ($)</label><input class="input" id="actionMonthlyPayment" value="186.26" /></div>
           <div class="control"><label>Start Date</label><input class="input" id="actionStartDate" value="6/1/26" /></div>
           <div class="control"><label>Confirmation #</label><input class="input" id="actionConfirmation" value="HC-TX-9921" /></div>
         </div>
         <div class="btnrow">
-          <button class="btn" type="button">Save Repayment Changes</button>
-          <button class="btn green" type="button">Send Agreement Reminder</button>
-          <button class="btn ghost" type="button">Refresh Data</button>
+          <button class="btn" type="button" id="saveBtn">Save Repayment Changes</button>
         </div>
-      </div>
-    </section>
 
-    <section class="card">
-      <div class="card-header"><span class="icon">📝</span>Conversation Guide</div>
-      <div class="card-body">
-        <div class="script-box">
-          <p class="quote">"Your repayment plan is confirmed!"</p>
-          <p>Here is the repayment summary for <span class="hl" id="scriptName1">Maria Lopez</span>:</p>
-          <ul>
-            <li>Confirmation number: <span class="hl" id="scriptConfirmation">HC-TX-9921</span></li>
-            <li>Down payment: <span class="hl" id="scriptDownPayment">$250.00</span></li>
-            <li>Monthly payment: <span class="hl" id="scriptMonthly">$186.26/month</span></li>
-            <li>Term: <span class="hl" id="scriptMonths">12 months</span></li>
-            <li>Start date: <span class="hl" id="scriptStartDate">6/1/26</span></li>
-          </ul>
-          <p>Please review the repayment agreement and submit the signature when ready.</p>
-          <p class="quote">"Let me know if you would like me to review anything else on the account."</p>
+        <div class="section-title" style="margin-top:22px;">SMS Actions</div>
+        <div class="subtle-rule"></div>
+        <div class="btnrow" style="margin-top:0;">
+          <button class="btn green" type="button" id="resendBtn">Resend SMS Form</button>
+          <button class="btn ghost" type="button" id="refreshBtn">Refresh Data</button>
         </div>
+        <div class="toast" id="toast">Changes saved.</div>
       </div>
     </section>
   </main>
+  <div class="footer">Harris County Tax Office &mdash; Internal Agent Tool &mdash; Not for public distribution</div>
 
   <script>
+    const HC_DATA = {
+      "PT-100001": {key:"PT-100001",name:"Maria Lopez",phone:"13177030977",address:"1450 Canal St, Houston, TX 77002",serviceType:"Property Tax",delinquentBalance:"2485.17",repaymentEligibilityStatus:"Eligible",downPaymentAmount:"250",repaymentMonths:"12",monthlyPayment:"186.26",repaymentStart:"6/1/26",confirmationNumber:"HC-TX-9921",smsSentTimestamp:"5/1/26 14:05",smsReceivedTimestamp:"5/1/26 14:05",signatureStatus:"Signed",signedName:"Maria Lopez",signedTimestamp:"5/1/26 14:06",officialUrl:"https://www.hctax.net"},
+      "PT-100002": {key:"PT-100002",name:"James Carter",phone:"13177030977",address:"2214 Pine Hollow Ln, Kingwood, TX 77339",serviceType:"Property Tax",delinquentBalance:"3891.44",repaymentEligibilityStatus:"Eligible",downPaymentAmount:"400",repaymentMonths:"24",monthlyPayment:"145.48",repaymentStart:"6/15/26",confirmationNumber:"HC-TX-8842",smsSentTimestamp:"5/1/26 14:18",smsReceivedTimestamp:"5/1/26 14:18",signatureStatus:"Sent",signedName:"",signedTimestamp:"",officialUrl:"https://www.hctax.net"}
+    };
+
     const params = new URLSearchParams(window.location.search);
-    const read = (key, fallback) => {
-      const value = params.get(key);
-      return value && value.trim() ? value : fallback;
-    };
-    const set = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value; };
-    const setInput = (id, value) => { const el = document.getElementById(id); if (el) el.value = value; };
+    const get = (k) => { const v = params.get(k); return v && v.trim() ? v.trim() : null; };
+    function resolveRecord() {
+      const q = get('accountNumber') || get('account') || get('key');
+      if (q && HC_DATA[q]) return HC_DATA[q];
+      return HC_DATA['PT-100001'];
+    }
+    const rec = resolveRecord();
+    const val = (field, fallback) => { const p = get(field); return p !== null ? p : (rec[field] !== undefined && rec[field] !== "" ? rec[field] : (fallback !== undefined ? fallback : "")); };
 
-    const values = {
-      accountType: read('accountType', 'Property Tax'),
-      accountNumber: read('accountNumber', 'PT-100001'),
-      name: read('name', 'Maria Lopez'),
-      phone: read('phone', '+1 (317) 703-0977'),
-      address: read('address', '1450 Canal St, Houston, TX 77002'),
-      delinquentBalance: read('delinquentBalance', '$2,485.17'),
-      eligibilityStatus: read('eligibilityStatus', 'Eligible'),
-      repaymentDownPayment: read('repaymentDownPayment', '$250.00'),
-      repaymentMonthlyPayment: read('repaymentMonthlyPayment', '$186.26'),
-      repaymentMonths: read('repaymentMonths', '12'),
-      repaymentStartDate: read('repaymentStartDate', '6/1/26'),
-      repaymentConfirmationNumber: read('repaymentConfirmationNumber', 'HC-TX-9921'),
-      planState: read('planState', 'Confirmed'),
-      smsSent: read('smsSent', '5/1/26 14:05'),
-      smsReceived: read('smsReceived', '5/1/26 14:05'),
-      signatureStatus: read('signatureStatus', 'Signed'),
-      signedName: read('signedName', 'Maria Lopez'),
-      signedTimestamp: read('signedTimestamp', '5/1/26 14:06'),
-      officialUrl: read('officialUrl', 'https://www.hctax.net'),
-    };
+    const fmtPhone = (p) => { if (!p) return ""; const d = String(p).replace(/\D/g,""); if (d.length===11&&d[0]==="1") return `+1 (${d.slice(1,4)}) ${d.slice(4,7)}-${d.slice(7)}`; if (d.length===10) return `+1 (${d.slice(0,3)}) ${d.slice(3,6)}-${d.slice(6)}`; return p; };
+    const fmtMoney = (v) => { if (v===null||v===undefined||v==="") return "\u2014"; const n=Number(String(v).replace(/[^0-9.\-]/g,"")); if(isNaN(n)) return v; return "$"+n.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}); };
+    const dash = (v) => (v===null||v===undefined||v==="") ? "\u2014" : v;
+    const set = (id,v) => { const el=document.getElementById(id); if(el) el.textContent=v; };
+    const setInput = (id,v) => { const el=document.getElementById(id); if(el) el.value=v; };
 
-    set('accountTypeChip', values.accountType);
-    set('accountNumberChip', values.accountNumber);
-    set('accountNumber', values.accountNumber);
-    set('name', values.name);
-    set('phone', values.phone);
-    set('address', values.address);
-    set('delinquentBalance', values.delinquentBalance);
-    set('eligibilityStatus', values.eligibilityStatus);
-    set('repaymentDownPayment', values.repaymentDownPayment);
-    set('repaymentMonthlyPayment', values.repaymentMonthlyPayment);
-    set('repaymentMonths', values.repaymentMonths);
-    set('repaymentStartDate', values.repaymentStartDate);
-    set('repaymentConfirmationNumber', values.repaymentConfirmationNumber);
-    set('planState', values.planState);
-    set('smsSent', values.smsSent);
-    set('smsReceived', values.smsReceived);
-    set('signatureStatus', values.signatureStatus);
-    set('signedName', values.signedName);
-    set('signedTimestamp', values.signedTimestamp);
-    set('officialUrl', values.officialUrl);
+    const accountNumber = val('key', rec.key);
+    set('accountTypeChip', get('accountType') || 'Property Tax');
+    set('accountNumberChip', accountNumber);
+    set('accountNumber', accountNumber);
+    set('name', dash(val('name')));
+    set('phone', fmtPhone(val('phone')) || "\u2014");
+    set('address', dash(val('address')));
+    set('delinquentBalance', fmtMoney(val('delinquentBalance')));
+    set('eligibilityStatus', dash(val('repaymentEligibilityStatus')));
+    set('downPayment', fmtMoney(val('downPaymentAmount')));
+    set('repaymentMonths', dash(val('repaymentMonths')));
+    set('monthlyPayment', fmtMoney(val('monthlyPayment')));
+    set('repaymentStart', dash(val('repaymentStart')));
+    set('confirmationNumber', dash(val('confirmationNumber')));
 
-    set('scriptName1', values.name);
-    set('scriptConfirmation', values.repaymentConfirmationNumber);
-    set('scriptDownPayment', values.repaymentDownPayment);
-    set('scriptMonthly', values.repaymentMonthlyPayment + '/month');
-    set('scriptMonths', values.repaymentMonths + ' months');
-    set('scriptStartDate', values.repaymentStartDate);
+    set('smsSent', dash(val('smsSentTimestamp')));
+    set('smsReceived', dash(val('smsReceivedTimestamp')));
+    const sig = val('signatureStatus') || 'Unknown';
+    const sigEl = document.getElementById('signatureStatus');
+    sigEl.textContent = sig;
+    sigEl.className = 'field-value ' + (sig === 'Signed' ? 'green' : 'gold');
+    set('signedName', dash(val('signedName')));
+    set('signedTimestamp', dash(val('signedTimestamp')));
+    const url = val('officialUrl', 'https://www.hctax.net');
+    const urlEl = document.getElementById('officialUrl');
+    urlEl.textContent = url; urlEl.href = url;
 
-    setInput('actionEligibility', values.eligibilityStatus);
-    setInput('actionDownPayment', values.repaymentDownPayment.replace(/[^0-9.]/g, ''));
-    setInput('actionMonths', values.repaymentMonths);
-    setInput('actionMonthlyPayment', values.repaymentMonthlyPayment.replace(/[^0-9.]/g, ''));
-    setInput('actionStartDate', values.repaymentStartDate);
-    setInput('actionConfirmation', values.repaymentConfirmationNumber);
+    setInput('actionEligibility', val('repaymentEligibilityStatus','Eligible'));
+    setInput('actionDownPayment', fmtMoney(val('downPaymentAmount')).replace(/[^0-9.]/g,'') || '0.00');
+    setInput('actionMonths', val('repaymentMonths','12'));
+    setInput('actionMonthlyPayment', String(val('monthlyPayment','0')).replace(/[^0-9.]/g,''));
+    setInput('actionStartDate', val('repaymentStart','6/1/26'));
+    setInput('actionConfirmation', val('confirmationNumber',''));
+
+    /* Demo action handlers */
+    const toast = document.getElementById('toast');
+    const showToast = (msg) => { toast.textContent = msg; toast.style.display = 'block'; setTimeout(()=>{toast.style.display='none';}, 2600); };
+    document.getElementById('saveBtn').addEventListener('click', () => showToast('Repayment plan changes saved.'));
+    document.getElementById('resendBtn').addEventListener('click', () => showToast('SMS repayment form re-sent to ' + fmtPhone(val('phone')) + '.'));
+    document.getElementById('refreshBtn').addEventListener('click', () => location.reload());
   </script>
 </body>
 </html>
