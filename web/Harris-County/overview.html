@@ -159,7 +159,6 @@
         <div class="btnrow">
           <a class="btn" id="btnRepayment" href="#">Open Repayment</a>
           <a class="btn green" id="btnRegistration" href="#">Open New Resident Registration</a>
-          <a class="btn ghost" id="btnVoter" href="voter-registration.html">Open Voter Registration</a>
         </div>
       </div>
     </section>
@@ -191,6 +190,7 @@
       if (q) {
         if (HC_DATA[q]) return HC_DATA[q];
         for (const k in HC_DATA) { if (HC_DATA[k].welcomePackageCode === q) return HC_DATA[k]; }
+        return { key: q }; /* key passed but not embedded: rely purely on URL params */
       }
       return HC_DATA['PT-100001'];
     }
@@ -215,9 +215,9 @@
     const dash = (v) => (v === null || v === undefined || v === "") ? "\u2014" : v;
     const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
 
-    const isNewResident = (rec.serviceType === "New Resident") || String(rec.key).startsWith("NR");
-    const accountType = get('accountType') || (isNewResident ? "New Resident" : "Property Tax");
     const accountNumber = val('key', rec.key);
+    const isNewResident = (get('serviceType') === "New Resident") || (rec.serviceType === "New Resident") || String(accountNumber).startsWith("NR");
+    const accountType = get('accountType') || (isNewResident ? "New Resident" : "Property Tax");
 
     set('accountTypeChip', accountType);
     set('accountNumberChip', accountNumber);
@@ -244,7 +244,11 @@
     }
 
     /* Wire navigation buttons, forwarding the account context */
-    const ctx = 'accountNumber=' + encodeURIComponent(accountNumber);
+    /* Forward every parameter received so downstream pages show the same live data */
+    const fwd = new URLSearchParams(window.location.search);
+    if (!fwd.get('key')) fwd.set('key', accountNumber);
+    if (!fwd.get('accountNumber')) fwd.set('accountNumber', accountNumber);
+    const ctx = fwd.toString();
     document.getElementById('btnRepayment').href = 'repayment.html?' + ctx;
     document.getElementById('btnRegistration').href = 'registration.html?' + ctx;
 
