@@ -142,6 +142,7 @@
       if (q) {
         if (HC_DATA[q]) return HC_DATA[q];
         for (const k in HC_DATA) { if (HC_DATA[k].welcomePackageCode === q) return HC_DATA[k]; }
+        return {}; /* key passed but not embedded: rely purely on URL params */
       }
       return HC_DATA['NR-100003'];
     }

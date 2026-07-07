@@ -156,7 +156,7 @@
     const get = (k) => { const v = params.get(k); return v && v.trim() ? v.trim() : null; };
     function resolveRecord() {
       const q = get('accountNumber') || get('account') || get('key');
-      if (q && HC_DATA[q]) return HC_DATA[q];
+      if (q) { return HC_DATA[q] ? HC_DATA[q] : {}; } /* key passed but not embedded: rely purely on URL params */
       return HC_DATA['PT-100001'];
     }
     const rec = resolveRecord();
