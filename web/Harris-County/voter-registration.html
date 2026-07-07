@@ -2,54 +2,62 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <title>Harris County Tax Office - Voter Registration</title>
   <style>
     :root {
       --navy: #1f2f53; --page: #e8eef5; --card: #ffffff; --line: #dbe4ef;
       --text: #24324a; --muted: #718197; --green: #2b7a45; --blue: #32578f;
       --shadow: 0 1px 1px rgba(16, 24, 40, .04), 0 6px 18px rgba(16, 24, 40, .06);
-      --radius: 10px;
+      --radius: 12px;
     }
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     html, body { margin: 0; padding: 0; }
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--page); color: var(--text); }
-    .topbar { background: var(--navy); color: #fff; min-height: 98px; display: flex; align-items: center; padding: 0 26px; box-shadow: inset 0 -1px 0 rgba(255,255,255,.08); }
-    .brand { display: flex; align-items: center; gap: 16px; min-width: 0; }
-    .seal { width: 44px; height: 44px; border-radius: 999px; flex: 0 0 auto; background: radial-gradient(circle at 35% 35%, #e3f0ff 0 11%, #f7fbff 12% 19%, #2e4f8f 20% 100%); border: 2px solid rgba(255,255,255,.7); display: grid; place-items: center; color: #fff; font-weight: 800; font-size: 12px; letter-spacing: .5px; position: relative; overflow: hidden; }
-    .seal::before { content: "TX"; position: absolute; bottom: 5px; left: 0; right: 0; text-align: center; font-size: 9px; letter-spacing: 1px; opacity: .9; }
-    .brand h1 { font-size: 22px; line-height: 1.1; margin: 0; font-weight: 700; }
-    .brand .sub { margin-top: 6px; font-size: 14px; color: rgba(255,255,255,.88); }
-    .page { width: min(860px, calc(100vw - 48px)); margin: 22px auto 0; padding-bottom: 30px; }
-    .intro { margin: 0 0 18px; }
-    .intro h2 { font-size: 24px; margin: 0 0 6px; color: #22314c; }
-    .intro p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.5; }
-    .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; margin-bottom: 18px; }
-    .card-header { min-height: 58px; padding: 14px 20px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--line); background: linear-gradient(#f8fafc, #f6f8fb); font-size: 17px; font-weight: 700; }
-    .card-body { padding: 22px 20px 24px; }
-    .icon { font-size: 20px; }
-    .grid2 { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px 20px; }
+    .topbar { background: var(--navy); color: #fff; display: flex; align-items: center; padding: 16px 18px; }
+    .brand { display: flex; align-items: center; gap: 13px; min-width: 0; }
+    .seal { width: 40px; height: 40px; border-radius: 999px; flex: 0 0 auto; background: radial-gradient(circle at 35% 35%, #e3f0ff 0 11%, #f7fbff 12% 19%, #2e4f8f 20% 100%); border: 2px solid rgba(255,255,255,.7); position: relative; overflow: hidden; }
+    .seal::before { content: "TX"; position: absolute; bottom: 4px; left: 0; right: 0; text-align: center; font-size: 9px; letter-spacing: 1px; opacity: .9; color:#fff; }
+    .brand h1 { font-size: 18px; line-height: 1.15; margin: 0; font-weight: 700; }
+    .brand .sub { margin-top: 3px; font-size: 13px; color: rgba(255,255,255,.85); }
+    .page { width: min(760px, calc(100vw - 28px)); margin: 18px auto 0; padding-bottom: 30px; }
+    .intro { margin: 0 0 16px; }
+    .intro h2 { font-size: 21px; margin: 0 0 6px; color: #22314c; }
+    .intro p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.5; }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; margin-bottom: 16px; }
+    .card-header { padding: 14px 18px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--line); background: linear-gradient(#f8fafc, #f6f8fb); font-size: 16px; font-weight: 700; }
+    .card-body { padding: 18px 16px 20px; }
+    .icon { font-size: 19px; }
+    .grid2 { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 14px 16px; }
     .control { display: flex; flex-direction: column; gap: 7px; }
     .control.full { grid-column: 1 / -1; }
     .control label { font-size: 13px; font-weight: 700; color: #3f4f63; }
     .req { color: #b3261e; }
-    .input, select { height: 42px; border: 1px solid #c9d4e1; border-radius: 8px; padding: 0 12px; font-size: 15px; color: #1f2937; background: #fff; box-shadow: inset 0 1px 2px rgba(0,0,0,.03); width: 100%; }
+    .input, select { height: 46px; border: 1px solid #c9d4e1; border-radius: 9px; padding: 0 13px; font-size: 16px; color: #1f2937; background: #fff; box-shadow: inset 0 1px 2px rgba(0,0,0,.03); width: 100%; }
     .input:focus, select:focus { outline: none; border-color: #6f97cf; box-shadow: 0 0 0 3px rgba(50,87,143,.14); }
-    .checks { display: flex; flex-direction: column; gap: 12px; margin-top: 4px; }
-    .check { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: #34455f; line-height: 1.45; }
-    .check input { width: 18px; height: 18px; margin-top: 2px; flex: 0 0 auto; }
-    .btnrow { display:flex; gap: 12px; flex-wrap: wrap; margin-top: 22px; }
-    .btn { appearance: none; border: 1px solid transparent; border-radius: 8px; padding: 13px 30px; font-size: 16px; font-weight: 700; color: #fff; background: #2e6f4f; cursor: pointer; box-shadow: inset 0 -1px 0 rgba(0,0,0,.08); }
+    .checks { display: flex; flex-direction: column; gap: 14px; margin-top: 4px; }
+    .check { display: flex; align-items: flex-start; gap: 11px; font-size: 14px; color: #34455f; line-height: 1.45; }
+    .check input { width: 22px; height: 22px; margin-top: 1px; flex: 0 0 auto; }
+    /* Signature */
+    .sigwrap { position: relative; }
+    .sigpad { width: 100%; height: 180px; border: 2px dashed #b9c6d6; border-radius: 10px; background: #fbfdff; touch-action: none; display: block; }
+    .sigpad.signed { border-style: solid; border-color: #8fb0dc; }
+    .sighint { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%); text-align: center; color: #a9b6c6; font-size: 14px; pointer-events: none; }
+    .sigbar { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+    .sigbar .lbl { font-size: 12.5px; color: var(--muted); }
+    .linkbtn { background: none; border: none; color: var(--blue); font-size: 14px; font-weight: 700; cursor: pointer; padding: 6px 4px; }
+    .btnrow { display:flex; gap: 12px; flex-wrap: wrap; margin-top: 20px; }
+    .btn { appearance: none; border: 1px solid transparent; border-radius: 10px; padding: 15px 24px; font-size: 16px; font-weight: 700; color: #fff; background: #2e6f4f; cursor: pointer; flex: 1 1 auto; min-width: 150px; }
     .btn.ghost { background: #fff; color: #32578f; border-color: #32578f; }
-    .field-error { border-color: #d78; }
+    .field-error { border-color: #d78 !important; }
     .note { font-size: 12.5px; color: var(--muted); margin-top: 16px; line-height: 1.5; }
     .success { display:none; text-align:center; padding: 10px 6px; }
     .success .badge { width: 66px; height: 66px; border-radius: 999px; background: #e6f4ec; color: var(--green); font-size: 34px; display:grid; place-items:center; margin: 0 auto 14px; }
     .success h3 { margin: 0 0 8px; font-size: 22px; color: #1f6b41; }
     .success p { margin: 0 auto 6px; color: #45566e; font-size: 15px; max-width: 520px; line-height: 1.5; }
     .success .conf { font-weight: 800; color: #22314c; }
-    .footer { text-align: center; color: #8a96a7; font-size: 12px; padding: 8px 0 20px; }
-    @media (max-width: 720px) { .grid2 { grid-template-columns: 1fr; } }
+    .footer { text-align: center; color: #8a96a7; font-size: 12px; padding: 8px 16px 24px; }
+    @media (max-width: 640px) { .grid2 { grid-template-columns: 1fr; } .btn { flex: 1 1 100%; } }
   </style>
 </head>
 <body>
@@ -66,7 +74,7 @@
   <main class="page">
     <div class="intro">
       <h2>Register to Vote in Harris County</h2>
-      <p>Complete the form below to submit your voter registration application. All fields marked with <span class="req">*</span> are required.</p>
+      <p>Review your information below, sign, and submit your voter registration application. Fields marked with <span class="req">*</span> are required.</p>
     </div>
 
     <form id="voterForm" novalidate>
@@ -97,7 +105,7 @@
       </section>
 
       <section class="card">
-        <div class="card-header"><span class="icon">&#128196;</span>Identification</div>
+        <div class="card-header"><span class="icon">&#128196;</span>Identification & Eligibility</div>
         <div class="card-body">
           <div class="grid2">
             <div class="control">
@@ -119,6 +127,21 @@
         </div>
       </section>
 
+      <section class="card">
+        <div class="card-header"><span class="icon">&#9997;</span>Signature</div>
+        <div class="card-body">
+          <p style="margin:0 0 12px; font-size:14px; color:var(--muted); line-height:1.5;">By signing below, I swear or affirm that the information I have provided is true and that I am eligible to register to vote in Harris County, Texas.</p>
+          <div class="sigwrap">
+            <canvas id="sigpad" class="sigpad"></canvas>
+            <div class="sighint" id="sigHint">Sign here with your finger or mouse</div>
+          </div>
+          <div class="sigbar">
+            <span class="lbl">Signature of applicant <span class="req">*</span></span>
+            <button type="button" class="linkbtn" id="clearSig">Clear signature</button>
+          </div>
+        </div>
+      </section>
+
       <div class="btnrow">
         <button class="btn" type="submit">Submit Registration</button>
         <button class="btn ghost" type="reset">Clear Form</button>
@@ -134,9 +157,6 @@
           <p>Thank you, <span class="conf" id="successName">Voter</span>. Your voter registration application has been received.</p>
           <p>Your confirmation number is <span class="conf" id="confNum">HC-VR-000000</span>.</p>
           <p>You will receive your voter registration certificate by mail within 30 days. If you have questions, contact the Harris County Tax Office Voter Registration Division.</p>
-          <div class="btnrow" style="justify-content:center;">
-            <button class="btn ghost" type="button" id="againBtn">Register Another Voter</button>
-          </div>
         </div>
       </div>
     </section>
@@ -144,39 +164,97 @@
   <div class="footer">Harris County Tax Office &mdash; Voter Registration Division</div>
 
   <script>
-    const form = document.getElementById('voterForm');
-    const successCard = document.getElementById('successCard');
+    // ---- Prefill from data table (URL params) ----
+    function param(name){ return new URLSearchParams(window.location.search).get(name); }
+    function firstParam(){ for (var i=0;i<arguments.length;i++){ var v=param(arguments[i]); if(v) return v; } return null; }
 
-    form.addEventListener('submit', (e) => {
+    (function prefill(){
+      var form = document.getElementById('voterForm');
+      var fullName = firstParam('residentName','name');
+      if (fullName){
+        var parts = fullName.trim().split(/\s+/);
+        form.firstName.value = parts.shift() || '';
+        form.lastName.value = parts.join(' ') || '';
+      }
+      var phone = firstParam('phone');
+      if (phone){
+        var d = phone.replace(/\D/g,'').replace(/^1(?=\d{10}$)/,'');
+        if (d.length === 10) phone = '(' + d.slice(0,3) + ') ' + d.slice(3,6) + '-' + d.slice(6);
+        form.phone.value = phone;
+      }
+    })();
+
+    // ---- Signature pad (mouse + touch) ----
+    var canvas = document.getElementById('sigpad');
+    var hint = document.getElementById('sigHint');
+    var ctx = canvas.getContext('2d');
+    var drawing = false, hasSig = false, last = null;
+
+    function sizeCanvas(){
+      var ratio = window.devicePixelRatio || 1;
+      var rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * ratio;
+      canvas.height = rect.height * ratio;
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      ctx.lineWidth = 2.2; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#12294d';
+    }
+    setTimeout(sizeCanvas, 0);
+    window.addEventListener('resize', function(){ var wasSigned = hasSig; sizeCanvas(); if(!wasSigned){ hasSig=false; } });
+
+    function pos(e){
+      var rect = canvas.getBoundingClientRect();
+      var t = e.touches ? e.touches[0] : e;
+      return { x: t.clientX - rect.left, y: t.clientY - rect.top };
+    }
+    function start(e){ e.preventDefault(); drawing = true; last = pos(e); }
+    function move(e){
+      if(!drawing) return; e.preventDefault();
+      var p = pos(e);
+      ctx.beginPath(); ctx.moveTo(last.x, last.y); ctx.lineTo(p.x, p.y); ctx.stroke();
+      last = p;
+      if(!hasSig){ hasSig = true; hint.style.display = 'none'; canvas.classList.add('signed'); }
+    }
+    function end(e){ drawing = false; }
+
+    canvas.addEventListener('mousedown', start);
+    canvas.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', end);
+    canvas.addEventListener('touchstart', start, { passive:false });
+    canvas.addEventListener('touchmove', move, { passive:false });
+    canvas.addEventListener('touchend', end);
+
+    function clearSig(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      hasSig = false; hint.style.display = 'block'; canvas.classList.remove('signed');
+    }
+    document.getElementById('clearSig').addEventListener('click', clearSig);
+
+    // ---- Submit ----
+    var form = document.getElementById('voterForm');
+    var successCard = document.getElementById('successCard');
+
+    form.addEventListener('submit', function(e){
       e.preventDefault();
-      let valid = true;
-      form.querySelectorAll('[required]').forEach(el => {
-        const bad = (el.type === 'checkbox') ? !el.checked : !String(el.value).trim();
-        if (bad) { valid = false; if (el.type !== 'checkbox') el.classList.add('field-error'); }
+      var valid = true;
+      form.querySelectorAll('[required]').forEach(function(el){
+        var bad = (el.type === 'checkbox') ? !el.checked : !String(el.value).trim();
+        if (bad){ valid = false; if (el.type !== 'checkbox') el.classList.add('field-error'); }
         else if (el.type !== 'checkbox') el.classList.remove('field-error');
       });
-      if (!valid) {
-        alert('Please complete all required fields and confirm the eligibility statements.');
-        return;
-      }
-      const fn = form.firstName.value.trim();
-      const ln = form.lastName.value.trim();
+      if (!valid){ alert('Please complete all required fields and confirm the eligibility statements.'); return; }
+      if (!hasSig){ alert('Please sign in the signature box before submitting.'); canvas.scrollIntoView({behavior:'smooth', block:'center'}); return; }
+
+      var fn = form.firstName.value.trim();
+      var ln = form.lastName.value.trim();
       document.getElementById('successName').textContent = (fn + ' ' + ln).trim() || 'Voter';
-      const conf = 'HC-VR-' + Math.floor(100000 + Math.random() * 900000);
-      document.getElementById('confNum').textContent = conf;
+      document.getElementById('confNum').textContent = 'HC-VR-' + Math.floor(100000 + Math.random() * 900000);
       form.style.display = 'none';
       document.querySelector('.intro').style.display = 'none';
       successCard.style.display = 'block';
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 
-    document.getElementById('againBtn').addEventListener('click', () => {
-      form.reset();
-      form.style.display = 'block';
-      document.querySelector('.intro').style.display = 'block';
-      successCard.style.display = 'none';
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
+    form.addEventListener('reset', function(){ setTimeout(clearSig, 0); });
   </script>
 </body>
 </html>
