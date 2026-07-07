@@ -3,54 +3,49 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Harris County Tax Office - Repayment Plan</title>
+  <title>Harris County Tax Office - Property Tax Repayment</title>
   <style>
     :root {
-      --navy: #1f2f53; --page: #e8eef5; --card: #ffffff; --line: #dbe4ef;
-      --text: #24324a; --muted: #718197; --green: #2b7a45; --blue: #32578f;
-      --blue-bg: #eef4ff; --gold: #c78a1e;
-      --shadow: 0 1px 1px rgba(16, 24, 40, .04), 0 6px 18px rgba(16, 24, 40, .06);
-      --radius: 10px;
+      --navy:#1f2f53; --page:#e8eef5; --card:#fff; --line:#dbe4ef; --text:#24324a;
+      --muted:#718197; --green:#2b7a45; --blue:#32578f; --blue-bg:#eef4ff; --gold:#c78a1e; --amber:#b06f12; --red:#b3261e;
+      --shadow:0 1px 1px rgba(16,24,40,.04), 0 6px 18px rgba(16,24,40,.06); --radius:10px;
     }
-    * { box-sizing: border-box; }
-    html, body { margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--page); color: var(--text); }
-    .topbar { background: var(--navy); color: #fff; min-height: 98px; display: flex; align-items: center; padding: 0 26px; box-shadow: inset 0 -1px 0 rgba(255,255,255,.08); }
-    .brand { display: flex; align-items: center; gap: 16px; min-width: 0; }
-    .seal { width: 44px; height: 44px; border-radius: 999px; flex: 0 0 auto; background: radial-gradient(circle at 35% 35%, #e3f0ff 0 11%, #f7fbff 12% 19%, #2e4f8f 20% 100%); border: 2px solid rgba(255,255,255,.7); display: grid; place-items: center; color: #fff; font-weight: 800; font-size: 12px; letter-spacing: .5px; position: relative; overflow: hidden; }
-    .seal::before { content: "TX"; position: absolute; bottom: 5px; left: 0; right: 0; text-align: center; font-size: 9px; letter-spacing: 1px; opacity: .9; }
-    .brand h1 { font-size: 22px; line-height: 1.1; margin: 0; font-weight: 700; }
-    .brand .sub { margin-top: 6px; font-size: 14px; color: rgba(255,255,255,.88); }
-    .chips { margin-left: auto; display: flex; gap: 12px; align-items: center; }
-    .chip { background: #edf4ff; color: #35598f; border-radius: 999px; padding: 10px 18px; font-weight: 700; font-size: 16px; line-height: 1; box-shadow: inset 0 0 0 1px rgba(53,89,143,.06); white-space: nowrap; }
-    .chip.muted { font-size: 15px; }
-    .page { width: min(1120px, calc(100vw - 48px)); margin: 18px auto 0; padding-bottom: 24px; }
-    .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; margin-bottom: 18px; }
-    .card-header { min-height: 62px; padding: 14px 18px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--line); background: linear-gradient(#f8fafc, #f6f8fb); font-size: 18px; font-weight: 700; }
-    .card-body { padding: 22px 18px 20px; }
-    .icon { font-size: 20px; width: 22px; text-align: center; opacity: .95; }
-    .grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 26px 48px; }
-    .grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 48px; }
-    .field-label { font-size: 13px; font-weight: 800; letter-spacing: 1px; color: #7a889b; text-transform: uppercase; margin-bottom: 6px; }
-    .field-value { font-size: 19px; line-height: 1.35; color: #232e40; }
-    .field-value.small { font-size: 15px; }
-    .field-value.green { color: var(--green); font-weight: 800; }
-    .field-value.gold { color: var(--gold); font-weight: 800; }
-    .field-value.link { color: #2f5c9a; text-decoration: underline; word-break: break-all; }
-    .field-group { min-height: 58px; }
-    .subtle-rule { border-top: 1px solid #e6edf5; margin: 0 0 14px; }
-    .form-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px 16px; }
-    .control { display: flex; flex-direction: column; gap: 8px; }
-    .control label { font-size: 13px; font-weight: 700; color: #3f4f63; }
-    .input, select { height: 38px; border: 1px solid #c9d4e1; border-radius: 7px; padding: 0 12px; font-size: 15px; color: #1f2937; background: #fff; box-shadow: inset 0 1px 2px rgba(0,0,0,.03); }
-    .section-title { font-size: 16px; font-weight: 700; margin: 0 0 10px; color: #29364a; }
-    .btnrow { display:flex; gap: 12px; flex-wrap: wrap; margin-top: 14px; }
-    .btn { appearance: none; border: 1px solid transparent; border-radius: 6px; padding: 12px 28px; font-size: 16px; font-weight: 700; color: #fff; background: #36588d; cursor: pointer; box-shadow: inset 0 -1px 0 rgba(0,0,0,.08); }
-    .btn.green { background: #2e6f4f; }
-    .btn.ghost { background: #fff; color: #32578f; border-color: #32578f; }
-    .toast { display:none; margin-top:14px; padding:10px 14px; border-radius:8px; background:#e6f4ec; color:#1f6b41; font-weight:700; font-size:14px; }
-    .footer { text-align: center; color: #8a96a7; font-size: 12px; padding: 18px 0 16px; }
-    @media (max-width: 980px) { .grid3, .grid2, .form-grid { grid-template-columns: 1fr; } .chips { display: none; } .page { width: min(1120px, calc(100vw - 24px)); } .field-value { font-size: 17px; } }
+    * { box-sizing:border-box; } html,body { margin:0; padding:0; }
+    body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; background:var(--page); color:var(--text); }
+    .topbar { background:var(--navy); color:#fff; min-height:88px; display:flex; align-items:center; padding:0 26px; box-shadow:inset 0 -1px 0 rgba(255,255,255,.08); }
+    .brand { display:flex; align-items:center; gap:16px; min-width:0; }
+    .seal { width:44px; height:44px; border-radius:999px; flex:0 0 auto; background:radial-gradient(circle at 35% 35%, #e3f0ff 0 11%, #f7fbff 12% 19%, #2e4f8f 20% 100%); border:2px solid rgba(255,255,255,.7); position:relative; overflow:hidden; }
+    .seal::before { content:"TX"; position:absolute; bottom:5px; left:0; right:0; text-align:center; font-size:9px; letter-spacing:1px; opacity:.9; }
+    .brand h1 { font-size:22px; line-height:1.1; margin:0; font-weight:700; }
+    .brand .sub { margin-top:5px; font-size:13px; color:rgba(255,255,255,.85); }
+    .chips { margin-left:auto; display:flex; gap:12px; align-items:center; }
+    .chip { background:#edf4ff; color:#35598f; border-radius:999px; padding:9px 16px; font-weight:700; font-size:15px; line-height:1; white-space:nowrap; }
+    .btn-refresh { background:rgba(255,255,255,.12); color:#fff; border:1px solid rgba(255,255,255,.4); border-radius:6px; padding:9px 16px; font-size:14px; font-weight:600; cursor:pointer; }
+    .btn-refresh:hover { background:rgba(255,255,255,.2); }
+    .page { width:min(1120px, calc(100vw - 40px)); margin:18px auto 0; padding-bottom:28px; }
+    .card { background:var(--card); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden; margin-bottom:18px; }
+    .card-header { min-height:56px; padding:13px 18px; display:flex; align-items:center; gap:10px; border-bottom:1px solid var(--line); background:linear-gradient(#f8fafc,#f6f8fb); font-size:17px; font-weight:700; }
+    .card-body { padding:20px 18px; }
+    .icon { font-size:19px; width:22px; text-align:center; opacity:.95; }
+    .grid3 { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:22px 42px; }
+    .field-label { font-size:12px; font-weight:800; letter-spacing:1px; color:#7a889b; text-transform:uppercase; margin-bottom:5px; }
+    .field-value { font-size:18px; line-height:1.35; color:#232e40; }
+    .field-value.big { font-size:26px; font-weight:800; color:#1c2740; }
+    .badge { display:inline-block; padding:5px 13px; border-radius:999px; font-size:14px; font-weight:700; }
+    .badge.green { background:#e6f4ec; color:var(--green); }
+    .badge.amber { background:#fbf0dd; color:var(--amber); }
+    .badge.blue { background:var(--blue-bg); color:var(--blue); }
+    .field-group { min-height:56px; }
+    .helper { color:var(--muted); font-size:13px; margin:0 0 14px; }
+    .btnrow { display:flex; gap:12px; flex-wrap:wrap; margin-top:14px; }
+    .btn { appearance:none; border:1px solid transparent; border-radius:6px; padding:12px 24px; font-size:15px; font-weight:700; color:#fff; background:#36588d; cursor:pointer; text-decoration:none; display:inline-block; }
+    .btn.green { background:#2e6f4f; }
+    .btn.ghost { background:#fff; color:#32578f; border-color:#c3d1e6; }
+    .link { color:#2f5c9a; text-decoration:underline; word-break:break-all; font-size:15px; }
+    .banner { display:none; margin-top:14px; padding:11px 15px; border-radius:8px; font-weight:700; font-size:14px; background:#e6f4ec; color:#1f6b41; }
+    .snapshot { background:#0f1b30; color:#d5e2f5; border-radius:8px; padding:18px 20px; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:12.5px; line-height:1.6; white-space:pre-wrap; word-break:break-word; }
+    .footer { text-align:center; color:#8a96a7; font-size:12px; padding:16px 0; }
+    @media (max-width:900px){ .grid3{grid-template-columns:1fr;} .chips .chip{display:none;} }
   </style>
 </head>
 <body>
@@ -59,168 +54,106 @@
       <div class="seal" aria-hidden="true"></div>
       <div>
         <h1>Harris County Tax Office</h1>
-        <div class="sub">Repayment Plan</div>
+        <div class="sub">Property Tax Repayment</div>
       </div>
     </div>
     <div class="chips">
-      <div class="chip" id="accountTypeChip">Property Tax</div>
-      <div class="chip muted" id="accountNumberChip">PT-100001</div>
+      <div class="chip" id="residentIdChip">100001</div>
+      <button class="btn-refresh" id="refreshBtn" type="button">Refresh</button>
     </div>
   </header>
 
   <main class="page">
     <section class="card">
-      <div class="card-header"><span class="icon">&#128100;</span>Customer Information</div>
+      <div class="card-header"><span class="icon">&#128100;</span>Account Information</div>
       <div class="card-body">
         <div class="grid3">
-          <div class="field-group"><div class="field-label">Full Name</div><div class="field-value" id="name">Maria Lopez</div></div>
+          <div class="field-group"><div class="field-label">Full Name</div><div class="field-value" id="residentName">Maria Lopez</div></div>
           <div class="field-group"><div class="field-label">Phone</div><div class="field-value" id="phone">+1 (317) 703-0977</div></div>
-          <div class="field-group"><div class="field-label">Address</div><div class="field-value" id="address">1450 Canal St, Houston, TX 77002</div></div>
+          <div class="field-group"><div class="field-label">Account Number</div><div class="field-value" id="accountNumber">100001</div></div>
         </div>
       </div>
     </section>
 
     <section class="card">
-      <div class="card-header"><span class="icon">&#128176;</span>Property Tax Account</div>
+      <div class="card-header"><span class="icon">&#128176;</span>Delinquent Balance &amp; Eligibility</div>
       <div class="card-body">
         <div class="grid3">
-          <div class="field-group"><div class="field-label">Account Number</div><div class="field-value" id="accountNumber">PT-100001</div></div>
-          <div class="field-group"><div class="field-label">Delinquent Balance</div><div class="field-value" id="delinquentBalance">$2,485.17</div></div>
-          <div class="field-group"><div class="field-label">Eligibility Status</div><div class="field-value green" id="eligibilityStatus">Eligible</div></div>
+          <div class="field-group"><div class="field-label">Delinquent Balance</div><div class="field-value big" id="delinquentBalance">&mdash;</div></div>
+          <div class="field-group"><div class="field-label">Repayment Eligibility</div><div class="field-value"><span class="badge green" id="status">Eligible</span></div></div>
+          <div class="field-group"><div class="field-label">Next Action</div><div class="field-value" id="actionRequired">Send repayment agreement</div></div>
         </div>
+        <p class="helper" id="statusDetail" style="margin:18px 0 0;">Eligible for a repayment plan.</p>
       </div>
     </section>
 
     <section class="card">
-      <div class="card-header"><span class="icon">&#128203;</span>Repayment Plan Details</div>
+      <div class="card-header"><span class="icon">&#128221;</span>Repayment Agreement</div>
       <div class="card-body">
-        <div class="grid3">
-          <div class="field-group"><div class="field-label">Down Payment</div><div class="field-value" id="downPayment">$250.00</div></div>
-          <div class="field-group"><div class="field-label">Months</div><div class="field-value" id="repaymentMonths">12</div></div>
-          <div class="field-group"><div class="field-label">Monthly Payment</div><div class="field-value" id="monthlyPayment">$186.26</div></div>
-          <div class="field-group"><div class="field-label">Start Date</div><div class="field-value" id="repaymentStart">6/1/26</div></div>
-          <div class="field-group"><div class="field-label">Confirmation #</div><div class="field-value" id="confirmationNumber">HC-TX-9921</div></div>
+        <p class="helper">Send the resident the interactive repayment agreement form to review and sign. Account context is passed automatically.</p>
+        <div class="field-group" style="margin-bottom:14px;">
+          <div class="field-label">Repayment Agreement Link</div>
+          <div class="field-value"><a class="link" id="linkText" href="#" target="_blank" rel="noopener">&mdash;</a></div>
         </div>
-      </div>
-    </section>
-
-    <section class="card">
-      <div class="card-header"><span class="icon">&#128241;</span>SMS Form Tracking</div>
-      <div class="card-body">
-        <div class="grid3">
-          <div class="field-group"><div class="field-label">SMS Sent</div><div class="field-value small" id="smsSent">5/1/26 14:05</div></div>
-          <div class="field-group"><div class="field-label">SMS Received</div><div class="field-value small" id="smsReceived">5/1/26 14:05</div></div>
-          <div class="field-group"><div class="field-label">Signature Status</div><div class="field-value green" id="signatureStatus">Signed</div></div>
-          <div class="field-group"><div class="field-label">Signed Name</div><div class="field-value small" id="signedName">Maria Lopez</div></div>
-          <div class="field-group"><div class="field-label">Signed Timestamp</div><div class="field-value small" id="signedTimestamp">5/1/26 14:06</div></div>
-          <div class="field-group"><div class="field-label">Official URL</div><div class="field-value small link"><a id="officialUrl" href="https://www.hctax.net" target="_blank" rel="noopener">https://www.hctax.net</a></div></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="card">
-      <div class="card-header"><span class="icon">&#9889;</span>Agent Actions</div>
-      <div class="card-body">
-        <div class="section-title">Update Repayment Plan</div>
-        <div class="form-grid">
-          <div class="control"><label>Eligibility Status</label><select id="actionEligibility"><option>Eligible</option><option>Pending Review</option><option>Ineligible</option></select></div>
-          <div class="control"><label>Down Payment ($)</label><input class="input" id="actionDownPayment" value="250.00" /></div>
-          <div class="control"><label>Months</label><input class="input" id="actionMonths" value="12" /></div>
-          <div class="control"><label>Monthly Payment ($)</label><input class="input" id="actionMonthlyPayment" value="186.26" /></div>
-          <div class="control"><label>Start Date</label><input class="input" id="actionStartDate" value="6/1/26" /></div>
-          <div class="control"><label>Confirmation #</label><input class="input" id="actionConfirmation" value="HC-TX-9921" /></div>
-        </div>
-        <div class="btnrow">
-          <button class="btn" type="button" id="saveBtn">Save Repayment Changes</button>
-        </div>
-
-        <div class="section-title" style="margin-top:22px;">SMS Actions</div>
-        <div class="subtle-rule"></div>
         <div class="btnrow" style="margin-top:0;">
-          <button class="btn green" type="button" id="resendBtn">Resend SMS Form</button>
-          <button class="btn ghost" type="button" id="refreshBtn">Refresh Data</button>
+          <a class="btn green" id="openFormBtn" href="#" target="_blank" rel="noopener">Open Repayment Agreement</a>
+          <button class="btn ghost" type="button" id="sendLinkBtn">Send Agreement by SMS</button>
         </div>
-        <div class="toast" id="toast">Changes saved.</div>
+        <div class="banner" id="sendBanner"></div>
       </div>
+    </section>
+
+    <section class="card">
+      <div class="card-header"><span class="icon">&#128203;</span>Record JSON</div>
+      <div class="card-body"><div class="snapshot" id="snapshot">{}</div></div>
     </section>
   </main>
-  <div class="footer">Harris County Tax Office &mdash; Internal Agent Tool &mdash; Not for public distribution</div>
+  <div class="footer">Harris County Tax Office &mdash; Internal Agent Tool</div>
 
   <script>
     const HC_DATA = {
-      "PT-100001": {key:"PT-100001",residentID:"PT-100001",name:"Maria Lopez",residentName:"Maria Lopez",phone:"13177030977",address:"1450 Canal St, Houston, TX 77002",serviceType:"Property Tax",delinquentBalance:"2485.17",repaymentEligibilityStatus:"Eligible",downPaymentAmount:"250",repaymentMonths:"12",monthlyPayment:"186.26",repaymentStart:"2026-06-01",confirmationNumber:"HC-TX-9921",smsSentTimestamp:"2026-05-01T14:05:00Z",smsReceivedTimestamp:"2026-05-01T14:05:00Z",signatureStatus:"Signed",signedName:"Maria Lopez",signedTimestamp:"2026-05-01T14:06:00Z",officialUrl:"https://www.hctax.net",link:"https://www.hctax.net",identifier:"100001",status:"Payment Processing",statusDetail:"Payment of $500.00 received on 2026-05-11 and is currently being researched."},
-      "PT-100002": {key:"PT-100002",residentID:"PT-100002",name:"James Carter",residentName:"James Carter",phone:"13177030977",address:"2214 Pine Hollow Ln, Kingwood, TX 77339",serviceType:"Property Tax",delinquentBalance:"3891.44",repaymentEligibilityStatus:"Eligible",downPaymentAmount:"400",repaymentMonths:"24",monthlyPayment:"145.48",repaymentStart:"2026-06-15",confirmationNumber:"HC-TX-8842",smsSentTimestamp:"2026-05-01T14:18:00Z",smsReceivedTimestamp:"2026-05-01T14:18:00Z",signatureStatus:"Sent",signedName:"",signedTimestamp:"",officialUrl:"https://www.hctax.net",link:"https://www.hctax.net",identifier:"100002",status:"Repayment Active",statusDetail:"Resident may qualify for new repayment plan. Plan currently requires $400 down payment."}
+      "100001": {residentID:"100001", serviceType:"PropertyTax", residentName:"Maria Lopez", phone:"13177030977", identifier:"100001", status:"Eligible", statusDetail:"Eligible for a repayment plan.", actionRequired:"Send repayment agreement", link:"https://genesys-signature-fo-q87qwl.abacusai.app?account=100001", smsTemplate:"PropertyTaxRepayment", notes:"Demo property tax scenario"}
     };
-
+    const COLUMNS = ["residentID","serviceType","residentName","phone","identifier","status","statusDetail","actionRequired","link","smsTemplate","notes"];
     const params = new URLSearchParams(window.location.search);
-    /* Map Genesys Cloud data-table column names to the fields the script reads */
-    const ALIASES = {
-      key: ['residentID', 'accountNumber', 'account', 'code'],
-      name: ['residentName'],
-      officialUrl: ['link'],
-      welcomePackageCode: ['identifier']
-    };
-    const get = (k) => {
-      let v = params.get(k);
-      if ((!v || !v.trim()) && ALIASES[k]) {
-        for (const alt of ALIASES[k]) { const av = params.get(alt); if (av && av.trim()) { v = av; break; } }
-      }
-      return v && v.trim() ? v.trim() : null;
-    };
-    function resolveRecord() {
-      const q = get('accountNumber') || get('account') || get('key');
-      if (q) { return HC_DATA[q] ? HC_DATA[q] : {}; } /* key passed but not embedded: rely purely on URL params */
-      return HC_DATA['PT-100001'];
-    }
+    const ALIASES = { residentID:["accountNumber","account","key","id"] };
+    const get = (k) => { let v=params.get(k); if((!v||!v.trim())&&ALIASES[k]){ for(const a of ALIASES[k]){ const av=params.get(a); if(av&&av.trim()){v=av;break;} } } return v&&v.trim()?v.trim():null; };
+    function resolveRecord(){ const q=get("residentID"); if(q) return HC_DATA[q]?{...HC_DATA[q]}:{residentID:q}; return {...HC_DATA["100001"]}; }
     const rec = resolveRecord();
-    const val = (field, fallback) => { const p = get(field); return p !== null ? p : (rec[field] !== undefined && rec[field] !== "" ? rec[field] : (fallback !== undefined ? fallback : "")); };
+    const val = (f,fb="") => { const p=get(f); if(p!==null) return p; return (rec[f]!==undefined&&rec[f]!=="")?rec[f]:fb; };
+    const fmtPhone = (p) => { if(!p) return "\u2014"; const d=String(p).replace(/\D/g,""); if(d.length===11&&d[0]==="1") return `+1 (${d.slice(1,4)}) ${d.slice(4,7)}-${d.slice(7)}`; if(d.length===10) return `+1 (${d.slice(0,3)}) ${d.slice(3,6)}-${d.slice(6)}`; return p; };
+    const fmtMoney = (v) => { if(v===null||v===undefined||v==="") return "\u2014"; const n=Number(String(v).replace(/[^0-9.\-]/g,"")); if(isNaN(n)) return v; return "$"+n.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}); };
+    const dash = (v)=>(v===null||v===undefined||v==="")?"\u2014":v;
+    const set = (id,v)=>{ const el=document.getElementById(id); if(el) el.textContent=v; };
 
-    const fmtPhone = (p) => { if (!p) return ""; const d = String(p).replace(/\D/g,""); if (d.length===11&&d[0]==="1") return `+1 (${d.slice(1,4)}) ${d.slice(4,7)}-${d.slice(7)}`; if (d.length===10) return `+1 (${d.slice(0,3)}) ${d.slice(3,6)}-${d.slice(6)}`; return p; };
-    const fmtMoney = (v) => { if (v===null||v===undefined||v==="") return "\u2014"; const n=Number(String(v).replace(/[^0-9.\-]/g,"")); if(isNaN(n)) return v; return "$"+n.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}); };
-    const dash = (v) => (v===null||v===undefined||v==="") ? "\u2014" : v;
-    const set = (id,v) => { const el=document.getElementById(id); if(el) el.textContent=v; };
-    const setInput = (id,v) => { const el=document.getElementById(id); if(el) el.value=v; };
+    const residentID = val("residentID");
+    const link = val("link");
 
-    const accountNumber = val('key', rec.key);
-    set('accountTypeChip', get('accountType') || 'Property Tax');
-    set('accountNumberChip', accountNumber);
-    set('accountNumber', accountNumber);
-    set('name', dash(val('name')));
-    set('phone', fmtPhone(val('phone')) || "\u2014");
-    set('address', dash(val('address')));
-    set('delinquentBalance', fmtMoney(val('delinquentBalance')));
-    set('eligibilityStatus', dash(val('repaymentEligibilityStatus')));
-    set('downPayment', fmtMoney(val('downPaymentAmount')));
-    set('repaymentMonths', dash(val('repaymentMonths')));
-    set('monthlyPayment', fmtMoney(val('monthlyPayment')));
-    set('repaymentStart', dash(val('repaymentStart')));
-    set('confirmationNumber', dash(val('confirmationNumber')));
+    set("residentIdChip", dash(residentID));
+    set("residentName", dash(val("residentName")));
+    set("phone", fmtPhone(val("phone")));
+    set("accountNumber", dash(val("identifier") || residentID));
+    /* delinquentBalance is optional in the simplified table; show if passed */
+    set("delinquentBalance", fmtMoney(val("delinquentBalance")));
+    set("actionRequired", dash(val("actionRequired")));
+    set("statusDetail", dash(val("statusDetail")));
 
-    set('smsSent', dash(val('smsSentTimestamp')));
-    set('smsReceived', dash(val('smsReceivedTimestamp')));
-    const sig = val('signatureStatus') || 'Unknown';
-    const sigEl = document.getElementById('signatureStatus');
-    sigEl.textContent = sig;
-    sigEl.className = 'field-value ' + (sig === 'Signed' ? 'green' : 'gold');
-    set('signedName', dash(val('signedName')));
-    set('signedTimestamp', dash(val('signedTimestamp')));
-    const url = val('officialUrl', 'https://www.hctax.net');
-    const urlEl = document.getElementById('officialUrl');
-    urlEl.textContent = url; urlEl.href = url;
+    const statusEl = document.getElementById("status");
+    const status = val("status");
+    statusEl.textContent = dash(status);
+    const sLow = String(status).toLowerCase();
+    statusEl.className = "badge " + (sLow.includes("eligible")||sLow.includes("active")||sLow.includes("ready") ? "green" : (sLow.includes("pending")||sLow.includes("review") ? "amber" : "blue"));
 
-    setInput('actionEligibility', val('repaymentEligibilityStatus','Eligible'));
-    setInput('actionDownPayment', fmtMoney(val('downPaymentAmount')).replace(/[^0-9.]/g,'') || '0.00');
-    setInput('actionMonths', val('repaymentMonths','12'));
-    setInput('actionMonthlyPayment', String(val('monthlyPayment','0')).replace(/[^0-9.]/g,''));
-    setInput('actionStartDate', val('repaymentStart','6/1/26'));
-    setInput('actionConfirmation', val('confirmationNumber',''));
+    const linkEl = document.getElementById("linkText");
+    if (link) { linkEl.textContent = link; linkEl.href = link; document.getElementById("openFormBtn").href = link; }
+    else { document.getElementById("openFormBtn").style.display = "none"; }
 
-    /* Demo action handlers */
-    const toast = document.getElementById('toast');
-    const showToast = (msg) => { toast.textContent = msg; toast.style.display = 'block'; setTimeout(()=>{toast.style.display='none';}, 2600); };
-    document.getElementById('saveBtn').addEventListener('click', () => showToast('Repayment plan changes saved.'));
-    document.getElementById('resendBtn').addEventListener('click', () => showToast('SMS repayment form re-sent to ' + fmtPhone(val('phone')) + '.'));
-    document.getElementById('refreshBtn').addEventListener('click', () => location.reload());
+    const snap = {}; COLUMNS.forEach(c=>snap[c]=val(c));
+    document.getElementById("snapshot").textContent = JSON.stringify(snap, null, 2);
+
+    const sb = document.getElementById("sendBanner");
+    document.getElementById("sendLinkBtn").addEventListener("click", () => { sb.textContent = "Repayment agreement sent by SMS to " + fmtPhone(val("phone")) + "."; sb.style.display="block"; setTimeout(()=>{sb.style.display="none";},2800); });
+    document.getElementById("refreshBtn").addEventListener("click", () => location.reload());
   </script>
 </body>
 </html>
