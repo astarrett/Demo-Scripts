@@ -51,6 +51,10 @@
     .script-box .detail { font-size:14px; color:#48576e; line-height:1.5; }
     .footer { text-align:center; color:#8a96a7; font-size:12px; padding:16px 0; }
     @media (max-width: 900px){ .cols{ grid-template-columns:1fr; } .chips .chip{ display:none; } }
+  .navbar{display:flex;gap:8px;background:#0d2440;padding:10px 20px;border-bottom:1px solid rgba(255,255,255,.12);flex-wrap:wrap}
+  .navbar a{color:#cbd5e1;text-decoration:none;padding:8px 16px;border-radius:6px;font-size:14px;font-weight:600;border:1px solid transparent;transition:background .15s}
+  .navbar a:hover{background:rgba(255,255,255,.12);color:#fff}
+  .navbar a.active{background:#1e40af;color:#fff;border-color:#3b82f6}
   </style>
 </head>
 <body>
@@ -67,6 +71,13 @@
       <button class="btn-refresh" id="refreshBtn" type="button">Refresh</button>
     </div>
   </header>
+
+  <nav class="navbar" id="navbar">
+    <a href="overview.html" data-page="overview">Overview</a>
+    <a href="repayment.html" data-page="repayment">Property Tax Repayment</a>
+    <a href="registration.html" data-page="registration">New Resident</a>
+    <a href="voter-registration.html" data-page="voter">Voter Registration</a>
+  </nav>
 
   <main class="page">
     <div class="cols">
@@ -236,6 +247,18 @@
     document.getElementById("qaCopyAccount").addEventListener("click", () => copy(String(residentID||""), "Account number copied."));
     document.getElementById("qaCopyLink").addEventListener("click", () => copy(String(link||""), "Link copied."));
     document.getElementById("refreshBtn").addEventListener("click", () => location.reload());
+  </script>
+
+  <script>
+    (function(){
+      var qs = window.location.search || "";
+      var current = "overview";
+      var links = document.querySelectorAll("#navbar a");
+      for (var i=0;i<links.length;i++){
+        links[i].setAttribute("href", links[i].getAttribute("href") + qs);
+        if (links[i].getAttribute("data-page") === current) links[i].classList.add("active");
+      }
+    })();
   </script>
 </body>
 </html>
