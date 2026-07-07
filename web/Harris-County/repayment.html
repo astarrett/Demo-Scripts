@@ -153,7 +153,20 @@
     };
 
     const params = new URLSearchParams(window.location.search);
-    const get = (k) => { const v = params.get(k); return v && v.trim() ? v.trim() : null; };
+    /* Map Genesys Cloud data-table column names to the fields the script reads */
+    const ALIASES = {
+      key: ['residentID', 'accountNumber', 'account', 'code'],
+      name: ['residentName'],
+      officialUrl: ['link'],
+      welcomePackageCode: ['identifier']
+    };
+    const get = (k) => {
+      let v = params.get(k);
+      if ((!v || !v.trim()) && ALIASES[k]) {
+        for (const alt of ALIASES[k]) { const av = params.get(alt); if (av && av.trim()) { v = av; break; } }
+      }
+      return v && v.trim() ? v.trim() : null;
+    };
     function resolveRecord() {
       const q = get('accountNumber') || get('account') || get('key');
       if (q) { return HC_DATA[q] ? HC_DATA[q] : {}; } /* key passed but not embedded: rely purely on URL params */
