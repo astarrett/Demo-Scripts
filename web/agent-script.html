@@ -1,3 +1,6 @@
+Here's the full file — copy everything below and paste it into GitHub's editor for `web/agent-script.html`, replacing the existing content:
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -398,7 +401,7 @@ body {
               <div class="field-value" id="language">—</div>
             </div>
             <div class="field">
-              <div class="field-label">Demo Scenario</div>
+              <div class="field-label">Anomaly</div>
               <div class="field-value" id="demoScenario">—</div>
             </div>
           </div>
@@ -524,11 +527,65 @@ body {
 <div class="footer">City Utilities &middot; Agent Dashboard &middot; Internal Use Only</div>
 
 <script>
-const DATA_URL = "https://raw.githubusercontent.com/astarrett/Demo-Scripts/refs/heads/main/data-actions/Utility-Accounts";
-const params = new URLSearchParams(window.location.search);
+// Hard-coded record for Account #100001 (Casey Morgan / WeatherSpike scenario)
+// Source: Andy-UtilityAccountv2 data table
+const ACCOUNT_100001 = {
+  key: "100001",
+  accountStatus: "finalNotice",
+  customerName: "Casey Morgan",
+  lastPaymentDate: "1/10/26",
+  arrangementIneligibleReason: "Returned check in last 6 months",
+  serviceAddress: "1452 Poplar Ave",
+  city: "Memphis",
+  state: "TN",
+  zip: "38104",
+  notes: "Transfer required",
+  currentBalance: 486.27,
+  lastPaymentAmount: 120.0,
+  arrangementMinDownPayment: 0,
+  arrangementMaxMonths: 0,
+  bouncedCheckCountLast6Months: 1,
+  shutOffRisk: "True",
+  arrangementEligible: "False",
+  hardshipFlag: "False",
+  bouncedCheckLast6Month: "True",
+  repaymentPlanStatus: "NONE",
+  repaymentConfirmationNumber: "",
+  repaymentDownPayment: 0,
+  repaymentMonths: 0,
+  repaymentMonthlyPayment: 0.0,
+  repaymentStartDate: "",
+  agreementStatus: "NOT_SENT",
+  agreementSentAt: "",
+  agreementReceivedAt: "",
+  agreementSignedName: "",
+  agreementLink: "",
+  agreementToken: "",
+  avgMonthlyBill: 305.00,
+  currentBillAmount: 486.27,
+  billIncreasePercent: 0.59,
+  avgMonthlyUseage: 840,
+  usageUnit: "kWh",
+  meterReadType: "Actual",
+  anomalyDetected: "true",
+  anomolyDriver: "Weather",
+  leakSuspectedFlag: "false",
+  ratePlanChangeFlag: "false",
+  estimateToActualFlag: "false",
+  anomolyConfidenceScore: 0.88,
+  aiExplanationSummary: "Bill is higher due to colder weather driving higher heating usage compared with the customer’s normal pattern.",
+  containmentEligible: "true",
+  escalationTrigger: "none",
+  proactiveSmsTemplateId: "HIGHBILL_WEATHER_01",
+  recommendedNextAction: "Educate",
+  customerLanguage: "English",
+  demoScenario: "WeatherSpike"
+};
+
+const ACCOUNT_ID = "100001";
 
 function accountId() {
-  return params.get("accountNumber") || params.get("key") || "";
+  return ACCOUNT_ID;
 }
 
 function goAgent()  { window.location.href = "agent-script.html?accountNumber=" + encodeURIComponent(accountId()); }
@@ -658,75 +715,59 @@ function buildHeroBadges(r) {
   box.innerHTML = html;
 }
 
-async function load() {
+function load() {
   const id = accountId();
-  if (!id) return;
+  const r = ACCOUNT_100001;
 
-  try {
-    const res = await fetch(DATA_URL, { cache: "no-store" });
-    const data = await res.json();
-    const r = data[id];
-    if (!r) {
-      set("heroAcct", id);
-      set("heroName", "Account not found");
-      return;
-    }
+  // Hero
+  set("heroAcct", r.key || id);
+  set("heroName", r.customerName);
+  document.getElementById("heroBill").textContent = money(r.currentBillAmount);
+  buildHeroBadges(r);
 
-    // Hero
-    set("heroAcct", r.key || id);
-    set("heroName", r.customerName);
-    document.getElementById("heroBill").textContent = money(r.currentBillAmount);
-    buildHeroBadges(r);
+  // Customer Info
+  set("customerName", r.customerName);
+  set("accountNumber", r.key || id);
+  document.getElementById("accountStatus").innerHTML = statusPill(r.accountStatus);
+  set("serviceAddress", [r.serviceAddress, r.city, r.state, r.zip].filter(Boolean).join(", "));
+  set("language", r.customerLanguage || "English");
+  set("demoScenario", r.demoScenario);
 
-    // Customer Info
-    set("customerName", r.customerName);
-    set("accountNumber", r.key || id);
-    document.getElementById("accountStatus").innerHTML = statusPill(r.accountStatus);
-    set("serviceAddress", [r.serviceAddress, r.city, r.state, r.zip].filter(Boolean).join(", "));
-    set("language", r.customerLanguage || "English");
-    set("demoScenario", r.demoScenario);
+  // Billing
+  set("currentBill", money(r.currentBillAmount));
+  set("currentBalance", money(r.currentBalance));
+  set("avgBill", money(r.avgMonthlyBill));
+  set("billIncrease", pct(r.billIncreasePercent));
+  set("avgUsage", r.avgMonthlyUseage ? r.avgMonthlyUseage + " " + (r.usageUnit || "kWh") : "—");
+  set("meterRead", r.meterReadType);
+  set("lastPayDate", r.lastPaymentDate);
+  set("lastPayAmt", money(r.lastPaymentAmount));
+  set("bouncedChecks", r.bouncedCheckCountLast6Months || "0");
 
-    // Billing
-    set("currentBill", money(r.currentBillAmount));
-    set("currentBalance", money(r.currentBalance));
-    set("avgBill", money(r.avgMonthlyBill));
-    set("billIncrease", pct(r.billIncreasePercent));
-    set("avgUsage", r.avgMonthlyUseage ? r.avgMonthlyUseage + " " + (r.usageUnit || "kWh") : "—");
-    set("meterRead", r.meterReadType);
-    set("lastPayDate", r.lastPaymentDate);
-    set("lastPayAmt", money(r.lastPaymentAmount));
-    set("bouncedChecks", r.bouncedCheckCountLast6Months || "0");
+  // Anomaly
+  buildAnomalyPanel(r);
 
-    // Anomaly
-    buildAnomalyPanel(r);
+  // Notes
+  set("notes", r.notes || "No notes on file.");
 
-    // Notes
-    set("notes", r.notes || "No notes on file.");
+  // Flags
+  buildFlags(r);
 
-    // Flags
-    buildFlags(r);
+  // Summary
+  set("sumStatus", titleStatus(r.accountStatus));
+  set("sumBalance", money(r.currentBalance));
+  set("sumEligible", boolYesNo(r.arrangementEligible));
+  set("sumShutoff", boolYesNo(r.shutOffRisk));
+  set("sumRepayment", r.repaymentPlanStatus || "NONE");
+  set("sumAction", r.recommendedNextAction);
 
-    // Summary
-    set("sumStatus", titleStatus(r.accountStatus));
-    set("sumBalance", money(r.currentBalance));
-    set("sumEligible", boolYesNo(r.arrangementEligible));
-    set("sumShutoff", boolYesNo(r.shutOffRisk));
-    set("sumRepayment", r.repaymentPlanStatus || "NONE");
-    set("sumAction", r.recommendedNextAction);
-
-    // Containment
-    set("containment", boolYesNo(r.containmentEligible));
-    set("escalation", r.escalationTrigger || "none");
-
-  } catch (e) {
-    console.error(e);
-    set("heroAcct", id);
-    set("heroName", "Error loading data");
-  }
+  // Containment
+  set("containment", boolYesNo(r.containmentEligible));
+  set("escalation", r.escalationTrigger || "none");
 }
 
 load();
 </script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"f0f03d0605bf45f1a3b17cf7d5e6861f","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>
+```
